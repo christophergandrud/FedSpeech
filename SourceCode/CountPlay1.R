@@ -28,9 +28,14 @@ TestimonyData <- TestimonyData[order(TestimonyData$Date), ]
 # Create month sums
 TestimonyData$Any <- 1
 TestimonyData <- ddply(TestimonyData, .(MonthYear), transform, MonthTotal = sum(Any)) 
+TestUnique <- TestimonyData[!duplicated(TestimonyData[, 1]), ]
 
-ggplot(TestimonyData, aes(x = MonthYear, y = MonthTotal)) +
+pdf(file = "~/Dropbox/Fed_Speeches_Paper/figures/TestimonyMonthCound.pdf")
+ggplot(TestUnique, aes(x = MonthYear, y = MonthTotal)) +
          geom_line() +
-         xlab("") + ylab("Monthly Testimony Totals \n") +
-         theme_bw()
- 
+         xlab("") + ylab("Monthly Testimony Count \n") +
+         theme_bw(base_size = 15)
+dev.off()
+
+ggplot(TestimonyData, aes(MonthTotal)) + geom_density() + theme_bw()
+
