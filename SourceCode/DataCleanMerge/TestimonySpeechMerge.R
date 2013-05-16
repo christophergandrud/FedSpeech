@@ -1,7 +1,7 @@
 ################
 # Merge Testimony and Base Speech Count Data
 # Christopher Gandrud
-# 3 May 2013
+# 16 May 2013
 ################
 
 # Load libraries
@@ -10,6 +10,7 @@ library(plyr)
 library(devtools)
 library(DataCombine)
 library(reshape2)
+library(digest)
 
 # Load quarter_year function
 source_gist("5500733")
