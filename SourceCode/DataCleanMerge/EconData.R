@@ -25,13 +25,29 @@ getSymbols(Symbols, src = "FRED")
 # Convert to data frames
 
 # Function based on: http://stackoverflow.com/questions/4368861/r-converting-xts-or-zoo-object-to-a-data-frame
+
 ToDF <- function(x){
-  mthlySumm <- apply.monthly(x, mean)
-  index(mthlySumm) <- as.yearmon(index(mthlySumm))
-  Data <- as.data.frame(mthlySumm)
-  DateField <- index(x)
-  Test <- data.frame(x, DateField)
-  Test
+  
+  getSymbols(x, src = "FRED")
+  
+  First <- x[1]
+  for (i in x){
+    TempDF <- get(i)
+    if (i == First){ 
+      mthlySumm <- apply.monthly(TempDF, mean)
+      DateField <- index(TempDF)
+      TempData <- data.frame(DateField, TempDF)
+    }
+    else if (i != First){
+      mthlySumm <- apply.monthly(TempDF, mean)
+      DateField <- index(TempDF)
+      TempDataMore <- data.frame(DateField, TempDF)
+      TempData <- merge(TempData, TempDataMore, by = "DateField", all = TRUE)  
+    }
+  }
+  TempData
 }
 
-apply 
+Test <- ToDF(Symbols)
+
+ 
