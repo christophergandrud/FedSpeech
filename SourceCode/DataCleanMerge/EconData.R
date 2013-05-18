@@ -7,6 +7,8 @@
 # Packages 
 library(quantmod)
 library(xts)
+library(plyr)
+library(DataCombine)
 library(lubridate)
 
 # Download data
@@ -24,7 +26,7 @@ getSymbols(Symbols, src = "FRED")
 
 # Convert to data frames
 
-# Function based on: http://stackoverflow.com/questions/4368861/r-converting-xts-or-zoo-object-to-a-data-frame
+# Function partially based on: http://stackoverflow.com/questions/4368861/r-converting-xts-or-zoo-object-to-a-data-frame
 
 ToDF <- function(x){
   
@@ -48,6 +50,30 @@ ToDF <- function(x){
   TempData
 }
 
-Test <- ToDF(Symbols)
+CombinedEcon <- ToDF(Symbols)
 
- 
+# Keep the first day of the month
+CombinedEcon$First <- grepl("-01$", as.character(CombinedEcon[, 1]))
+CombinedEconSlim <- subset(CombinedEcon, First == TRUE)
+Vars <- c("DateField", Symbols)
+CombinedEconSlim <- CombinedEconSlim[, Vars]
+
+# Extend quarterly variables through the quarter
+Quart <- function(data, Var){
+  TempPos <- match(Var, names(data))
+  Variable <- data[, TempPos]
+  Q2 <- c(NA, Variable[-length(Variable)])
+  Q3 <- c(NA, Q2[-length(Variable)])
+  LagsDF <- data.frame(data[, 1], Q2, Q3)
+  names(LagsDF) <- c("DateField", "Q2", "Q3")
+  TempComb <- FillIn(data, LagsDF, Var1 = Var, Var2 = "Q2", KeyVar = "DateField")
+  TempComb <- TempComb[, -2]
+  TempComb <- FillIn(TempComb, LagsDF, Var1 = Var, Var2 = "Q3", KeyVar = "DateField")
+  TempComb <- TempComb[, -2]
+  TempComb
+}
+
+CombinedEconSlim <- Quart(CombinedEconSlim, "GDPC96")
+CombinedEconSlim <- Quart(CombinedEconSlim, "GDPDEF")
+
+# Save as EconData.csv
