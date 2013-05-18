@@ -9,7 +9,7 @@ library(quantmod)
 library(xts)
 library(plyr)
 library(DataCombine)
-library(lubridate)
+library(xtable)
 
 # Download data
 ## CPIAUCNS = Consumer Price Index for All Urban Consumers: All Items
@@ -77,3 +77,22 @@ CombinedEconSlim <- Quart(CombinedEconSlim, "GDPC96")
 CombinedEconSlim <- Quart(CombinedEconSlim, "GDPDEF")
 
 # Save as EconData.csv
+write.csv(CombinedEconSlim,
+          file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.csv")
+
+####----------- Variable Description Table ----------####
+ColNames <- names(CombinedEconSlim[, 2:7])
+Description <- c("Consumer Price Index for All Urban Consumers: All Items",
+  "Effective Federal Funds Rate (daily)",
+  "Effective Federal Funds Rate (monthly)",
+  "GDPDEF = Gross Domestic Product: Implicit Price Deflator",
+  "GDPC96 = Real Gross Domestic Product, 3 Decimal",
+  "U6RATE = Total unemployed, plus all marginally attached workers plus total employed part time for economic reasons)")
+Source <- "FRED: http://research.stlouisfed.org/fred2/"
+
+VarList <- cbind(ColNames, Description, Source)
+VarList <- xtable(VarList)
+Table <- print(VarList, type = "html")
+
+cat("#Variable Label and Descriptions For Economic Data", VarList, 
+    file = "")
