@@ -94,5 +94,5 @@ VarList <- cbind(ColNames, Description, Source)
 VarList <- xtable(VarList)
 Table <- print(VarList, type = "html")
 
-cat("#Variable Label and Descriptions For Economic Data", VarList, 
-    file = "")
+cat("#Variable Label and Descriptions For Economic Data", Table, 
+    file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/EconDataDescription.md")

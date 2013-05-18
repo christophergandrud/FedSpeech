@@ -44,6 +44,8 @@ TestUnique <- TestimonyMonth[!duplicated(TestimonyMonth[, 1]), ]
 # Keep MonthYear & MonthTotal
 TestimonyMonthTotals <- TestUnique[, c("MonthYear", "MonthTestTotal")]
 
+write.csv(TestimonyMonthTotals, file = "TestimonyPerMonth.csv")
+
 #### Make testimony per quarter Data ####
 #### Quarter
 TestimonyQuarter <- TestimonyData
@@ -111,14 +113,6 @@ OrgPercents <- merge(BF_MonthUnique, CO_MonthUnique, by = "MonthYear")
 Monthly <- merge(TestimonyMonthTotals, OrgPercents, 
 				 by = "MonthYear")
 
-## Test graph
-
-require(ggplot2)
-ggplot(Monthly, aes(x = MonthYear, y = CO_PerMonth)) +
-	geom_point() +
-	stat_smooth() +
-	theme_bw()
-
 #### Find Quarterly Percentages ####
 # Quarterly totals
 OrgData <- ddply(OrgData, 
@@ -162,13 +156,6 @@ OrgPercents$CO_BF <- OrgPercents$CO_Quarter/OrgPercents$BF_Quarter
 Quarterly <- merge(TestimonyQuarterTotals, OrgPercents, 
 				 by = "QuarterYear")
 
-## Test graph
-
 require(ggplot2)
-ggplot(Quarterly, aes(x = QuarterYear, y = CO_BF)) +
-	geom_point() +
-	stat_smooth() +
-	geom_vline(aes(xintercept = 2008), 
-		linetype = "dotted") +
-	theme_bw()
+ggplot(Quarterly, aes(QuarterTestTotal, BF_PerQuarter)) + geom_point() + theme_bw()
 
