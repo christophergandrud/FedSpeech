@@ -20,6 +20,7 @@ TestCount <- TestCount[, -1]
 
 ####-------- EconData -----------------------------####
 EconData <- read.csv("FREDEconData.csv")
+EconData <- EconData[, -1]
 
 ####-------- Merge -------------------------------####
 Combined <- merge(TestCount, EconData, by = "DateField")
