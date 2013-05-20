@@ -4,44 +4,40 @@
 # Updated 20 May 2013
 ######################
 
-library(RCurl)
 library(XML)
 
 #######################
 ## CSV file with Fed governor speech URLs
 
-addresses <- read.csv("/Users/christophergandrud/Dropbox/Fed_Speeches/Old/fed.hyperlinks/links.full.csv")
+SpeechesData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/FedSpeechesVersionMay2013.csv")
 
-for (i in addresses){
-    fed.text.Dec <- getURL(i)
-}
+Addresses <- as.character(SpeechesData[, "vars.link"])
+x <- 1:length(Addresses)
+Combi <- data.frame(x, Addresses, stringsAsFactors = FALSE)
 
-fed.df <- as.data.frame(fed.text.Dec)
+outpathA <- "~/Desktop/FedSpeechIndv/"
 
-## Save raw HTML to individual text files
-outpathA <- "/Users/christophergandrud/Desktop/Fed_Speeches/fed.text.indv.full/"
-
-x <- 1:nrow(fed.df)
-
-for(i in x) {
-   write(as.character(fed.df[i,1]), file = paste(outpathA,"/",i,".txt",sep = ""))
+for (i in nrow(Combi)){
+  TempFile <- paste0(outpathA, "/", i, ".txt")
+  URL <- Combi[, 2]
+  download.file(URL, destfile = TempFile)
 }
 
 #######################
 ## Open text files, parse individually and remove text of the the speeches
 
-setwd("/Users/christophergandrud/Desktop/Fed_Speeches/fed.text.indv/")
+setwd("~/Desktop/FedSpeechIndv/")
 
     # Create list of text files to parse and extract speech text from
-    files <- list.files(path = "/Users/christophergandrud/Desktop/Fed_Speeches/fed.text.indv/", pattern = "*.txt")
+    Files <- list.files(path = "~/Desktop/FedSpeechIndv/", pattern = "*.txt")
     
     # Create object to record empty text files (likely empty due to error in the website download)
     missing <- NULL
     
     # Indicate folder to save cleaned files into
-    outpathB <- "/Users/christophergandrud/Desktop/Fed_Speeches/fed.text.parsed/"
+    outpathB <- "~/Desktop/FedSpeechIndvParsed/"
 
-for (i in files){
+for (i in Files){
   
     # Parse HTML and extract speech text
     marker <- tryCatch(
