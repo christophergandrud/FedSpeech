@@ -46,6 +46,10 @@ TestimonyMonthTotals <- TestUnique[, c("MonthYear", "MonthTestTotal")]
 
 write.csv(TestimonyMonthTotals, file = "TestimonyPerMonth.csv")
 
+
+
+
+
 #### Make testimony per quarter Data ####
 #### Quarter
 TestimonyQuarter <- TestimonyData
@@ -61,6 +65,13 @@ TestUnique <- TestimonyQuarter[!duplicated(TestimonyQuarter[, 1]), ]
 
 # Keep QuarterYear & QuarterTotal
 TestimonyQuarterTotals <- TestUnique[, c("QuarterYear", "QuarterTestTotal")]
+
+
+
+
+
+
+
 
 #### ---------------------- Speech Orgs ------------------- ####
 # Load data
