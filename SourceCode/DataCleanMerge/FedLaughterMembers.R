@@ -1,7 +1,7 @@
 ###############
 # Clean Congressional Testimony Laughter Data
 # Christopher Gandrud
-# 22 May 2013
+# 24 May 2013
 ############### 
 
 library(lubridate)
@@ -27,14 +27,41 @@ LDataSub$MembersPres <- gsub("[a-zA-Z]", NA, LDataSub$MembersPres)
 LDataSub$MembersPres <- as.numeric(LDataSub$MembersPres)
 
 LDataSub <- DropNA(LDataSub, "MembersPres")
+LDataSub <- DropNA(LDataSub, "LaughCount")
 
+
+LD <- LDataSub
 
 #### Graphing Fun ####
-library(changepoint)
-Test <- cpt.var(LDataSub$MembersPres, method = "PELT")
-plot(Test, type = "l")
+# Graph median members per month
+library(plyr)
 
-ggplot(LDataSub, aes(DateStandard, MembersPres)) + 
+# Create MonthYear variable
+LD$MonthYear <- floor_date(LD$DateStandard, "month")
+
+LD <- ddply(LD, .(MonthYear), transform, MembPresMedian = median(MembersPres)) 
+LD <- ddply(LD, .(MonthYear), transform, LaughMedian = median(LaughCount)) 
+
+# Create Month Only data
+LDMonth <- LD[!duplicated(LD[, "MonthYear"]), ]
+
+
+#### Change Point Analysis ####
+library(changepoint)
+ChangeLaugth <- cpt.meanvar(LDMonth$LaughMedian)
+plot(ChangeLaugth, ylab = "Monthly Median Laughter")
+
+ChangePres <- cpt.mean(LDMonth$MembPresMedian, method = "BinSeg")
+plot(ChangePres, ylab = "Monthly Median Attendance")
+
+library(ggplot2)
+ggplot(LD, aes(DateStandard, LaughMedian)) + 
+  geom_point() + 
+  stat_smooth() +
+  xlab("") +
+  theme_bw()
+
+ggplot(LD, aes(MembPresMedian, LaughMedian)) + 
   geom_point() + 
   stat_smooth() +
   xlab("") +

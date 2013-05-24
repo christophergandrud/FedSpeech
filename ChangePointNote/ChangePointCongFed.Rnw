@@ -1,0 +1,99 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fed Testimony Change Point Analysis
+% Kevin Young and Christopher Gandrud
+% 24 May 2013
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% !Rnw weave = knitr
+
+\documentclass[a4paper]{article}
+\usepackage{fullpage}
+\usepackage[authoryear]{natbib}
+\usepackage{setspace}
+    \doublespacing
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=cyan,
+    urlcolor=cyan
+}
+\usepackage{dcolumn}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{todonotes}
+\usepackage[utf8]{inputenc} 
+
+% Set knitr global options and load packages
+<<ParentGlobalOpts, include=FALSE>>=
+    # Global options
+    opts_chunk$set(concordance=TRUE)
+    opts_chunk$set(fig.align='center')
+
+    # Load packages
+    Pkgs <- c("repmis", "changepoint")
+    repmis::LoadandCite(Pkgs, file = "PaperPackages.bib")
+@
+
+%%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{An Exploration of Congressional Scrutiny of the US Federal Reserve}
+
+\author{Kevin Young \\ \& \\ Christopher Gandrud}
+
+\begin{document}
+
+\maketitle
+
+%%%%%%% Abstract %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+\noindent\emph{Working draft. Comments welcome.}\footnote{Thank to you Rebecca Kanter and Brent Ramsey for research assistance.}
+
+In this short research note we investigate trends in congressional scrutiny of the US Federal Reserve from mid-1997 through 2012. Though independent, the Federal Reserve is accountable to legislators. The purpose of this note is to develop indicators of high and low scrutiny that can be used in future research to examine how the Fed responds to pressures from legislators. We use change point analysis to estimate periods of high and low scrutiny for 
+
+\end{abstract}
+
+Though politically independent, the US Federal Reserve (henceforth Fed) is nontheless subject to scrutiny from the US Congress. This includes both regular hearings, primarily the Fed governor's Semiannual Report to Congress, as well as irregularly to discuss specific issues such as the accounting problems at WorldCom in 2002 and US-EU regulatory dialog in 2004. In this short note we use change point analysis \citep{SenSrivastava1975, EckleyFearnheadKillick2011,Killick2012,Killick2013} to develop indicators of higher and lower levels of congressional scrutiny. Ultimately, we hope to construct indicators that we can use to examine how Fed governors respond to legislative scrutiny by engaging with outside groups. 
+
+In this note we first discuss our sample of US Congressional hearings that involve representatives from the Fed. We then give a brief overview of change point analysis and justify why it is a useful tool for determining states of high and low scrutiny. We then present the results of change point analysis for three time-series derived from the Congressional hearings data: the number of hearings, the number of members present at the hearings, and the number of times someone laughs at a hearing. We conduct a corresponding change point analysis on a number of macroeconomic indicators, especially indicators of the Fed's performance--inflation and unemployment--, to help understand what may be influencing changes in scrutiny states.  
+
+
+\section{Congressional Scrutiny of the Fed (1997-2013)}
+
+We gathered data on congressional hearings--in both the Senate and the House of Representatives--that included the presence of a representative of the Federal Reserve. We had access to the transcripts of all such hearings from 5 March 1997 through 13 December 2012. \todo[inline]{Add more info on sources}
+
+It's important to not that we classified field hearings separately from other hearings. Field hearings are held outside of Washington, D.C. Attendance at these hearings by members of Congress is usually much lower than hearings held at the Capital. We also noted when the hearing discussed the Fed governor's Semiannual Report to Congress. 
+
+\section{Methods: Change Point Analysis}
+
+Our objective in this paper is to determine when the Fed is in a period of low or high scrutiny. An obvious method for using to determine change in states through a time series is change point analysis. Change point analysis is a general term used to describe methods aimed at detecting changes in the ``statistical properties of a sequence of observations'' \cite[2]{Killick2013}. Imagine we have a series of data $y_{1:n} = (y_{1},\ldots,\: y_{n})$, for example, monthly median number of hearings.  We can say that a change has happened at a time $\tau \in \{1,\ldots,\:n-1\}$ in the data if the statistical properties, such as mean and variance, are different in $(y_{1},\ldots,\: y_{\tau})$ and $(y_{\tau},\ldots,\: y_{\tau})$. We can extend this logic to the study of series with multiple change points $m$ such that $\tau_{1:m} = (\tau_{1},\ldots,\:\tau_{m})$ and the data broken into segments $m + 1$ \citep{Killick2012,Killick2013}. These segments could be periods of higher and lower legislative scrutiny of the Fed.
+
+There are a number of different ways to estimate change points' locations.
+
+\todo[inline]{Fill In}
+
+\section{Scrutiny States}
+
+We use change point analysis with three indicators of Congressional scrutiny. None of the indicators directly and unequivocally capture legislative scrutiny. But they do indicate it. Hopefully by triangulating with all three we will have a better understanding of the underlying scrutiny states. The first indicator is the number of hearings that Fed representatives are asked to attend \todo{Kevin, is this phrasing correct?}. This is not a perfect measure of scrutiny as the Fed may be asked to attend hearings scrutinizing not it, but another issue or economic bureaucracy. We also look at congress members' attendance at the hearings. Higher attendance implies that there hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Finally, we examine how many times laughter is recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and congress members who are less critical of the Fed.
+
+We focus on the number of hearings per month. In the case of member attendance and laughter counts we use monthly medians, rather than individual hearings as the data points. This helps make the series more comparable. It also allows us to minimize how much our change point results are influenced by meetings with outlier attendance or laughter.
+
+\paragraph{Monthly Testimony Counts} 
+
+\paragraph{Monthly Median Attendance}
+
+\paragraph{Monthly Median Laughter}
+
+\section{Scrutiny States Compared to Economic States}
+
+
+\section{Discussion}
+
+%%%%%%% Bib and End File 
+\bibliographystyle{apsr}
+\bibliography{MainBib,PaperPackages}
+
+\end{document}
