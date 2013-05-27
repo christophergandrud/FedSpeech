@@ -1,14 +1,18 @@
 ###############
 # Clean Congressional Testimony Laughter Data
 # Christopher Gandrud
-# 24 May 2013
+# 27 May 2013
 ############### 
 
 library(lubridate)
 library(DataCombine)
+library(plyr)
+
+# Set working directory
+setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data")
 
 # Import data 
-LData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/MonetaryPolicyChron.csv")
+LData <- read.csv("Raw/MonetaryPolicyChron.csv")
 
 #### Clean
 LDataSub <- LData[, c("Date", "Laughter.Count", "Members.Present", 
@@ -30,10 +34,8 @@ LDataSub <- DropNA(LDataSub, "MembersPres")
 LDataSub <- DropNA(LDataSub, "LaughCount")
 
 
-LD <- LDataSub
-
-#### Graphing Fun ####
-# Graph median members per month
+#### Per Month ####
+# Median members per month
 library(plyr)
 
 # Create MonthYear variable
@@ -42,27 +44,32 @@ LD$MonthYear <- floor_date(LD$DateStandard, "month")
 LD <- ddply(LD, .(MonthYear), transform, MembPresMedian = median(MembersPres)) 
 LD <- ddply(LD, .(MonthYear), transform, LaughMedian = median(LaughCount)) 
 
+LD$Dummy <- 1
+LD <- ddply(LD, .(MonthYear), transform, TestCountMonth = sum(Dummy)) 
+
 # Create Month Only data
 LDMonth <- LD[!duplicated(LD[, "MonthYear"]), ]
 
+# Clean up
+LDMonth <- LDMonth[, c("MonthYear", "MembPresMedian", 
+			"LaughMedian", "TestCountMonth")]
 
-#### Change Point Analysis ####
-library(changepoint)
-ChangeLaugth <- cpt.meanvar(LDMonth$LaughMedian)
-plot(ChangeLaugth, ylab = "Monthly Median Laughter")
+#### Merge with economic data ####
+EconData <- read.csv("FREDEconData.csv")
 
-ChangePres <- cpt.mean(LDMonth$MembPresMedian, method = "BinSeg")
-plot(ChangePres, ylab = "Monthly Median Attendance")
+# Clean
+EconData <- EconData[, -1]
+EconData <- rename(EconData, c("DateField" = "MonthYear"))
+EconData$MonthYear <- ymd(as.character(EconData$MonthYear))
+EconData <- EconData[year(EconData$MonthYear) >= 1997,]
 
-library(ggplot2)
-ggplot(LD, aes(DateStandard, LaughMedian)) + 
-  geom_point() + 
-  stat_smooth() +
-  xlab("") +
-  theme_bw()
+# Merge
+Combined <- merge (LDMonth, EconData, by = "MonthYear", all = TRUE)
 
-ggplot(LD, aes(MembPresMedian, LaughMedian)) + 
-  geom_point() + 
-  stat_smooth() +
-  xlab("") +
-  theme_bw()
+# Clean combined 
+Combined$TestCountMonth[is.na(Combined$TestCountMonth)] <- 0
+Combined$LaughMedian[is.na(Combined$LaughMedian)] <- 0
+Combined$MembPresMedian[is.na(Combined$MembPresMedian)] <- 0
+
+#### ---- Save ---- ####
+write.csv(Combined, file = "Main.csv")
