@@ -24,6 +24,7 @@
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage{tikz}
+
 \usepackage{todonotes}
 \usepackage[utf8]{inputenc} 
 
@@ -36,6 +37,14 @@
     # Load packages
     Pkgs <- c("repmis", "changepoint")
     repmis::LoadandCite(Pkgs, file = "PaperPackages.bib")
+
+    # Load data
+    Main <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Main.csv")
+
+    # Minor cleaning data
+    ## Drop if no hearings
+    Main <- Main[-1:-2, ]
+    Main <- Main[-193:-197, ]
 @
 
 %%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -82,6 +91,29 @@ We use change point analysis with three indicators of Congressional scrutiny. No
 We focus on the number of hearings per month. In the case of member attendance and laughter counts we use monthly medians, rather than individual hearings as the data points. This helps make the series more comparable. It also allows us to minimize how much our change point results are influenced by meetings with outlier attendance or laughter.
 
 \paragraph{Monthly Testimony Counts} 
+
+
+\begin{figure}
+    \caption{Congressional Scrutiny Change Point Analysis}
+    \label{fig:BaseCP}
+<<BaseCP, echo=FALSE, fig.height=4, out.width='0.8\\linewidth'>>=
+## Testimony Month Count
+TestPerMonthTS <- ts(Main$TestCountMonth, start = c(1997, 3), frequency = 12)
+ChangeCount <- cpt.meanvar(TestPerMonthTS, method = "BinSeg")
+plot(ChangeCount, ylab = "Number of Hearings per Month", xlab = "")
+
+## Members Present Median
+PresTS <- ts(Main$MembPresMedian, start = c(1997, 3), frequency = 12)
+ChangePres <- cpt.mean(PresTS, method = "BinSeg")
+plot(ChangePres, ylab = "Monthly Median Attendance", xlab = "")
+
+## Laughter Median
+LaughTS <- ts(Main$LaughMedian, start = c(1997, 3), frequency = 12)
+ChangeLaugh <- cpt.meanvar(LaughTS)
+plot(ChangeLaugh, ylab = "Monthly Median Laughter", xlab = "")
+@
+{\scriptsize{Red horizontal lines signify the estimated states.}}
+\end{figure}
 
 \paragraph{Monthly Median Attendance}
 
