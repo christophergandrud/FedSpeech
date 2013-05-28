@@ -64,7 +64,7 @@ EconData$MonthYear <- ymd(as.character(EconData$MonthYear))
 EconData <- EconData[year(EconData$MonthYear) >= 1997,]
 
 # Merge
-Combined <- merge (LDMonth, EconData, by = "MonthYear", all = TRUE)
+Combined <- merge(LDMonth, EconData, by = "MonthYear", all = TRUE)
 
 # Clean combined 
 Combined$TestCountMonth[is.na(Combined$TestCountMonth)] <- 0

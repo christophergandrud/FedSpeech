@@ -67,10 +67,14 @@ plot(ChangeCountQt, ylab = "Number of Hearings per Quarter", xlab = "")
 
 # Members Present Quarterly
 PresQuarter <- quarter_sum(data = MainQt, Var = "MembPresMedian",
-							TimeVar = "MonthYear")
-PresPerQuarterTS <- ts(PresQuarter[, 2], start = c(1997, 2), frequency = 4)
+							TimeVar = "MonthYear", NewVar = "PresSum")
+PresQuarter <- merge(TestQuarter, PresQuarter, by = "Quarter")
+PresQuarter$AverageMedianPres <- PresQuarter[, 3]/PresQuarter[, 2]
+PresQuarter$AverageMedianPres[is.nan(PresQuarter$AverageMedianPres)] <- 0
+
+PresPerQuarterTS <- ts(PresQuarter[, 4], start = c(1997, 2), frequency = 4)
 ChangeCountQt <- cpt.meanvar(PresPerQuarterTS, method = "BinSeg")
-plot(ChangeCountQt, ylab = "Monthly Sum of the Median Members Present per Quarter", xlab = "")
+plot(ChangeCountQt, ylab = "Monthly Median Attendance Averaged by Quarterly Hearing Count", xlab = "")
 
 # Laughter Quarterly
 LaughterQuarter <- quarter_sum(data = MainQt, Var = "LaughMedian",
