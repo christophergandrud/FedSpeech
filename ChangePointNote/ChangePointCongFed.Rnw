@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 24 May 2013
+% 29 May 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -39,7 +39,7 @@
     repmis::LoadandCite(Pkgs, file = "PaperPackages.bib")
 
     # Load data
-    Main <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Main.csv")
+    Main <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/MainMonth.csv")
 
     # Minor cleaning data
     ## Drop if no hearings
@@ -88,7 +88,7 @@ There are a number of different ways to estimate change points' locations.
 
 We use change point analysis with three indicators of Congressional scrutiny. None of the indicators directly and unequivocally capture legislative scrutiny. But they do indicate it. Hopefully by triangulating with all three we will have a better understanding of the underlying scrutiny states. The first indicator is the number of hearings that Fed representatives are asked to attend \todo{Kevin, is this phrasing correct?}. This is not a perfect measure of scrutiny as the Fed may be asked to attend hearings scrutinizing not it, but another issue or economic bureaucracy. We also look at congress members' attendance at the hearings. Higher attendance implies that there hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Finally, we examine how many times laughter is recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and congress members who are less critical of the Fed.
 
-We focus on the number of hearings per month. In the case of member attendance and laughter counts we use monthly medians, rather than individual hearings as the data points. This helps make the series more comparable. It also allows us to minimize how much our change point results are influenced by meetings with outlier attendance or laughter.
+We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly medians, rather than individual hearings as the data points. This helps make the series more comparable. It also allows us to minimize how much our change point results are influenced by meetings with outlier attendance or laughter.
 
 \paragraph{Monthly Testimony Counts} 
 

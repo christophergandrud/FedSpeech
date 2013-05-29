@@ -1,7 +1,7 @@
 ###############
 # Changepoint Play
 # Christopher Gandrud
-# 28 May 2013
+# 29 May 2013
 ############### 
 
 # Load packages
@@ -54,9 +54,6 @@ ChangePresTest <- cpt.mean(MembersHearings, method = "BinSeg")
 plot(ChangePresTest)
 
 #### ---------------- Change Point Analysis Quarterly -------------- ####
-# Drop non-fully observed quarters
-MainQt <- Main[c(-1, -191, -192), ]
-
 # Testimony Quarterly Count
 TestQuarter <- quarter_sum(data = MainQt, Var = "TestCountMonth",
 							TimeVar = "MonthYear")
@@ -77,9 +74,9 @@ ChangeCountQt <- cpt.meanvar(PresPerQuarterTS, method = "BinSeg")
 plot(ChangeCountQt, ylab = "Monthly Median Attendance Averaged by Quarterly Hearing Count", xlab = "")
 
 # Laughter Quarterly
-LaughterQuarter <- quarter_sum(data = MainQt, Var = "LaughMedian",
+LaughQuarter <- quarter_sum(data = MainQt, Var = "LaughMedian",
 							TimeVar = "MonthYear")
 LaughPerQuarterTS <- ts(LaughQuarter[, 2], start = c(1997, 2), frequency = 4)
 ChangeCountQt <- cpt.meanvar(LaughPerQuarterTS, method = "BinSeg")
-plot(ChangeCountQt, ylab = "Monthly Sum of the Median Members Present per Quarter", xlab = "")
+plot(ChangeCountQt, ylab = "Quarterly Sum of Median Montly Laughter per Quarter", xlab = "")
 
