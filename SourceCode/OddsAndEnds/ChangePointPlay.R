@@ -9,42 +9,47 @@ library(changepoint)
 library(digest)
 library(devtools)
 
-# Load quarter_year and quarter_sum functions
-source_gist("5500733")
-source_gist("5660246")
-
 # Set working directory
 setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data")
 
-Main <- read.csv("Main.csv")
+MainMonth <- read.csv("MainMonth.csv")
+MainQt <- read.csv("MainQuarter.csv")
 
 # Drop if no hearings
-Main <- Main[-1:-2, ]
-Main <- Main[-193:-197, ]
+MainMonth <- MainMonth[-1:-2, ]
+MainMonth <- MainMonth[-193:-197, ]
 
 
 #### -------------- Change Point Analysis Monthly ----------------- ####
 
+tsMonth <- function(x){
+	ts(x, start = c(1997, 3), frequency = 12)
+}
+
+tsQt <- function(x){
+	ts(x, start = c(1997, 2), frequency = 4)
+}
+
 ## Testimony Month Count
-TestPerMonthTS <- ts(Main$TestCountMonth, start = c(1997, 3), frequency = 12)
+TestPerMonthTS <- tsMonth(MainMonth$TestCountMonthNoF)
 ChangeCount <- cpt.meanvar(TestPerMonthTS, method = "BinSeg")
 plot(ChangeCount, ylab = "Number of Hearings per Month", xlab = "")
 
 ## Members Present Median
-PresTS <- ts(Main$MembPresMedian, start = c(1997, 3), frequency = 12)
+PresTS <- tsMonth(MainMonth$MembPresMeanNoF)
 ChangePres <- cpt.mean(PresTS, method = "BinSeg")
-plot(ChangePres, ylab = "Monthly Median Attendance", xlab = "")
+plot(ChangePres, ylab = "Monthly Mean Attendance", xlab = "")
 
 ## Laughter Median
-LaughTS <- ts(Main$LaughMedian, start = c(1997, 3), frequency = 12)
+LaughTS <- tsMonth(MainMonth$LaughMeanNoF)
 ChangeLaugh <- cpt.meanvar(LaughTS)
-plot(ChangeLaugh, ylab = "Monthly Median Laughter", xlab = "")
+plot(ChangeLaugh, ylab = "Monthly Mean Laughter", xlab = "")
 
 
 #### Median Members Present/Number of Hearings
-attach(Main)
-	MembersHearings <- MembPresMedian/TestCountMonth
-detach(Main)
+attach(MainMonth)
+	MembersHearings <- MembPresMedianNoF/TestCountMonth
+detach(MainMonth)
 
 MembersHearings[is.nan(MembersHearings)] <- 0
 
@@ -53,30 +58,37 @@ MembersTS <- ts(MembersHearings, start = 1997)
 ChangePresTest <- cpt.mean(MembersHearings, method = "BinSeg")
 plot(ChangePresTest)
 
+#### Monthly Econ Data ####
+UnRateTS <- tsMonth(MainMonth$U6RATE)
+UnRateChange <- cpt.mean(UnRateTS)
+plot(UnRateChange, ylab = "Monthly Unemployment Rate", xlab = "")
+
 #### ---------------- Change Point Analysis Quarterly -------------- ####
 # Testimony Quarterly Count
-TestQuarter <- quarter_sum(data = MainQt, Var = "TestCountMonth",
-							TimeVar = "MonthYear")
-TestPerQuarterTS <- ts(TestQuarter[, 2], start = c(1997, 2), frequency = 4)
+TestPerQuarterTS <- tsQt(MainQt[, 5])
 ChangeCountQt <- cpt.meanvar(TestPerQuarterTS, method = "BinSeg")
 plot(ChangeCountQt, ylab = "Number of Hearings per Quarter", xlab = "")
 
 
 # Members Present Quarterly
-PresQuarter <- quarter_sum(data = MainQt, Var = "MembPresMedian",
-							TimeVar = "MonthYear", NewVar = "PresSum")
-PresQuarter <- merge(TestQuarter, PresQuarter, by = "Quarter")
-PresQuarter$AverageMedianPres <- PresQuarter[, 3]/PresQuarter[, 2]
-PresQuarter$AverageMedianPres[is.nan(PresQuarter$AverageMedianPres)] <- 0
+#PresQuarter$AverageMedianPres[is.nan(PresQuarter$AverageMedianPres)] <- 0
 
-PresPerQuarterTS <- ts(PresQuarter[, 4], start = c(1997, 2), frequency = 4)
-ChangeCountQt <- cpt.meanvar(PresPerQuarterTS, method = "BinSeg")
-plot(ChangeCountQt, ylab = "Monthly Median Attendance Averaged by Quarterly Hearing Count", xlab = "")
+PresPerQuarterTS <- tsQt(MainQt[, 3])
+ChangePresQt <- cpt.meanvar(PresPerQuarterTS, method = "BinSeg")
+plot(ChangePresQt, ylab = "Quarterly Median Attendance", xlab = "")
+
+# Members Present/Hearing Count Quarterly
+MainQt$PresCount <- MainQt$MembPresMedian/MainQt$TestCountQuarter
+PresCountTS <- tsQt(MainQt[, 6])
+ChangePresTestQt <- cpt.meanvar(PresCountTS, method = "BinSeg")
+plot(ChangePresTestQt, ylab = "Quarterly Median Attendance/No. of Hearings", xlab = "")
 
 # Laughter Quarterly
-LaughQuarter <- quarter_sum(data = MainQt, Var = "LaughMedian",
-							TimeVar = "MonthYear")
-LaughPerQuarterTS <- ts(LaughQuarter[, 2], start = c(1997, 2), frequency = 4)
-ChangeCountQt <- cpt.meanvar(LaughPerQuarterTS, method = "BinSeg")
-plot(ChangeCountQt, ylab = "Quarterly Sum of Median Montly Laughter per Quarter", xlab = "")
+LaughPerQuarterTS <- tsQt(MainQt[, 4])
+ChangeLaughQt <- cpt.meanvar(LaughPerQuarterTS, method = "BinSeg")
+plot(ChangeLaughQt, ylab = "Quarterly Median Laughter", xlab = "")
 
+# Field Hearings Quarterly 
+FieldQt <- tsQt(MainQt$FieldCountQuarter)
+ChangeQuarterQt <- cpt.meanvar(FieldQt, method = "BinSeg")
+plot(ChangeQuarterQt, ylab = "Quarterly Field Hearings Count", xlab = "")

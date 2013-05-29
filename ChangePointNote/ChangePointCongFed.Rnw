@@ -39,12 +39,25 @@
     repmis::LoadandCite(Pkgs, file = "PaperPackages.bib")
 
     # Load data
-    Main <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/MainMonth.csv")
+    # Set working directory
+    setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data")
 
-    # Minor cleaning data
-    ## Drop if no hearings
-    Main <- Main[-1:-2, ]
-    Main <- Main[-193:-197, ]
+    MainMonth <- read.csv("MainMonth.csv")
+    MainQt <- read.csv("MainQuarter.csv")
+
+    # Drop if outside of the hearing observation period
+    MainMonth <- MainMonth[-1:-2, ]
+    MainMonth <- MainMonth[-193:-197, ]
+
+    # Functions
+    tsMonth <- function(x){
+        ts(x, start = c(1997, 3), frequency = 12)
+    }
+
+    tsQt <- function(x){
+        ts(x, start = c(1997, 2), frequency = 4)
+    }
+
 @
 
 %%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,19 +111,31 @@ We focus on the number of days hearings were held per month.\footnote{Some heari
     \label{fig:BaseCP}
 <<BaseCP, echo=FALSE, fig.height=4, out.width='0.8\\linewidth'>>=
 ## Testimony Month Count
-TestPerMonthTS <- ts(Main$TestCountMonth, start = c(1997, 3), frequency = 12)
+TestPerMonthTS <- tsMonth(MainMonth$TestCountMonthNoF)
 ChangeCount <- cpt.meanvar(TestPerMonthTS, method = "BinSeg")
 plot(ChangeCount, ylab = "Number of Hearings per Month", xlab = "")
 
 ## Members Present Median
-PresTS <- ts(Main$MembPresMedian, start = c(1997, 3), frequency = 12)
+PresTS <- tsMonth(MainMonth$MembPresMedianNoF)
 ChangePres <- cpt.mean(PresTS, method = "BinSeg")
 plot(ChangePres, ylab = "Monthly Median Attendance", xlab = "")
 
 ## Laughter Median
-LaughTS <- ts(Main$LaughMedian, start = c(1997, 3), frequency = 12)
+LaughTS <- tsMonth(MainMonth$LaughMedianNoF)
 ChangeLaugh <- cpt.meanvar(LaughTS)
 plot(ChangeLaugh, ylab = "Monthly Median Laughter", xlab = "")
+@
+{\scriptsize{Red horizontal lines signify the estimated states.}}
+\end{figure}
+
+\begin{figure}
+    \caption{Change Point Analysis of Congressional Field Hearings}
+    \label{fig:MoreCP}
+<<MoreCP, echo=FALSE, fig.height=4, out.width='0.8\\linewidth'>>=
+# Field Hearings Quarterly 
+FieldQt <- tsQt(MainQt$FieldCountQuarter)
+ChangeQuarterQt <- cpt.meanvar(FieldQt, method = "BinSeg")
+plot(ChangeQuarterQt, ylab = "Quarterly Field Hearings Count", xlab = "")
 @
 {\scriptsize{Red horizontal lines signify the estimated states.}}
 \end{figure}
