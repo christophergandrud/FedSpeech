@@ -35,35 +35,35 @@
     opts_chunk$set(fig.align='center')
 
     # Load packages
-    Pkgs <- c("repmis", "changepoint")
+    Pkgs <- c("repmis", "digest", "devtools", "plyr", "ecp")
     repmis::LoadandCite(Pkgs, file = "PaperPackages.bib")
 
-    # Load data
+    # Load e.divGG function
+    source_gist("5675688")
+
     # Set working directory
     setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data")
 
     MainMonth <- read.csv("MainMonth.csv")
-    MainQt <- read.csv("MainQuarter.csv")
 
-    # Drop if outside of the hearing observation period
+    # Drop if no hearings
     MainMonth <- MainMonth[-1:-2, ]
     MainMonth <- MainMonth[-193:-197, ]
 
-    # Functions
-    tsMonth <- function(x){
-        ts(x, start = c(1997, 3), frequency = 12)
-    }
-
-    tsQt <- function(x){
-        ts(x, start = c(1997, 2), frequency = 4)
-    }
-
+    # Rename variables so that they are more legible when plotted
+    MainMonth <- rename(MainMonth, 
+                    c("TestCountMonthNoF" = "Hearings",
+                     "MembPresMeanNoF" = "Attendance",
+                     "LaughMeanNoF" = "Laughter",
+                     "U6RATE" = "Unemployment",
+                     "GDPC96Percent" = "Growth",
+                     "PCEPIPercent" = "Inflation"))
 @
 
 %%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{An Exploration of Congressional Scrutiny of the US Federal Reserve}
 
-\author{Kevin Young \\ \& \\ Christopher Gandrud}
+\author{Kevin Young \\ {\emph{University of Massachusetts, Amherst}} \\ \& \\ Christopher Gandrud \\ {\emph{Hertie School of Governance}}}
 
 \begin{document}
 
@@ -72,7 +72,7 @@
 %%%%%%% Abstract %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-\noindent\emph{Working draft. Comments welcome.}\footnote{Thank to you Rebecca Kanter and Brent Ramsey for research assistance.}
+\noindent\emph{Very Early Working draft. Comments welcome.}\footnote{Thank to you Rebecca Kanter and Brent Ramsey for research assistance.}
 
 In this short research note we investigate trends in congressional scrutiny of the US Federal Reserve from mid-1997 through 2012. Though independent, the Federal Reserve is accountable to legislators. The purpose of this note is to develop indicators of high and low scrutiny that can be used in future research to examine how the Fed responds to pressures from legislators. We use change point analysis to estimate periods of high and low scrutiny for 
 
@@ -97,61 +97,60 @@ It's important to not that we classified field hearings separately from other he
 
 Our objective in this paper is to determine when the Fed is in a period of low or high scrutiny. An obvious method for using to determine change in states through a time series is change point analysis. Change point analysis is a general term used to describe methods aimed at detecting changes in the ``statistical properties of a sequence of observations'' \cite[2]{Killick2013}. Imagine we have a series of data $y_{1:n} = (y_{1},\ldots,\: y_{n})$, for example, monthly median number of hearings.  We can say that a change has happened at a time $\tau \in \{1,\ldots,\:n-1\}$ in the data if the statistical properties, such as mean and variance, are different in $(y_{1},\ldots,\: y_{\tau})$ and $(y_{\tau},\ldots,\: y_{\tau})$. We can extend this logic to the study of series with multiple change points $m$ such that $\tau_{1:m} = (\tau_{1},\ldots,\:\tau_{m})$ and the data broken into segments $m + 1$ \citep{Killick2012,Killick2013}. These segments could be periods of higher and lower legislative scrutiny of the Fed.
 
-There are a number of different ways to estimate change points' locations.
+There are a number of different ways to estimate change points' locations \cite[see][]{Killick2013,Matteson2012}. For our project we need a change point analysis method that (a) allows us to identify an unknown number of change points and (b) allows us to combine information from multiple observed variables. We want a method that allows us to estimate an unknown number of change points because we have no a priori reason to assume that there is any fixed number of points at which the level of scrutiny changes. It's likely that none of our variables individually indicate the scrutiny level. Therefore we would like to combine information from all of these observed variables to understand the latent scrutiny level.
 
-\todo[inline]{Fill In}
+Matteson and James' \citeyearpar{Matteson2012,James2013} energy divisive hierarchical change point estimation algorithm.\footnote{We specifically use the \texttt{e.divisive} function in their \emph{ecp} R package \citep{R-ecp}.} Their approach draws on Sz{\'e}kely and Rizzo's \citeyearpar{Szekely2005} work with hierarchical clustering. In particular they use the ``energy statistic'' method of determining statistical distances between probability distributions, e.g. the joint multivariate distributions of sequences of our observed Congressional hearing data. 
 
 \section{Scrutiny States}
 
-We use change point analysis with three indicators of Congressional scrutiny. None of the indicators directly and unequivocally capture legislative scrutiny. Instead they indicate it. Hopefully by triangulating with all of them we will have a better understanding of the underlying scrutiny states. The first indicator is the number of hearings that Fed representatives are asked to attend \todo{Kevin, is this phrasing correct?}. This is not a perfect measure of scrutiny as the Fed may be asked to attend hearings scrutinizing not it, but another issue or economic bureaucracy. We also look at congress members' attendance at the hearings. Higher attendance implies that there hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Finally, we examine how many times laughter is recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and congress members who are less critical of the Fed.
+We use change point analysis with three indicators of Congressional scrutiny. None of the indicators directly and unequivocally capture legislative scrutiny. Instead they indicate some part of it. We are interested in the joint distribution of the multivariate. First we'll discuss the three scrutiny indicators then we will discuss the results from our multivariate change point analysis. 
 
-We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly medians, rather than individual hearings as the data points. This helps make the series more comparable. It also allows us to minimize how much our change point results are influenced by meetings with outlier attendance or laughter.
+One of our scrutiny indicators is the number of hearings that Fed representatives are asked to attend \todo{Kevin, is this phrasing correct?}. Presumably if Congress holds more hearings in which it asks the Fed to send a representative, then they are scrutinizing it more. This is not a perfect measure of scrutiny, however, as the Fed may be asked to attend hearings scrutinizing not it, but another issue or economic bureaucracy. 
 
-\paragraph{Monthly Testimony Counts} 
+We also look at congress members' attendance at the hearings. Higher attendance implies that the hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Again, there may be high attendance and high salience for scrutiny not aimed directly at the Fed.
 
+Finally, we examine how many times laughter is recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and congress members who are less critical of the Fed. Low levels of laughter could indicate a more serious and critical hearing. Though laughter and humor may be used even during highly critical meetings.
+
+Combining these indicators, we expect that periods of high scrutiny will be characterized by frequent hearings, that are attended by many members, and where there is little or no laughter. Periods of of low scrutiny would have the opposite characteristics.
+
+We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly means. We have removed field hearings from the from the data. These meetings almost always have much lower attendance--fewer than ten members usually attend.
 
 \begin{figure}
     \caption{Congressional Scrutiny Change Point Analysis}
     \label{fig:BaseCP}
-<<BaseCP, echo=FALSE, fig.height=4, out.width='0.8\\linewidth'>>=
-## Testimony Month Count
-TestPerMonthTS <- tsMonth(MainMonth$TestCountMonthNoF)
-ChangeCount <- cpt.meanvar(TestPerMonthTS, method = "BinSeg")
-plot(ChangeCount, ylab = "Number of Hearings per Month", xlab = "")
-
-## Members Present Median
-PresTS <- tsMonth(MainMonth$MembPresMedianNoF)
-ChangePres <- cpt.mean(PresTS, method = "BinSeg")
-plot(ChangePres, ylab = "Monthly Median Attendance", xlab = "")
-
-## Laughter Median
-LaughTS <- tsMonth(MainMonth$LaughMedianNoF)
-ChangeLaugh <- cpt.meanvar(LaughTS)
-plot(ChangeLaugh, ylab = "Monthly Median Laughter", xlab = "")
+<<ScrutinyCP, echo=FALSE, out.width='0.8\\linewidth', message=FALSE, warning=FALSE>>=
+# Scrutiny Change Point
+ScrutVars <- c("Hearings", "Attendance", "Laughter")
+e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 799, min.size = 6)
 @
-{\scriptsize{Red horizontal lines signify the estimated states.}}
+{\scriptsize{Red horizontal dashed lines signify the estimated change point 95\% significance level from an analysis including all of the variables.\\
+The data is aggregated on a monthly basis. Hearings indicates the number of hearings per month. Attendance and Laughter indicate the average congressional member attendance and laughter at the hearings}}
 \end{figure}
 
-\begin{figure}
-    \caption{Change Point Analysis of Congressional Field Hearings}
-    \label{fig:MoreCP}
-<<MoreCP, echo=FALSE, fig.height=4, out.width='0.8\\linewidth'>>=
-# Field Hearings Quarterly 
-FieldQt <- tsQt(MainQt$FieldCountQuarter)
-ChangeQuarterQt <- cpt.meanvar(FieldQt, method = "BinSeg")
-plot(ChangeQuarterQt, ylab = "Quarterly Field Hearings Count", xlab = "")
-@
-{\scriptsize{Red horizontal lines signify the estimated states.}}
-\end{figure}
+\subsection{Interpreting the Change Points}
 
-\paragraph{Monthly Median Attendance}
-
-\paragraph{Monthly Median Laughter}
+The change point analysis by itself only estimates time periods that are different from each their neighbors. We would expect that
 
 \section{Scrutiny States Compared to Economic States}
 
+\begin{figure}
+    \caption{Economic Indicator Change Point Analysis}
+    \label{fig:FullEconCP}
+<<EconFullCP, echo=FALSE, out.width='0.8\\linewidth', message=FALSE, warning=FALSE>>=
+# Full
+EconVars <- c("Inflation", "Unemployment", "Growth")
+e.divGG(data = MainMonth, Vars = EconVars, TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 799, min.size = 16)
+@
+{\scriptsize{Red horizontal dashed lines signify the estimated change point at the 95\% significance level from an analysis including all of the variables.\\
+Inflation is the percentage change in the chain-type personal consumption price index compared to the year before. Growth indicates GDP growth from the same quarter the year before. Unemployment is the unemployment rate for the month.}}
+\end{figure}
+
 
 \section{Discussion}
+
+We intend to improve our measures of legislative scrutiny by including sentiment analysis of the hearing transcripts. This will allow us to include information on whether the or not the Fed is being challenged on its activities. We predict that positive sentiments will be positively associated with laughter. If so, this would provide more evidence for the scrutiny change point that we estimated at September 2008.
 
 %%%%%%% Bib and End File 
 \bibliographystyle{apsr}

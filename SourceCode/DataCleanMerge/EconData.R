@@ -14,6 +14,7 @@ library(xtable)
 # Download data
 ## CPIAUCNS = Consumer Price Index for All Urban Consumers: All Items
 ## PCEPI = Personal Consumption Expenditures: Chain-type Price Index (PCEPI), Monthly, Seasonally Adjusted
+## INTDSRUSM193N = Interest Rates, Discount Rate for United States
 ## DFF = Effective Federal Funds Rate (daily)
 ## FEDFUNDS = Effective Federal Funds Rate (monthly)
 ## GDPDEF = Gross Domestic Product: Implicit Price Deflator
@@ -22,7 +23,7 @@ library(xtable)
 ##
 ##
 
-Symbols <- c("CPIAUCNS", "PCEPI", "DFF", "FEDFUNDS", "GDPDEF", "GDPC96", "U6RATE")
+Symbols <- c("CPIAUCNS", "PCEPI", "INTDSRUSM193N", "DFF", "FEDFUNDS", "GDPDEF", "GDPC96", "U6RATE")
 getSymbols(Symbols, src = "FRED")
 
 # Convert to data frames
@@ -102,9 +103,10 @@ write.csv(CombinedEconSlim,
           file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.csv")
 
 ####----------- Variable Description Table ----------####
-ColNames <- names(CombinedEconSlim[, 2:8])
+ColNames <- names(CombinedEconSlim[, 2:9])
 Description <- c("Consumer Price Index for All Urban Consumers: All Items",
    "Personal Consumption Expenditures: Chain-type Price Index (PCEPI), (monthly, seasonally adjusted)",
+  "Interest Rates, Discount Rate for United States",
   "Effective Federal Funds Rate (daily)",
   "Effective Federal Funds Rate (monthly)",
   "GDPDEF = Gross Domestic Product: Implicit Price Deflator",
