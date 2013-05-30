@@ -24,3 +24,5 @@ MainMonth <- MainMonth[-193:-197, ]
 ScrutVars <- c("TestCountMonthNoF", "MembPresMeanNoF", "LaughMeanNoF")
 e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear", 
 		sig.lvl = 0.05, R = 799, min.size = 12)
+
+# Economic Indications Change Point

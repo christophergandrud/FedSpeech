@@ -104,7 +104,7 @@ write.csv(CombinedEconSlim,
 ####----------- Variable Description Table ----------####
 ColNames <- names(CombinedEconSlim[, 2:8])
 Description <- c("Consumer Price Index for All Urban Consumers: All Items",
-   "Personal Consumption Expenditures: Chain-type Price Index (PCEPI), (monthly, seasonally adjusted)"
+   "Personal Consumption Expenditures: Chain-type Price Index (PCEPI), (monthly, seasonally adjusted)",
   "Effective Federal Funds Rate (daily)",
   "Effective Federal Funds Rate (monthly)",
   "GDPDEF = Gross Domestic Product: Implicit Price Deflator",
