@@ -1,13 +1,11 @@
 ###############
 # Changepoint Play
 # Christopher Gandrud
-# 29 May 2013
+# 30 May 2013
 ############### 
 
 # Load packages
 library(changepoint)
-library(digest)
-library(devtools)
 
 # Set working directory
 setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data")
@@ -60,7 +58,7 @@ plot(ChangePresTest)
 
 #### Monthly Econ Data ####
 UnRateTS <- tsMonth(MainMonth$U6RATE)
-UnRateChange <- cpt.mean(UnRateTS)
+UnRateChange <- cpt.mean(UnRateTS, method = "BinSeg")
 plot(UnRateChange, ylab = "Monthly Unemployment Rate", xlab = "")
 
 #### ---------------- Change Point Analysis Quarterly -------------- ####

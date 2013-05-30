@@ -1,7 +1,7 @@
 ##############
 # Download econ data and save as monthly data file.
 # Christopher Gandrud
-# 18 May 2013
+# 30 May 2013
 ##############
 
 # Packages 
@@ -13,6 +13,7 @@ library(xtable)
 
 # Download data
 ## CPIAUCNS = Consumer Price Index for All Urban Consumers: All Items
+## PCEPI = Personal Consumption Expenditures: Chain-type Price Index (PCEPI), Monthly, Seasonally Adjusted
 ## DFF = Effective Federal Funds Rate (daily)
 ## FEDFUNDS = Effective Federal Funds Rate (monthly)
 ## GDPDEF = Gross Domestic Product: Implicit Price Deflator
@@ -21,7 +22,7 @@ library(xtable)
 ##
 ##
 
-Symbols <- c("CPIAUCNS", "DFF", "FEDFUNDS", "GDPDEF", "GDPC96", "U6RATE")
+Symbols <- c("CPIAUCNS", "PCEPI", "DFF", "FEDFUNDS", "GDPDEF", "GDPC96", "U6RATE")
 getSymbols(Symbols, src = "FRED")
 
 # Convert to data frames
@@ -76,13 +77,34 @@ Quart <- function(data, Var){
 CombinedEconSlim <- Quart(CombinedEconSlim, "GDPC96")
 CombinedEconSlim <- Quart(CombinedEconSlim, "GDPDEF")
 
+# Create Year-on-Year percent change variables
+YearChange <- function (data, Var, NewVar)
+{
+  Temp <- slide(data = data, Var = Var, slideBy = - 12)
+  Temp$TempVar <- ((Temp[, Var] - Temp[, length(Temp)])/Temp[, Var]) * 100
+  RMVar <- length(Temp) - 1
+  Temp <- Temp[, -RMVar]
+  Temp <- rename(Temp, c("TempVar" = NewVar))
+  Temp
+}
+
+CombinedEconSlim <- YearChange(data = CombinedEconSlim, 
+                               Var = "CPIAUCNS", NewVar = "CPIAUCNSPercent")
+CombinedEconSlim <- YearChange(data = CombinedEconSlim, 
+                               Var = "PCEPI", 
+                               NewVar = "PCEPIPercent")
+CombinedEconSlim <- YearChange(data = CombinedEconSlim, 
+                               Var = "GDPC96", 
+                               NewVar = "GDPC96Percent")
+
 # Save as EconData.csv
 write.csv(CombinedEconSlim,
           file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.csv")
 
 ####----------- Variable Description Table ----------####
-ColNames <- names(CombinedEconSlim[, 2:7])
+ColNames <- names(CombinedEconSlim[, 2:8])
 Description <- c("Consumer Price Index for All Urban Consumers: All Items",
+   "Personal Consumption Expenditures: Chain-type Price Index (PCEPI), (monthly, seasonally adjusted)"
   "Effective Federal Funds Rate (daily)",
   "Effective Federal Funds Rate (monthly)",
   "GDPDEF = Gross Domestic Product: Implicit Price Deflator",

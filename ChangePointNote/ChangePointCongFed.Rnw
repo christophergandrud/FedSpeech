@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 29 May 2013
+% 30 May 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -78,6 +78,10 @@ In this short research note we investigate trends in congressional scrutiny of t
 
 \end{abstract}
 
+\begin{description}
+  \item [{\textbf{Keywords:}}] monetary policy, legislative oversight, change point analysis
+\end{description}
+
 Though politically independent, the US Federal Reserve (henceforth Fed) is nontheless subject to scrutiny from the US Congress. This includes both regular hearings, primarily the Fed governor's Semiannual Report to Congress, as well as irregularly to discuss specific issues such as the accounting problems at WorldCom in 2002 and US-EU regulatory dialog in 2004. In this short note we use change point analysis \citep{SenSrivastava1975, EckleyFearnheadKillick2011,Killick2012,Killick2013} to develop indicators of higher and lower levels of congressional scrutiny. Ultimately, we hope to construct indicators that we can use to examine how Fed governors respond to legislative scrutiny by engaging with outside groups. 
 
 In this note we first discuss our sample of US Congressional hearings that involve representatives from the Fed. We then give a brief overview of change point analysis and justify why it is a useful tool for determining states of high and low scrutiny. We then present the results of change point analysis for three time-series derived from the Congressional hearings data: the number of hearings, the number of members present at the hearings, and the number of times someone laughs at a hearing. We conduct a corresponding change point analysis on a number of macroeconomic indicators, especially indicators of the Fed's performance--inflation and unemployment--, to help understand what may be influencing changes in scrutiny states.  
@@ -85,7 +89,7 @@ In this note we first discuss our sample of US Congressional hearings that invol
 
 \section{Congressional Scrutiny of the Fed (1997-2013)}
 
-We gathered data on congressional hearings--in both the Senate and the House of Representatives--that included the presence of a representative of the Federal Reserve. We had access to the transcripts of all such hearings from 5 March 1997 through 13 December 2012. \todo[inline]{Add more info on sources}
+We gathered data on congressional hearings--in both the Senate and the House of Representatives--that included the presence of a representative of the Federal Reserve. We had access to the transcripts of all such hearings from 5 March 1997 through 13 December 2012. We gathered all of the hearing transcripts from the US House of Representatives Financial Services Committee's website.\footnote{GET WEBSITE} \todo[inline]{Talk to Kevin}
 
 It's important to not that we classified field hearings separately from other hearings. Field hearings are held outside of Washington, D.C. Attendance at these hearings by members of Congress is usually much lower than hearings held at the Capital. We also noted when the hearing discussed the Fed governor's Semiannual Report to Congress. 
 
@@ -99,7 +103,7 @@ There are a number of different ways to estimate change points' locations.
 
 \section{Scrutiny States}
 
-We use change point analysis with three indicators of Congressional scrutiny. None of the indicators directly and unequivocally capture legislative scrutiny. But they do indicate it. Hopefully by triangulating with all three we will have a better understanding of the underlying scrutiny states. The first indicator is the number of hearings that Fed representatives are asked to attend \todo{Kevin, is this phrasing correct?}. This is not a perfect measure of scrutiny as the Fed may be asked to attend hearings scrutinizing not it, but another issue or economic bureaucracy. We also look at congress members' attendance at the hearings. Higher attendance implies that there hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Finally, we examine how many times laughter is recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and congress members who are less critical of the Fed.
+We use change point analysis with three indicators of Congressional scrutiny. None of the indicators directly and unequivocally capture legislative scrutiny. Instead they indicate it. Hopefully by triangulating with all of them we will have a better understanding of the underlying scrutiny states. The first indicator is the number of hearings that Fed representatives are asked to attend \todo{Kevin, is this phrasing correct?}. This is not a perfect measure of scrutiny as the Fed may be asked to attend hearings scrutinizing not it, but another issue or economic bureaucracy. We also look at congress members' attendance at the hearings. Higher attendance implies that there hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Finally, we examine how many times laughter is recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and congress members who are less critical of the Fed.
 
 We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly medians, rather than individual hearings as the data points. This helps make the series more comparable. It also allows us to minimize how much our change point results are influenced by meetings with outlier attendance or laughter.
 
