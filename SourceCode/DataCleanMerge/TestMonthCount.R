@@ -1,7 +1,7 @@
 ################
 # Testimony Sum by Month
 # Christopher Gandrud
-# 21 May 2013
+# 31 May 2013
 ################
 
 # Load libraries
@@ -14,7 +14,7 @@ setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/")
 
 #### ---------------Testimony------------------ #######
 # Import testimony data
-TestimonyData <- read.csv("TestimonyCount.csv")
+TestimonyData <- read.csv("TestimonyRaw.csv")
 TestimonyData$full_date <- as.character(TestimonyData$full_date)
 
 # Declare full_data varaiable to be a dat variable

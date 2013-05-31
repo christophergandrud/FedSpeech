@@ -1,7 +1,7 @@
 ###############
 # Clean Congressional Testimony Laughter Data
 # Christopher Gandrud
-# 29 May 2013
+# 31 May 2013
 ############### 
 
 library(lubridate)
@@ -57,7 +57,7 @@ LDM <- ddply(LDM, .(MonthYear), transform, MembPresMean = mean(MembersPres))
 LDM <- ddply(LDM, .(MonthYear), transform, LaughMean = mean(LaughCount)) 
 
 LDM$Dummy <- 1
-LDM <- ddply(LDM, .(MonthYear), transform, TestCountMonth = sum(Dummy)) 
+LDM <- ddply(LDM, .(MonthYear), transform, HearingCountMonth = sum(Dummy)) 
 
 # Create Month Only data
 LDMonth <- LDM[!duplicated(LDM[, "MonthYear"]), ]
@@ -65,7 +65,7 @@ LDMonth <- LDM[!duplicated(LDM[, "MonthYear"]), ]
 # Clean up
 LDMonth <- LDMonth[, c("MonthYear", "MembPresMedian", 
 			"LaughMedian", "MembPresMean", 
-			"LaughMean", "TestCountMonth")]
+			"LaughMean", "HearingCountMonth")]
 
 #### Excluding Field hearings ####
 LDNoF <- subset(LDM, Field == 0)
@@ -79,7 +79,7 @@ LDNoF <- ddply(LDNoF, .(MonthYear), transform, MembPresMeanNoF = mean(MembersPre
 LDNoF <- ddply(LDNoF, .(MonthYear), transform, LaughMeanNoF = mean(LaughCount)) 
 
 LDNoF$Dummy <- 1
-LDNoF <- ddply(LDNoF, .(MonthYear), transform, TestCountMonthNoF = sum(Dummy)) 
+LDNoF <- ddply(LDNoF, .(MonthYear), transform, HearingCountMonthNoF = sum(Dummy)) 
 
 # Create Month Only data
 LDNoF <- LDNoF[!duplicated(LDNoF[, "MonthYear"]), ]
@@ -87,10 +87,18 @@ LDNoF <- LDNoF[!duplicated(LDNoF[, "MonthYear"]), ]
 # Clean up
 LDNoF <- LDNoF[, c("MonthYear", "MembPresMedianNoF", 
 			"LaughMedianNoF", "MembPresMeanNoF", 
-			"LaughMeanNoF", "TestCountMonthNoF")]
+			"LaughMeanNoF", "HearingCountMonthNoF")]
 
 # Merge no Field with full Field
 LDMonth <- merge(LDMonth, LDNoF, by = "MonthYear")
+
+#### ------------ Merge with Testimony Count ------------- ####
+TestCount <- read.csv("TestimonyPerMonth.csv", stringsAsFactors = FALSE) 
+TestCount <- TestCount[, -1]
+TestCount$MonthYear <- ymd(TestCount$MonthYear)
+
+# Merge with Main Data
+LDMonth <- merge(LDMonth, TestCount, by = "MonthYear", all = TRUE)
 
 #### ------------ Per Quarter ---------------------------------- ####
 # Drop non-fully observed quarters
@@ -104,7 +112,7 @@ LDQt <- ddply(LDQt, .(Quarter), transform, MembPresMedian = median(MembersPres))
 LDQt <- ddply(LDQt, .(Quarter), transform, LaughMedian = median(LaughCount)) 
 
 LDQt$Dummy <- 1
-LDQt <- ddply(LDQt, .(Quarter), transform, TestCountQuarter = sum(Dummy)) 
+LDQt <- ddply(LDQt, .(Quarter), transform, HearingCountQuarter = sum(Dummy)) 
 
 LDQt <- ddply(LDQt, .(Quarter), transform, FieldCountQuarter = sum(Field))
 
@@ -113,7 +121,7 @@ LDQt <- LDQt[!duplicated(LDQt[, "Quarter"]), ]
 
 # Clean up
 LDQt <- LDQt[, c("Quarter", "MembPresMedian", 
-                  "LaughMedian", "TestCountQuarter", "FieldCountQuarter")]
+                  "LaughMedian", "HearingCountQuarter", "FieldCountQuarter")]
 
 #### ------------ Merge Month Data with economic data --------------------- ####
 EconData <- read.csv("FREDEconData.csv")
@@ -127,17 +135,23 @@ EconData <- EconData[year(EconData$MonthYear) >= 1997,]
 # Merge
 CombinedMonth <- merge(LDMonth, EconData, by = "MonthYear", all = TRUE)
 
+# Drop if outside of Full Hearing and Testimony data
+CombinedMonth <- CombinedMonth[c(-1:-5, -196:-200), ]
+
 # Clean combined 
-CombinedMonth$TestCountMonth[is.na(CombinedMonth$TestCountMonth)] <- 0
-CombinedMonth$LaughMedian[is.na(CombinedMonth$LaughMedian)] <- 0
-CombinedMonth$MembPresMedian[is.na(CombinedMonth$MembPresMedian)] <- 0
-CombinedMonth$LaughMean[is.na(CombinedMonth$LaughMean)] <- 0
-CombinedMonth$MembPresMean[is.na(CombinedMonth$MembPresMean)] <- 0
-CombinedMonth$TestCountMonthNoF[is.na(CombinedMonth$TestCountMonthNoF)] <- 0
-CombinedMonth$LaughMedianNoF[is.na(CombinedMonth$LaughMedianNoF)] <- 0
-CombinedMonth$MembPresMedianNoF[is.na(CombinedMonth$MembPresMedianNoF)] <- 0
-CombinedMonth$LaughMeanNoF[is.na(CombinedMonth$LaughMeanNoF)] <- 0
-CombinedMonth$MembPresMeanNoF[is.na(CombinedMonth$MembPresMeanNoF)] <- 0
+attach(CombinedMonth)
+CombinedMonth$HearingCountMonth[is.na(HearingCountMonth)] <- 0
+CombinedMonth$LaughMedian[is.na(LaughMedian)] <- 0
+CombinedMonth$MembPresMedian[is.na(MembPresMedian)] <- 0
+CombinedMonth$LaughMean[is.na(LaughMean)] <- 0
+CombinedMonth$MembPresMean[is.na(MembPresMean)] <- 0
+CombinedMonth$HearingCountMonthNoF[is.na(HearingCountMonthNoF)] <- 0
+CombinedMonth$LaughMedianNoF[is.na(LaughMedianNoF)] <- 0
+CombinedMonth$MembPresMedianNoF[is.na(MembPresMedianNoF)] <- 0
+CombinedMonth$LaughMeanNoF[is.na(LaughMeanNoF)] <- 0
+CombinedMonth$MembPresMeanNoF[is.na(MembPresMeanNoF)] <- 0
+CombinedMonth$MonthTestTotal[is.na(MonthTestTotal)] <- 0
+detach(CombinedMonth)
 
 #### ---- Save ---- ####
 write.csv(CombinedMonth, file = "MainMonth.csv")

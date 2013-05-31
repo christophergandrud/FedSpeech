@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 30 May 2013
+% 31 May 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -125,6 +125,7 @@ e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear",
         sig.lvl = 0.05, R = 799, min.size = 6)
 @
 {\scriptsize{Red horizontal dashed lines signify the estimated change point 95\% significance level from an analysis including all of the variables.\\
+Minimum state width set at 6 months. \\
 The data is aggregated on a monthly basis. Hearings indicates the number of hearings per month. Attendance and Laughter indicate the average congressional member attendance and laughter at the hearings}}
 \end{figure}
 
@@ -144,6 +145,7 @@ e.divGG(data = MainMonth, Vars = EconVars, TimeVar = "MonthYear",
         sig.lvl = 0.05, R = 799, min.size = 16)
 @
 {\scriptsize{Red horizontal dashed lines signify the estimated change point at the 95\% significance level from an analysis including all of the variables.\\
+Minimum state width set at 16 months. \\
 Inflation is the percentage change in the chain-type personal consumption price index compared to the year before. Growth indicates GDP growth from the same quarter the year before. Unemployment is the unemployment rate for the month.}}
 \end{figure}
 
