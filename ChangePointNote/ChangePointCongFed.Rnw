@@ -24,6 +24,7 @@
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage{tikz}
+\usepackage{lscape}
 
 \usepackage{todonotes}
 \usepackage[utf8]{inputenc} 
@@ -46,18 +47,15 @@
 
     MainMonth <- read.csv("MainMonth.csv")
 
-    # Drop if no hearings
-    MainMonth <- MainMonth[-1:-2, ]
-    MainMonth <- MainMonth[-193:-197, ]
-
     # Rename variables so that they are more legible when plotted
     MainMonth <- rename(MainMonth, 
-                    c("TestCountMonthNoF" = "Hearings",
+                    c("HearingCountMonthNoF" = "Hearings",
                      "MembPresMeanNoF" = "Attendance",
                      "LaughMeanNoF" = "Laughter",
                      "U6RATE" = "Unemployment",
                      "GDPC96Percent" = "Growth",
-                     "PCEPIPercent" = "Inflation"))
+                     "PCEPIPercent" = "Inflation",
+                     "MonthTestTotal" = "Testimony"))
 @
 
 %%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -114,20 +112,21 @@ Finally, we examine how many times laughter is recorded in the testimony transcr
 Combining these indicators, we expect that periods of high scrutiny will be characterized by frequent hearings, that are attended by many members, and where there is little or no laughter. Periods of of low scrutiny would have the opposite characteristics.
 
 We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly means. We have removed field hearings from the from the data. These meetings almost always have much lower attendance--fewer than ten members usually attend.
-
+\begin{landscape}
 \begin{figure}
     \caption{Congressional Scrutiny Change Point Analysis}
     \label{fig:BaseCP}
-<<ScrutinyCP, echo=FALSE, out.width='0.8\\linewidth', message=FALSE, warning=FALSE>>=
+<<ScrutinyCP, echo=FALSE, fig.width=10, fig.height=6, message=FALSE, warning=FALSE>>=
 # Scrutiny Change Point
-ScrutVars <- c("Hearings", "Attendance", "Laughter")
+ScrutVars <- c("Hearings", "Testimony", "Attendance", "Laughter")
 e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear", 
         sig.lvl = 0.05, R = 799, min.size = 6)
 @
-{\scriptsize{Red horizontal dashed lines signify the estimated change point 95\% significance level from an analysis including all of the variables.\\
+{\scriptsize{The red horizontal dashed line at September 2008 signifies the estimated change point at the 95\% significance level from an analysis including all of the variables.\\
 Minimum state width set at 6 months. \\
 The data is aggregated on a monthly basis. Hearings indicates the number of hearings per month. Attendance and Laughter indicate the average congressional member attendance and laughter at the hearings}}
 \end{figure}
+\end{landscape}
 
 \subsection{Interpreting the Change Points}
 
