@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 31 May 2013
+% 3 June 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -43,19 +43,16 @@
     source_gist("5675688")
 
     # Set working directory
-    setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data")
+    setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/ChangePointNote/")
 
-    MainMonth <- read.csv("MainMonth.csv")
+    MainMonth <- read.csv("MainHearings.csv")
 
     # Rename variables so that they are more legible when plotted
     MainMonth <- rename(MainMonth, 
-                    c("HearingCountMonthNoF" = "Hearings",
-                     "MembPresMeanNoF" = "Attendance",
-                     "LaughMeanNoF" = "Laughter",
-                     "U6RATE" = "Unemployment",
+                    c("U6RATE" = "Unemployment",
                      "GDPC96Percent" = "Growth",
-                     "PCEPIPercent" = "Inflation",
-                     "MonthTestTotal" = "Testimony"))
+                     "PCEPIPercent" = "Inflation"
+                     ))
 @
 
 %%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,7 +67,7 @@
 %%%%%%% Abstract %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-\noindent\emph{Very Early Working draft. Comments welcome.}\footnote{Thank to you Rebecca Kanter and Brent Ramsey for research assistance.}
+\noindent\emph{Very Early Working draft. Comments welcome.}\footnote{Thank to you Rebecca Kanter, Natalie McClung, and Brent Ramsey for research assistance.}
 
 In this short research note we investigate trends in congressional scrutiny of the US Federal Reserve from mid-1997 through 2012. Though independent, the Federal Reserve is accountable to legislators. The purpose of this note is to develop indicators of high and low scrutiny that can be used in future research to examine how the Fed responds to pressures from legislators. We use change point analysis to estimate periods of high and low scrutiny for 
 
@@ -80,16 +77,16 @@ In this short research note we investigate trends in congressional scrutiny of t
   \item [{\textbf{Keywords:}}] monetary policy, legislative oversight, change point analysis
 \end{description}
 
-Though politically independent, the US Federal Reserve (henceforth Fed) is nontheless subject to scrutiny from the US Congress. This includes both regular hearings, primarily the Fed governor's Semiannual Report to Congress, as well as irregularly to discuss specific issues such as the accounting problems at WorldCom in 2002 and US-EU regulatory dialog in 2004. In this short note we use change point analysis \citep{SenSrivastava1975, EckleyFearnheadKillick2011,Killick2012,Killick2013} to develop indicators of higher and lower levels of congressional scrutiny. Ultimately, we hope to construct indicators that we can use to examine how Fed governors respond to legislative scrutiny by engaging with outside groups. 
+Though politically independent, the US Federal Reserve (henceforth Fed) is nontheless subject to scrutiny from the US Congress. This includes both regular hearings, primarily the Fed governor's Semiannual Report to Congress, as well as irregularly to discuss specific issues such as the accounting problems at WorldCom in 2002 and US-EU regulatory dialog in 2004. In this short note we use change point analysis \citep{SenSrivastava1975, EckleyFearnheadKillick2011,Killick2012, Matteson2012, Killick2013} to develop indicators of higher and lower levels of congressional scrutiny. Ultimately, we hope to construct indicators that we can use to examine how Fed governors respond to legislative scrutiny by engaging with outside groups. 
 
 In this note we first discuss our sample of US Congressional hearings that involve representatives from the Fed. We then give a brief overview of change point analysis and justify why it is a useful tool for determining states of high and low scrutiny. We then present the results of change point analysis for three time-series derived from the Congressional hearings data: the number of hearings, the number of members present at the hearings, and the number of times someone laughs at a hearing. We conduct a corresponding change point analysis on a number of macroeconomic indicators, especially indicators of the Fed's performance--inflation and unemployment--, to help understand what may be influencing changes in scrutiny states.  
 
 
-\section{Congressional Scrutiny of the Fed (1997-2013)}
+\section{Congressional Hearing Transcripts}
 
-We gathered data on congressional hearings--in both the Senate and the House of Representatives--that included the presence of a representative of the Federal Reserve. We had access to the transcripts of all such hearings from 5 March 1997 through 13 December 2012. We gathered all of the hearing transcripts from the US House of Representatives Financial Services Committee's website.\footnote{GET WEBSITE} \todo[inline]{Talk to Kevin}
+We gathered data on congressional hearings--in both the Senate and the House of Representatives--that included the presence of a representative of the Federal Reserve. We aimed to gather (a) all of the transcripts for the hearings where a member Federal Reserve representative gave testimony and (b) all of the transcripts for the hearings of both the US House of Representatives Committee on Financial Services\footnote{From 1995 until 2000 it was known as the Committee on Banking and Financial Services.} and the Senate Committee on Banking, Housing, and Urban Affairs. Both of these committees have the normal responsibility for oversight of the Federal Reserve.
 
-It's important to not that we classified field hearings separately from other hearings. Field hearings are held outside of Washington, D.C. Attendance at these hearings by members of Congress is usually much lower than hearings held at the Capital. We also noted when the hearing discussed the Fed governor's Semiannual Report to Congress. 
+We used the Federal Reserves' website\footnote{See: \url{http://www.federalreserve.gov/newsevents/default.htm}. Accessed Spring 2013.} to find information on all of the hearings where its representatives gave testimony. Currently it gives information on testimony made from 1996 through 2013. Only the prepared hearing statements are available at this website. To gather the full hearing transcripts we relied primarily on the US Government Printing Office (GPO) website.\footnote{See \url{http://www.gpo.gov/fdsys/browse/committeetab.action}. Accessed Spring 2013.} For most committees the GPO website only has full transcripts available from 2001 through 2012. We attempted to fill in missing transcripts with information available on individual committee's websites. Among the two major committees, the House Committee on Financial Services had the most complete set of transcripts available. For full committee hearings, transcripts were available back to 1997.\footnote{See: \url{http://financialservices.house.gov/archives/}. Accessed Spring 2013.} Unfortunately, the Senate Committee on Banking, Housing, and Urban, Affairs archive website\footnote{See: \url{http://www.banking.senate.gov/public/index.cfm?FuseAction=Hearings.Home}. Accessed Spring 2013.} does not contain full hearing transcripts, so we could not include them in our sample. As such for full committee hearings, including Fed testimony and not, we only have a complete corpus for the House Committee on House Financial Services.\footnote{It's important to not that for this corpus we classified field hearings separately from other hearings. Field hearings are held outside of Washington, D.C. Attendance at these hearings by members of Congress is usually much lower than hearings held at the Capital. We also noted when the hearing discussed the Fed governor's Semiannual Report to Congress.}
 
 \section{Methods: Change Point Analysis}
 
@@ -112,21 +109,48 @@ Finally, we examine how many times laughter is recorded in the testimony transcr
 Combining these indicators, we expect that periods of high scrutiny will be characterized by frequent hearings, that are attended by many members, and where there is little or no laughter. Periods of of low scrutiny would have the opposite characteristics.
 
 We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly means. We have removed field hearings from the from the data. These meetings almost always have much lower attendance--fewer than ten members usually attend.
-\begin{landscape}
+
+%%%%%%%%%%%%%%%% No Change Points found for Senate
+%\begin{figure}
+%    \caption{Congressional Scrutiny Change Point Analysis: US Senate}
+%    \label{fig:SenateCP}
+%<<ScrutinySenateCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
+%# Scrutiny Change Point
+%ScrutVarsSenate <- c("SumFedSenate", "FedLaughterSenate")
+%e.divGG(data = MainMonth, Vars = ScrutVarsSenate, TimeVar = "MonthYear", 
+%        sig.lvl = 0.1, R = 999, min.size = 30)
+%@
+%{\scriptsize{The red horizontal dashed line signifies the estimated change point at the 90\% significance level from an analysis including all of the variables.\\
+%The data is aggregated on a monthly basis.}}
+%\end{figure}
+
+
 \begin{figure}
-    \caption{Congressional Scrutiny Change Point Analysis}
-    \label{fig:BaseCP}
-<<ScrutinyCP, echo=FALSE, fig.width=10, fig.height=6, message=FALSE, warning=FALSE>>=
+    \caption{Congressional Scrutiny Change Point Analysis: US House of Representatives}
+    \label{fig:HouseFedCP}
+<<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
 # Scrutiny Change Point
-ScrutVars <- c("Hearings", "Testimony", "Attendance", "Laughter")
-e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 799, min.size = 6)
+ScrutVarsHouse <- c("SumFedHouse", "FedLaughterHouse")
+e.divGG(data = MainMonth, Vars = ScrutVarsHouse, TimeVar = "MonthYear", 
+        sig.lvl = 0.1, R = 999, min.size = 30)
 @
-{\scriptsize{The red horizontal dashed line at September 2008 signifies the estimated change point at the 95\% significance level from an analysis including all of the variables.\\
-Minimum state width set at 6 months. \\
-The data is aggregated on a monthly basis. Hearings indicates the number of hearings per month. Attendance and Laughter indicate the average congressional member attendance and laughter at the hearings}}
+{\scriptsize{The red horizontal dashed line signifies the estimated change point at the 90\% significance level from an analysis including all of the variables.\\
+The data is aggregated on a monthly basis with Laughter as the monthly mean.}}
 \end{figure}
-\end{landscape}
+
+
+\begin{figure}
+    \caption{Congressional Scrutiny Change Point Analysis: US House Financial Services Committee with No Fed Testimony}
+    \label{fig:BaseNonFedCP}
+<<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
+# Scrutiny Change Point
+ScrutVars <- c("SumNonFed", "NonFedLaughter")
+e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 999, min.size = 30)
+@
+{\scriptsize{The red horizontal dashed line signifies the estimated change point at the 90\% significance level from an analysis including all of the variables.\\
+The data is aggregated on a monthly basis with Laughter as the monthly mean.}}
+\end{figure}
 
 \subsection{Interpreting the Change Points}
 
@@ -141,7 +165,7 @@ The change point analysis by itself only estimates time periods that are differe
 # Full
 EconVars <- c("Inflation", "Unemployment", "Growth")
 e.divGG(data = MainMonth, Vars = EconVars, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 799, min.size = 16)
+        sig.lvl = 0.05, R = 999, min.size = 16)
 @
 {\scriptsize{Red horizontal dashed lines signify the estimated change point at the 95\% significance level from an analysis including all of the variables.\\
 Minimum state width set at 16 months. \\
