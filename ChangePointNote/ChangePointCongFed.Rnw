@@ -57,7 +57,7 @@
 @
 
 %%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{An Exploration of Congressional Scrutiny of the US Federal Reserve}
+\title{A Change Point Exploration of Congressional Scrutiny of the US Federal Reserve}
 
 \author{Kevin Young \\ {\emph{University of Massachusetts, Amherst}} \\ \& \\ Christopher Gandrud \\ {\emph{Hertie School of Governance}}}
 
@@ -103,7 +103,7 @@ Matteson and James' \citeyearpar{Matteson2012,James2013} energy divisive hierarc
 
 \paragraph{Minimum Change Point Cluster Size}
 
-One potential disadvantage of Matteson and James' change point method is that the minimum cluster size must be set \emph{a priori}. 
+One potential disadvantage of Matteson and James' change point method is that the minimum cluster size must be set \emph{a priori} \citeyearpar[11]{Matteson2012}. In other words, we need to tell the algorithm the minimum number of time points that are between the change points. The minimum size is generally needs to be larger if the distance between the probability distributions is small. We had no reason to impose a particular minimum cluster size on the model so we started from a size of 6 months and moved upward until we found change points significant at least the 90\% level. 
 
 \section{Scrutiny States}
 
@@ -122,7 +122,7 @@ We focus on the number of days hearings were held per month.\footnote{Some heari
 \begin{figure}
     \caption{Congressional Scrutiny of the Federal Reserve Change Point Analysis}
     \label{fig:HouseFedCP}
-<<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.9\\linewidth'>>=
+<<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
 # Scrutiny Change Point
 ScrutVarsHouse <- c("SumFedHouse", "SumFedSenate")
 e.divGG(data = MainMonth, Vars = ScrutVarsHouse, TimeVar = "MonthYear", 
@@ -136,7 +136,7 @@ The data is aggregated on a monthly basis, i.e. observations represent monthly h
 \begin{figure}
     \caption{Congressional Scrutiny Change Point Analysis: US House Financial Services Committee with No Federal Reserve Testimony}
     \label{fig:BaseNonFedCP}
-<<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, fig.height=2, fig.width=7>>=
+<<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, fig.height=2, out.width='0.8\\linewidth'>>=
 # Scrutiny Change Point
 ScrutVars <- c("SumNonFed")
 e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear", 
@@ -152,7 +152,11 @@ The change point analysis by itself only estimates time periods that are differe
 
 \section{Scrutiny States Compared to Economic States}
 
-We conducted a similar change point analysis with key economic indicators that may influence Congress to increase its scrutiny of the Federal Reserve. All of the data was gathered from the Federal Reserve Bank's Economic Data (FRED) database.\footnote{See: \url{http://research.stlouisfed.org/fred2/}. Accessed Spring 2013.} The Fed's statutory obligations--as specified by the 1913 Federal Reserve Act--are to promote maximum employment and stable prices. Therefore we included measures of inflation\footnote{Specifically, the year on year percent change in the seasonally adjusted personal consumption expenditures chain-type price index. FRED symbol: PCEPI.} and the unemployment rate.\footnote{FRED symbol: U6RATE.} We also included a measure of general economic growth: the year on year percentage change of the gross domestic product per capita.\footnote{FRED symbol: GDPC96.}
+We conducted a similar change point analysis with key economic indicators that may influence Congress to increase its scrutiny of the Federal Reserve. All of the data was gathered from the Federal Reserve Bank's Economic Data (FRED) database.\footnote{See: \url{http://research.stlouisfed.org/fred2/}. Accessed Spring 2013.} The Fed's statutory obligations--as specified by the 1913 Federal Reserve Act--are to promote maximum employment and stable prices. Therefore we included measures of inflation\footnote{Specifically, the year on year percent change in the seasonally adjusted personal consumption expenditures chain-type price index. FRED symbol: PCEPI.} and the unemployment rate.\footnote{FRED symbol: U6RATE.} We also included a measure of general economic growth: the year on year percentage change of the gross domestic product per capita.\footnote{FRED symbol: GDPC96.} 
+
+The results of the multivariate economic indicator change point analysis are in Figure \ref{fig:FullEconCP}. We estimate that there are seven states in the economic data from 2001 through 2012.\footnote{These dates were chosen to match the available Congressional hearing data.} A number of the states correspond to relatively minor changes in the economic indicators. For example, the second state from late 2003 through late 2005 corresponds to a relatively minor increase in inflation and a similarly gradual fall in unemployment. Other states, primarily the fourth and fifth correspond to fairly dramatic changes. These cover the Global Financial Crisis. 
+
+When we compare the estimated scrutiny states to the economic states we see that the high scrutiny states between late 2007 and early 2010 closely corresponds to two economic states with the most severe changes--both the 2007/08 fall and the subsequent rise--in the observation period. There are two recessions in our sample. The first was in 2001 following the Dot Com crash and the second ran from late 2007 until mid-2009 and resulted from the Global Financial Crisis. As we can see in the Figure \ref{fig:FullEconCP} the first recession was relatively mild in terms of changes in inflation, unemployment and growth compared to the second. This indicates that Congress may only increase its scrutiny of the Fed and other economic policy bureaucrats when the economy is under extreme stress. Using McCubbins and Schwartz's \citeyearpar{Mccubbins1984} terminology, Congress increases its scrutiny when the fire alarm is ringing very loudly.
 
 \begin{figure}
     \caption{Economic Indicator Change Point Analysis}
@@ -161,7 +165,7 @@ We conducted a similar change point analysis with key economic indicators that m
 # Full
 EconVars <- c("Inflation", "Unemployment", "Growth")
 e.divGG(data = MainMonth, Vars = EconVars, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 999, min.size = 16)
+        sig.lvl = 0.05, R = 999, min.size = 6)
 @
 {\scriptsize{Red horizontal dashed lines signify the estimated change point at the 95\% significance level from an analysis including all of the variables.\\
 Minimum state width set at 16 months. \\
