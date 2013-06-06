@@ -1,7 +1,7 @@
 ##############
 # Fed Change Point Play 3
 # Christopher Gandrud
-# 3 June 2013
+# 6 June 2013
 ##############
 
 library(lubridate)
@@ -20,19 +20,35 @@ setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/")
 MainData <- read.csv("TestFullPlay.csv", stringsAsFactors = FALSE)
 
 MainData$name[MainData$name == "man, Roger W. Ferguson Jr."] <- "Roger W. Ferguson Jr."
-#MainData <- subset(MainData, name != "Roger W. Ferguson Jr." | is.na(name))
-MainData <- subset(MainData, laughter < 25 | is.na(laughter))
+# MainData <- subset(MainData, name != "Roger W. Ferguson Jr." | is.na(name))
+# MainData <- subset(MainData, laughter < 25 | is.na(laughter))
 
 # Drop incomplete data
 SubMain <- MainData[, c("Date", "NonFedFinanceCom", "CleanFullCommitteeName1", 
-                        "legislature", "laughter", "Field")]
+                        "CleanFullCommitteeName2", "legislature", "laughter",
+                        "attendance", "Field")]
+SubMain$Date <- dmy(SubMain$Date)
+SubMain <- SubMain[order(SubMain$Date),]
 SubMain <- SubMain[year(SubMain$Date) > 2000, ]
 
 # Create Laughter variables for Full Finance and Fed Testimony
-SubMain$Date <- ymd(SubMain$Date)
 SubMain$MonthYear <- floor_date(SubMain$Date, "month")
 
 SubMain <- DropNA(SubMain, "laughter")
+
+SubMain$Field[is.na(SubMain$Field)] <- 0
+
+# NAs for subcommittes that are missing
+SubMain$CleanFullCommitteeName2[SubMain$CleanFullCommitteeName2 == ""] <- NA
+
+# Keep only full HFSC
+SubMainHouse <- subset(SubMain, 
+                       CleanFullCommitteeName1 == "Committee on Financial Services"
+                       & is.na(CleanFullCommitteeName2))
+
+# Numeric Attendance #### 
+SubMain$attendance <- as.numeric(SubMain$attendance)
+SubMain <- subset(SubMain, !is.na(attendance))
 
 # Hearings count filler
 SubMain$Any <- 1
@@ -48,22 +64,23 @@ MonthLaughter <- function(FedorNot, NewSumName, NewMeanName, Legislature = NULL)
   }
   SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempSum = sum(Any))
   SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMean = mean(laughter))
+##
+  SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMeanAttend = mean(attendance, an.rm = TRUE))
+##  
   SubTemp <- SubTemp[!duplicated(SubTemp[, "MonthYear"]), ]
-  SubTemp <- SubTemp[, c("MonthYear", "TempSum", "TempMean")]
-  names(SubTemp) <- c("MonthYear", NewSumName,  NewMeanName)
+  SubTemp <- SubTemp[, c("MonthYear", "TempSum", "TempMean", "TempMeanAttend")]
+  names(SubTemp) <- c("MonthYear", NewSumName,  NewMeanName, "Attend")
   SubTemp
 }
 
 ## Non Fed
 SubNonFed <- MonthLaughter(1, NewSumName = "SumNonFed", NewMeanName = "NonFedLaughter") 
-
+SubNonFed <- rename(SubNonFed, c("Attend" = "NonFedAttend"))
 ## Fed 
 SubFedHouse <- MonthLaughter(FedorNot = 0, NewSumName = "SumFedHouse", 
-                             NewMeanName = "FedLaughterHouse", Legislature = "House")
+                        NewMeanName = "FedLaughterHouse", Legislature = "House")
 
-SubFedSenate <- MonthLaughter(FedorNot = 0, NewSumName = "SumFedSenate", 
-                              NewMeanName = "FedLaughterSenate", Legislature = "Senate")
-
+SubFedHouse <- rename(SubFedHouse, c("Attend" = "FedAttend"))
 
 #### ---- Merge in Econ Vars ---- ####
 EconData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.csv")
@@ -76,30 +93,27 @@ EconData <- EconData[year(EconData$MonthYear) > 2000,]
 
 # Merge
 CombNonFed <- merge(SubNonFed, EconData, by = "MonthYear", all = TRUE)
-CombNonFed <- CombNonFed[, c("MonthYear", "SumNonFed", "NonFedLaughter")]
+CombNonFed <- CombNonFed[, c("MonthYear", "SumNonFed", "NonFedLaughter", "NonFedAttend")]
 CombFedHouse <- merge(SubFedHouse, EconData, by = "MonthYear", all = TRUE)
-CombFedHouse <- CombFedHouse[, c("MonthYear", "SumFedHouse", "FedLaughterHouse")]
-CombFedSenate <- merge(SubFedSenate, EconData, by = "MonthYear", all = TRUE)
 
-Combined <- merge(CombNonFed, CombFedSenate, by = "MonthYear")
-Combined <- merge(Combined, CombFedHouse, by = "MonthYear")
-
+Combined <- merge(CombNonFed, CombFedHouse, by = "MonthYear")
 
 attach(Combined)
 Combined$NonFedLaughter[is.na(NonFedLaughter)] <- 0
 Combined$FedLaughterHouse[is.na(FedLaughterHouse)] <- 0
-Combined$FedLaughterSenate[is.na(FedLaughterSenate)] <- 0
 Combined$SumNonFed[is.na(SumNonFed)] <- 0
 Combined$SumFedHouse[is.na(SumFedHouse)] <- 0
-Combined$SumFedSenate[is.na(SumFedSenate)] <- 0
+Combined$FedAttend[is.na(FedAttend)] <- 0
+Combined$NonFedAttend[is.na(NonFedAttend)] <- 0
 detach(Combined)
 
-# write.csv(Combined, file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/ChangePointNote/MainHearings.csv")
+# write.csv(Combined, file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/ChangePointNote/HouseFullHearings.csv")
 
 #### ------- Play Change Point ----- ####
-e.divGG(data = Combined, Vars = c("SumFedHouse", "SumFedSenate", "FedLaughterHouse", "FedLaughterSenate"), TimeVar = "MonthYear", 
-        sig.lvl = 0.1, R = 999, min.size = 48)
+ScrutVars <- c("SumFedHouse", "FedAttend", "FedLaughterHouse")
+e.divGG(data = Combined, Vars = ScrutVars, TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 1999, min.size = 24)
 
-e.divGG(data = Combined, Vars = c("NonFedLaughter", "SumNonFed"),
+e.divGG(data = Combined, Vars = c("SumNonFed", "NonFedAttend", "NonFedLaughter"),
         TimeVar = "MonthYear", 
-        sig.lvl = 0.1, R = 999, min.size = 6)
+        sig.lvl = 0.05, R = 999, min.size = 24)
