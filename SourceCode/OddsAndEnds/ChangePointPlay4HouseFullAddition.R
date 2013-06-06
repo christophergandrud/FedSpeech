@@ -1,5 +1,5 @@
 ##############
-# Fed Change Point Play 3
+# Fed Change Point Play 4: House
 # Christopher Gandrud
 # 6 June 2013
 ##############
@@ -41,10 +41,10 @@ SubMain$Field[is.na(SubMain$Field)] <- 0
 SubMain$CleanFullCommitteeName2[SubMain$CleanFullCommitteeName2 == ""] <- NA
 
 # Keep only full HFSC
-SubMainHouse <- subset(SubMain, 
+SubMain <- subset(SubMain, 
                        CleanFullCommitteeName1 == "Committee on Financial Services" |
                          CleanFullCommitteeName1 == "Committee on Banking and Financial Services")
-SubMainHouse <- subset(SubMainHouse, is.na(CleanFullCommitteeName2))
+SubMain <- subset(SubMain, is.na(CleanFullCommitteeName2))
 
 # Numeric Attendance #### 
 SubMain$attendance <- as.numeric(SubMain$attendance)
