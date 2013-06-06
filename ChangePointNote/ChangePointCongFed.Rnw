@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 5 June 2013
+% 6 June 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -47,9 +47,15 @@
     setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/ChangePointNote/")
 
     MainMonth <- read.csv("MainHearings.csv")
+    HouseMonth <- read.csv("HouseFullHearings.csv")
 
     # Rename variables so that they are more legible when plotted
     MainMonth <- rename(MainMonth, 
+                    c("U6RATE" = "Unemployment",
+                     "GDPC96Percent" = "Growth",
+                     "PCEPIPercent" = "Inflation"
+                     ))
+    HouseMonth <- rename(HouseMonth, 
                     c("U6RATE" = "Unemployment",
                      "GDPC96Percent" = "Growth",
                      "PCEPIPercent" = "Inflation"
@@ -113,37 +119,38 @@ One of our key scrutiny indicators is the number of hearings that Fed representa
 
 We also look at congress members' attendance at the hearings. Higher attendance implies that the hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Again, there may be high attendance and high salience for scrutiny not aimed directly at the Fed. Unfortunately attendance reporting was inconsistent across the committees. The HCFS had complete data on attendance. The SBHUA Committee did not consistently report attendance.
 
-Finally, we initially examined how many times instances of laughter was recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and congress members who are less critical of the Fed. However, we have excluded laughter from our final analysis because the data was being driven by specific individuals at the Fed, primarily Federal Reserve Vice Chairman Roger W. Ferguson Jr. He regularly gave testimony before late 2003 when there were a number of high laughter counts. When he became the chairman of the Committee on the Global Financial System and Financial Stability Forum. Both are based in Basel, Switzerland and Ferguson did not give any Congressional testimony from that point. Laughter counts declined substantially as soon as he stopped giving testimony. Because the laughter variable is so susceptible to individual effects, we did not include it in our change point analysis.
+Finally, we examine how many times instances of laughter were recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and Congress members who are less critical of the Fed.
 
-Combining these indicators, we expect that periods of high scrutiny will be characterized by frequent hearings, that are attended by many members, and where there is little or no laughter. Periods of of low scrutiny would have the opposite characteristics.
-
-We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly means. We have removed field hearings from the from the data. These meetings almost always have much lower attendance--fewer than ten members usually attend.
+Combining these indicators, we expect that periods of high scrutiny will be characterized by frequent hearings, that are attended by many members, and where there is little or no laughter. Periods of of low scrutiny would have the opposite characteristics. We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly means. We have removed field hearings from the from the data. These meetings almost always have much lower attendance--fewer than ten members usually attend. The Fed also almost never gives testimony at field hearings.
 
 \begin{figure}
-    \caption{Congressional Scrutiny of the Federal Reserve Change Point Analysis}
+    \caption{Congressional Scrutiny of the Federal Reserve Change Point Analysis: Full US House Financial Services Committee \emph{with} Federal Reserve Testimony}
     \label{fig:HouseFedCP}
 <<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
 # Scrutiny Change Point
-ScrutVarsHouse <- c("SumFedHouse", "SumFedSenate")
-e.divGG(data = MainMonth, Vars = ScrutVarsHouse, TimeVar = "MonthYear", 
-        sig.lvl = 0.1, R = 1999, min.size = 30)
+ScrutVarsHouse <- c("SumFedHouse", "FedAttend", "FedLaughterHouse")
+e.divGG(data = HouseMonth, Vars = ScrutVarsHouse, TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 1999, min.size = 24)
 @
-{\scriptsize{The red horizontal dashed line signifies the estimated change point at the 90\% significance level from an analysis including both of the variables.\\
-The data is aggregated on a monthly basis, i.e. observations represent monthly hearing counts.}}
+{\scriptsize{The red horizontal dashed line signifies the estimated change points at the 95\% significance level from an analysis including both of the variables.\\
+Minimum state width set at 24 months. \\
+The data is aggregated on a monthly basis, i.e. observations represent monthly hearing counts or averages.}}
 \end{figure}
 
 
 \begin{figure}
-    \caption{Congressional Scrutiny Change Point Analysis: US House Financial Services Committee with No Federal Reserve Testimony}
+    \caption{Congressional Scrutiny Change Point Analysis: US House Financial Services Committee \emph{without} Federal Reserve Testimony}
     \label{fig:BaseNonFedCP}
-<<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, fig.height=2, out.width='0.8\\linewidth'>>=
+<<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
 # Scrutiny Change Point
-ScrutVars <- c("SumNonFed")
-e.divGG(data = MainMonth, Vars = ScrutVars, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 999, min.size = 30)
+NonFedVars <- c("SumNonFed", "NonFedAttend", "NonFedLaughter")
+e.divGG(data = HouseMonth, Vars = NonFedVars,
+        TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 1999, min.size = 24)
 @
-{\scriptsize{The red horizontal dashed line signifies the estimated change point at the 95\% significance level.\\
-The data is aggregated on a monthly basis, i.e. observations represent monthly hearing counts.}}
+{\scriptsize{The red horizontal dashed line signifies the estimated change points at the 95\% significance level.\\
+Minimum state width set at 24 months. \\
+The data is aggregated on a monthly basis, i.e. observations represent monthly hearing counts or averages.}}
 \end{figure}
 
 \subsection{Interpreting the Change Points}
@@ -154,7 +161,7 @@ The change point analysis by itself only estimates time periods that are differe
 
 We conducted a similar change point analysis with key economic indicators that may influence Congress to increase its scrutiny of the Federal Reserve. All of the data was gathered from the Federal Reserve Bank's Economic Data (FRED) database.\footnote{See: \url{http://research.stlouisfed.org/fred2/}. Accessed Spring 2013.} The Fed's statutory obligations--as specified by the 1913 Federal Reserve Act--are to promote maximum employment and stable prices. Therefore we included measures of inflation\footnote{Specifically, the year on year percent change in the seasonally adjusted personal consumption expenditures chain-type price index. FRED symbol: PCEPI.} and the unemployment rate.\footnote{FRED symbol: U6RATE.} We also included a measure of general economic growth: the year on year percentage change of the gross domestic product per capita.\footnote{FRED symbol: GDPC96.} 
 
-The results of the multivariate economic indicator change point analysis are in Figure \ref{fig:FullEconCP}. We estimate that there are seven states in the economic data from 2001 through 2012.\footnote{These dates were chosen to match the available Congressional hearing data.} A number of the states correspond to relatively minor changes in the economic indicators. For example, the second state from late 2003 through late 2005 corresponds to a relatively minor increase in inflation and a similarly gradual fall in unemployment. Other states, primarily the fourth and fifth correspond to fairly dramatic changes. These cover the Global Financial Crisis. 
+The results of the multivariate economic indicator change point analysis are in Figure \ref{fig:FullEconCP}. We estimate that there are eleven states in the economic data from 2001 through 2012.\footnote{These dates were chosen to match the available Congressional hearing data.} A number of the states correspond to relatively minor changes in the economic indicators. For example, the second state from late 2003 through late 2005 corresponds to a relatively minor increase in inflation and a similarly gradual fall in unemployment. Other states, primarily the fourth and fifth correspond to fairly dramatic changes. These cover the Global Financial Crisis. 
 
 When we compare the estimated scrutiny states to the economic states we see that the high scrutiny states between late 2007 and early 2010 closely corresponds to two economic states with the most severe changes--both the 2007/08 fall and the subsequent rise--in the observation period. There are two recessions in our sample. The first was in 2001 following the Dot Com crash and the second ran from late 2007 until mid-2009 and resulted from the Global Financial Crisis. As we can see in the Figure \ref{fig:FullEconCP} the first recession was relatively mild in terms of changes in inflation, unemployment and growth compared to the second. This indicates that Congress may only increase its scrutiny of the Fed and other economic policy bureaucrats when the economy is under extreme stress. Using McCubbins and Schwartz's \citeyearpar{Mccubbins1984} terminology, Congress increases its scrutiny when the fire alarm is ringing very loudly.
 
@@ -165,10 +172,10 @@ When we compare the estimated scrutiny states to the economic states we see that
 # Full
 EconVars <- c("Inflation", "Unemployment", "Growth")
 e.divGG(data = MainMonth, Vars = EconVars, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 999, min.size = 6)
+        sig.lvl = 0.05, R = 999, min.size = 12)
 @
 {\scriptsize{Red horizontal dashed lines signify the estimated change point at the 95\% significance level from an analysis including all of the variables.\\
-Minimum state width set at 16 months. \\
+Minimum state width set at 12 months. \\
 Inflation is the percentage change in the chain-type personal consumption price index compared to the year before. Growth indicates GDP growth from the same quarter the year before. Unemployment is the unemployment rate for the month.}}
 \end{figure}
 

@@ -29,7 +29,6 @@ SubMain <- MainData[, c("Date", "NonFedFinanceCom", "CleanFullCommitteeName1",
                         "attendance", "Field")]
 SubMain$Date <- dmy(SubMain$Date)
 SubMain <- SubMain[order(SubMain$Date),]
-SubMain <- SubMain[year(SubMain$Date) > 2000, ]
 
 # Create Laughter variables for Full Finance and Fed Testimony
 SubMain$MonthYear <- floor_date(SubMain$Date, "month")
@@ -43,8 +42,9 @@ SubMain$CleanFullCommitteeName2[SubMain$CleanFullCommitteeName2 == ""] <- NA
 
 # Keep only full HFSC
 SubMainHouse <- subset(SubMain, 
-                       CleanFullCommitteeName1 == "Committee on Financial Services"
-                       & is.na(CleanFullCommitteeName2))
+                       CleanFullCommitteeName1 == "Committee on Financial Services" |
+                         CleanFullCommitteeName1 == "Committee on Banking and Financial Services")
+SubMainHouse <- subset(SubMainHouse, is.na(CleanFullCommitteeName2))
 
 # Numeric Attendance #### 
 SubMain$attendance <- as.numeric(SubMain$attendance)
@@ -89,7 +89,8 @@ EconData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.c
 EconData <- EconData[, -1]
 EconData <- rename(EconData, c("DateField" = "MonthYear"))
 EconData$MonthYear <- ymd(as.character(EconData$MonthYear))
-EconData <- EconData[year(EconData$MonthYear) > 2000,]
+EconData <- EconData[year(EconData$MonthYear) >= 1997, ]
+EconData <- EconData[-1:-4, ]
 
 # Merge
 CombNonFed <- merge(SubNonFed, EconData, by = "MonthYear", all = TRUE)
@@ -114,6 +115,7 @@ ScrutVars <- c("SumFedHouse", "FedAttend", "FedLaughterHouse")
 e.divGG(data = Combined, Vars = ScrutVars, TimeVar = "MonthYear", 
         sig.lvl = 0.05, R = 1999, min.size = 24)
 
-e.divGG(data = Combined, Vars = c("SumNonFed", "NonFedAttend", "NonFedLaughter"),
+NonFedVars <- c("SumNonFed", "NonFedAttend", "NonFedLaughter")
+e.divGG(data = Combined, Vars = NonFedVars,
         TimeVar = "MonthYear", 
         sig.lvl = 0.05, R = 999, min.size = 24)
