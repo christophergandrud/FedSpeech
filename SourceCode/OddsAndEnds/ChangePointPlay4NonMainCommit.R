@@ -1,5 +1,5 @@
 ##############
-# Fed Change Point Play 4: Senate
+# Fed Change Point Play 4: Non-Main Committees
 # Christopher Gandrud
 # 7 June 2013
 ##############
@@ -32,38 +32,45 @@ SubMain <- SubMain[order(SubMain$Date),]
 SubMain$MonthYear <- floor_date(SubMain$Date, "month")
 
 SubMain <- DropNA(SubMain, "laughter")
+SubMain <- DropNA(SubMain, "attendance")
 
-# NAs for subcommittes that are missing
+
 attach(SubMain)
-  SubMain$CleanFullCommitteeName2[CleanFullCommitteeName2 == ""] <- NA
-  SubMain$CleanFullCommitteeName2[CleanFullCommitteeName2 == "NA"] <- NA
+# NAs for subcommittes that are missing
+SubMain$CleanFullCommitteeName2[CleanFullCommitteeName2 == ""] <- NA
+SubMain$CleanFullCommitteeName2[CleanFullCommitteeName2 == "NA"] <- NA
+# Var for non full main committees
+SubMain$Main <- 0
+SubMain$Main[CleanFullCommitteeName1 == "Committee on Banking, Housing, and Urban Affairs" & is.na(CleanFullCommitteeName2)] <- 1
+SubMain$Main[CleanFullCommitteeName1 == "Committee on Financial Services" & is.na(CleanFullCommitteeName2)] <- 1
+SubMain$Main[CleanFullCommitteeName1 == "Committee on Banking and Financial Services" & is.na(CleanFullCommitteeName2)] <- 1
+SubMain$Main[CleanFullCommitteeName1 == "Committee on Banking and Financial Services" & is.na(CleanFullCommitteeName2)] <- 1
 detach(SubMain)
 
-# Keep only full Senate Banking Committee
-SubMain <- subset(SubMain, 
-                       CleanFullCommitteeName1 == "Committee on Banking, Housing, and Urban Affairs")
-
-SubMain <- subset(SubMain, is.na(CleanFullCommitteeName2))
+# Drop if a main committee hearing
+SubMain <- subset(SubMain, Main == 0)
 
 # Hearings count filler
 SubMain$Any <- 1
 
 # Sub Counts
 MonthLaughter <- function(NewSumName, NewMeanName, Legislature = NULL){
+  SubTemp <- SubMain
   if (!is.null(Legislature)){
     SubTemp <- subset(SubMain, legislature == Legislature)
   }
   SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempSum = sum(Any))
   SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMean = mean(laughter)) 
+  SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMeanAttend = mean(attendance, na.rm = TRUE))
   SubTemp <- SubTemp[!duplicated(SubTemp[, "MonthYear"]), ]
-  SubTemp <- SubTemp[, c("MonthYear", "TempSum", "TempMean")]
-  names(SubTemp) <- c("MonthYear", NewSumName,  NewMeanName)
+  SubTemp <- SubTemp[, c("MonthYear", "TempSum", "TempMean", "TempMeanAttend")]
+  names(SubTemp) <- c("MonthYear", NewSumName,  NewMeanName, "Attend")
   SubTemp
 }
 
 ## Fed 
-SubFedSenate <- MonthLaughter(NewSumName = "SumFedSenate", 
-                        NewMeanName = "FedLaughterSenate", Legislature = "Senate")
+SubFedNonMain <- MonthLaughter(NewSumName = "SumFedNonMain", 
+                        NewMeanName = "FedLaughterNonMain")
 
 #### ---- Merge in Econ Vars ---- ####
 EconData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.csv")
@@ -75,16 +82,17 @@ EconData$MonthYear <- ymd(as.character(EconData$MonthYear))
 EconData <- EconData[year(EconData$MonthYear) > 2000, ]
 
 # Merge
-Combined <- merge(SubFedSenate, EconData, by = "MonthYear", all = TRUE)
+Combined <- merge(SubFedNonMain, EconData, by = "MonthYear", all = TRUE)
 
 attach(Combined)
-  Combined$FedLaughterSenate[is.na(FedLaughterSenate)] <- 0
-  Combined$SumFedSenate[is.na(SumFedSenate)] <- 0
+Combined$FedLaughterNonMain[is.na(FedLaughterNonMain)] <- 0
+Combined$SumFedNonMain[is.na(Attend)] <- 0
+Combined$SumFedNonMain[is.na(SumFedNonMain)] <- 0
 detach(Combined)
 
-#write.csv(Combined, file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/ChangePointNote/SenateFullHearings.csv")
+#write.csv(Combined, file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/ChangePointNote/NonMainFullHearings.csv")
 
 #### ------- Play Change Point ----- ####
-ScrutVars <- c("SumFedSenate", "FedLaughterSenate")
+ScrutVars <- c("SumFedNonMain", "Attend", "FedLaughterNonMain")
 e.divGG(data = Combined, Vars = ScrutVars, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 1999, min.size = 24)
+        sig.lvl = 0.1, R = 1999, min.size = 30)
