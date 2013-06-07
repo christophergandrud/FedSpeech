@@ -47,8 +47,6 @@ Connected$Match.FedSpeech[is.na(Connected$Match.FedSpeech)] <- 0
 Connected$EndDate[is.na(Connected$EndDate)] <- 2013
 Connected$FedEnd[is.na(Connected$FedEnd)] <- 2013
 Connected <- subset(Connected, FedStart >= 1997)
-# Connected <- subset(Connected, EndDate < FedStart)
-
 
 # Keep min (max) StartDate, EndDate, FedStart and FedEnd 
 MinMaxTies <- merge(Connected, Connected, by = c("Organisation", "Indv"))
@@ -160,35 +158,40 @@ rm(list = CleanOut)
 
 library(igraph)
 
+YearsList <- 1997:2012
+for (i in YearsList){
+  # Subset the Data by year
+  YearlyTies <- subset(FullTies, Year == i)
 
-millennium2<-subset(FullTies, Year==2000)
-# write.csv(millennium2, file = "BD 2000.csv")
+  Var <- c("Organisation", "Indv", "YearsExp")
+  foredgelist <- YearlyTies[, Var]
+   
+  # renaming the variables so they can be used in igraph
 
-varsforedgelist<- c("Organisation", "Indv", "YearsExp")
-foredgelist <- millennium2[, varsforedgelist]
- 
+  names(foredgelist) <- c("sender", "receiver", "width")
 
-### I need to reorder this so that the SENDER is a firm, and the RECEIVER is an individual within the Fed....
+  # transforming the edgelist into useable format for igraph
 
+  g1<- graph.data.frame(foredgelist, directed = TRUE)
+  #Edges <- V(g1)$name
+  #colnames(Edges) <- c('sender','receiver', 'width')
+  E(g1)$width
+  
+  # this is a package that sets the default colour and default transparency...can come in handy later
+  colvec <- rep(rgb(60,1,1, 20, names = NULL, 
+                maxColorValue = 255), length(V(g1)$name))  
 
-# renaming the variables so they can be used in igraph
-
-names(foredgelist) <- c("sender", "receiver", "width")
-
-# transforming the edgelist into useable format for igraph
-
-g1<- graph.data.frame(foredgelist,directed=TRUE)
-Edges <- V(g1)$name
-colnames(Edges) <- c('sender','receiver', 'width')
-E(g1)$width
-
-# this is a package that sets the default colour and default transparency...can come in handy later
-colvec<-rep(rgb(60,1,1, 20, names=NULL, maxColorValue=255), length(V(g1)$name))  
-
-# this plots the network graphic
-plot(g1, layout=layout.kamada.kawai, vertex.size=4,  edge.width=E(g1)$width*.1, edge.arrow.size=0, edge.color="red", vertex.color=colvec,vertex.label=NA, vertex.label.color="black", vertex.label.family="sans", vertex.label.cex=1, vertex.label.degree=0)
+  # this plots the network graphic
+  plot(g1, layout=layout.kamada.kawai, vertex.size=4,  
+    edge.width=E(g1)$width*.1, edge.arrow.size=0, 
+    edge.color="red", vertex.color = colvec, vertex.label = NA, 
+    vertex.label.color="black", vertex.label.family="sans", 
+    vertex.label.cex=1, vertex.label.degree = 0,
+    main = i)
+}
 
 
+#### ------------ Kevin, I haven't touched anything after this point ------- ###
 # this TRIES TO limit the number of isolates
 #####But I still have a problem with getting rid of isolate vertices....
 #g3 <- delete.vertices(g1, which(degree(g1) < 5))
