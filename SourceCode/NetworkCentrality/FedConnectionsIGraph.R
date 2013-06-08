@@ -1,7 +1,7 @@
 ##############
 # Ties cumulative sum creation
 # Christopher Gandrud & Kevin Young
-# 7 June 2013
+# 8 June 2013
 ##############
 
 # Kevin
@@ -13,6 +13,7 @@
 library(stringr)
 library(plyr)
 library(data.table)
+library(DataCombine)
 
 # Set working directory
 setwd("~/Dropbox/Fed Hearings")
@@ -36,7 +37,7 @@ setwd("~/Dropbox/Fed Hearings")
 
 # Add in Connected Data 
 ## This data contains a variable (Match.FedSpeech) that records if the Fed gave a speech to the organization
-Connected <- read.csv("~/Dropbox/Fed Hearings/SubTiesToCode.csv", 
+Connected <- read.csv("SubTiesToCode.csv", 
                       stringsAsFactors = FALSE)
 
 # Minor clearn
@@ -84,12 +85,12 @@ MinMaxTies <- MinMaxDates("FedStart", MM = "min")
 MinMaxTies <- MinMaxDates("FedEnd", MM = "max")
 
 # Drop duplicated and redundant
-MinMaxNoDups <- MinMaxTies[!duplicated(MinMaxTies$Organisation,
-                                       MinMaxTies$Indv,
-                                       MinMaxTies$StartDate,
-                                       MinMaxTies$EndDate,
-                                       MinMaxTies$FedStart,
-                                       MinMaxTies$FedEnd,),]
+MinMaxNoDups <- MinMaxTies[!duplicated(MinMaxTies[, c("Organisation",
+                                       "Indv",
+                                       "StartDate",
+                                       "EndDate",
+                                       "FedStart",
+                                       "FedEnd")]), ]
 MinMaxNoDups <- MinMaxNoDups[order(MinMaxNoDups$Indv,
                                   MinMaxNoDups$Organisation),]
 
@@ -124,6 +125,18 @@ OrgIndvNamesDF <- data.frame(DummyID, OrgIndvNames)
 
 FullYears <- merge(OrgIndvNamesDF, FullYears, by = "DummyID", all = TRUE)
 FullYears <- FullYears[, -1]
+
+# Create Fed Connections
+FedConnect <- FullYears[, c("Indv", "FedStart", "FedEnd", "Year")]
+FedConnect <- FedConnect[!duplicated(FedConnect[, c("Indv", "Year")]),]
+
+FedConnect$StartDate <- FedConnect$FedStart
+FedConnect$EndDate <- FedConnect$FedEnd
+
+FedConnect$Organisation <- "Federal Reserve"
+FedConnect <- MoveFront(FedConnect, "Organisation")
+
+FullYears <- rbind.fill(FullYears, FedConnect)
 
 # Calculate years experience variable
 YearsExpCalc <- function(x){
@@ -166,6 +179,11 @@ for (i in YearsList){
   Var <- c("Organisation", "Indv", "YearsExp")
   foredgelist <- YearlyTies[, Var]
    
+  ###Christopher right here I am trying to write the edgelist for each year but I don't know how to do this...
+  ##the reason why I want the edgelist for each year is because we want to see which institutions we need to correct the name of
+  # e.g. haas school of business, UC Berkeley is the same as UC Berkeley...so we need to make these changes before generating the netwwork graphics and data
+  #write.csv(foredgelist, file = i.csv)
+  
   # renaming the variables so they can be used in igraph
 
   names(foredgelist) <- c("sender", "receiver", "width")
@@ -178,16 +196,32 @@ for (i in YearsList){
   E(g1)$width
   
   # this is a package that sets the default colour and default transparency...can come in handy later
-  colvec <- rep(rgb(60,1,1, 20, names = NULL, 
+  colvec <- rep(rgb(2,200,1, 80, names = NULL, 
                 maxColorValue = 255), length(V(g1)$name))  
-
+  
+  colvec[V(g1)$name=="Princeton"]<-rgb(200,25,15, 155, names=NULL, maxColorValue=255)
+  
   # this plots the network graphic
-  plot(g1, layout=layout.kamada.kawai, vertex.size=4,  
-    edge.width=E(g1)$width*.1, edge.arrow.size=0, 
-    edge.color="red", vertex.color = colvec, vertex.label = NA, 
+  plot(g1, layout=layout.kamada.kawai, vertex.size=20,  
+    edge.width=E(g1)$width*.5, edge.arrow.size=0, 
+    edge.color="blue", vertex.color = colvec, vertex.label =g1$Name, 
     vertex.label.color="black", vertex.label.family="sans", 
-    vertex.label.cex=1, vertex.label.degree = 0,
+    vertex.label.cex=.5, vertex.label.degree = 1,
     main = i)
+  
+  
+  
+  evcentstore<-evcent(g1, scale=FALSE)
+  NamesValue <- data.frame(evcentstore$vector)
+  NamesValue$names <- row.names(NamesValue)
+   NamesValue <- NamesValue[order(-NamesValue$evcentstore.vector),] 
+  View(NamesValue)
+  FileName <- paste0("CentralityScores/EVCentralityNO SCALE", i, ".csv")
+  write.csv(NamesValue, file = FileName)
+  
+  
+  
+  
 }
 
 
@@ -201,6 +235,9 @@ for (i in YearsList){
 #dev.off()
 
 
+# 
+write.csv(foredgelist, file = "edgelist.csv")
+
 # this generates the eigenvector centrality score for all actors in the network, then stores it, then writes to file
 
 evcentstore<-evcent(g1)
@@ -209,4 +246,41 @@ NamesValue$names <- row.names(NamesValue)
 View(NamesValue)
 NamesValue <- NamesValue[order(-NamesValue$evcentstore.vector),] 
 View(NamesValue)
-write.csv(NamesValue, file = "EVcentrality.csv")
+FileName <- paste0("CentralityScores/EVCentralityBLAH", i, ".csv")
+write.csv(NamesValue, file = FileName)
+
+
+
+
+
+edgetrial <- read.csv("edgelist.csv")
+
+
+names(edgetrial) <- c("sender", "receiver", "width")
+
+# transforming the edgelist into useable format for igraph
+
+g1<- graph.data.frame(edgetrial, directed = TRUE)
+#Edges <- V(g1)$name
+#colnames(Edges) <- c('sender','receiver', 'width')
+E(g1)$width
+
+# this is a package that sets the default colour and default transparency...can come in handy later
+colvec <- rep(rgb(2,200,1, 80, names = NULL, 
+                  maxColorValue = 255), length(V(g1)$name))  
+
+# this plots the network graphic
+plot(g1, layout=layout.kamada.kawai, vertex.size=20,  
+     edge.width=E(g1)$width*.5, edge.arrow.size=0, 
+     edge.color="blue", vertex.color = colvec, vertex.label =g1$Name, 
+     vertex.label.color="black", vertex.label.family="sans", 
+     vertex.label.cex=.5, vertex.label.degree = 1)
+ 
+
+evcentstore<-evcent(g1, weight=g1$width)
+NamesValue <- data.frame(evcentstore$vector)
+NamesValue$names <- row.names(NamesValue)
+View(NamesValue)
+NamesValue <- NamesValue[order(-NamesValue$evcentstore.vector),] 
+View(NamesValue)
+write.csv(NamesValue, file ="trial2.csv")
