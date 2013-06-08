@@ -215,7 +215,6 @@ for (i in YearsList){
     vertex.label.color="black", vertex.label.family="sans", 
     vertex.label.cex=.5, vertex.label.degree = 1,
     main = i)
-}
   
   # Save yearly network centrality scores
   evcentstore<-evcent(g1, scale=FALSE)
