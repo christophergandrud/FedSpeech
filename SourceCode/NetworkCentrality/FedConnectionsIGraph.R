@@ -20,37 +20,35 @@ setwd("~/Dropbox/Fed Hearings")
 
 #### -------Completed in an earlier version the manually added Speech Connectino Data
 # Load csv version of the data
-#Ties <- read.csv("Fed_BX_Full_DATES.csv")
-# SubTies <- Ties[, c("Organisation", "Connected.Org.Duration", "Connected.Org.Role.Start.Date", "Connected.Org.Role.End.Date", "Individual", "Board.of.Governors.of.the.Federal.Reserve.System.Role.Start.Date", "Board.of.Governors.of.the.Federal.Reserve.System.Role.End.Date")]
+Ties <- read.csv("Fed_BX_Full_DATES.csv")
+SubTies <- Ties[, c("Organisation", "Connected.Org.Duration", 
+  "Connected.Org.Role.Start.Date","Connected.Org.Role.End.Date", 
+  "Individual", "Board.of.Governors.of.the.Federal.Reserve.System.Role.Start.Date", 
+  "Board.of.Governors.of.the.Federal.Reserve.System.Role.End.Date")]
 
+names(SubTies) <- c("Organisation", "YearsExp", "StartDate", "EndDate", "Indv", "FedStart", "FedEnd")
 
-# Keep Organisation, years.of.experience, Connected.Org.Role.End.Date, Individual, FedStart, FedEnd
-# SubTies <- Ties[, c("Organisation", "Connected.Org.Duration", "Connected.Org.Role.Start.Date","Connected.Org.Role.End.Date", "Individual", "Board.of.Governors.of.the.Federal.Reserve.System.Role.Start.Date", "Board.of.Governors.of.the.Federal.Reserve.System.Role.End.Date")]
-
-# names(SubTies) <- c("Organisation", "YearsExp", "StartDate", "EndDate", "Indv", "FedStart", "FedEnd")
-
-
-# Keep only start years FOR THE FED
-# SubTies$Year <- str_extract(SubTies$FedStart, "[1-2][0-9][0-9][0-9]")
-# SubTies$Year <- as.numeric(SubTies$Year)
+# Keep only complete data for the 
+SubTies <- subset(SubTies, !is.na(StartDate))
+SubTies <- subset(SubTies, !is.na(FedStart))
 #### -------
 
 # Add in Connected Data 
 ## This data contains a variable (Match.FedSpeech) that records if the Fed gave a speech to the organization
-Connected <- read.csv("SubTiesToCode.csv", 
-                      stringsAsFactors = FALSE)
+#Connected <- read.csv("SubTiesToCode.csv", 
+#                      stringsAsFactors = FALSE)
 
 # Minor clearn
-Connected <- Connected[, -1]
-Connected$Match.FedSpeech[is.na(Connected$Match.FedSpeech)] <- 0
+# Connected <- Connected[, -1]
+# Connected$Match.FedSpeech[is.na(Connected$Match.FedSpeech)] <- 0
 
 # Keep only when the person started working for the Fed after 1997, the year our data begins
-Connected$EndDate[is.na(Connected$EndDate)] <- 2013
-Connected$FedEnd[is.na(Connected$FedEnd)] <- 2013
-Connected <- subset(Connected, FedStart >= 1997)
+#SubTies$EndDate[is.na(SubTies$EndDate)] <- 2013
+SubTies$FedEnd[is.na(SubTies$FedEnd)] <- 2013
+SubTies <- subset(SubTies, !is.na(EndDate))
 
 # Keep min (max) StartDate, EndDate, FedStart and FedEnd 
-MinMaxTies <- merge(Connected, Connected, by = c("Organisation", "Indv"))
+MinMaxTies <- merge(SubTies, SubTies, by = c("Organisation", "Indv"))
 
 MinMaxTies$Copied <- 0
 attach(MinMaxTies)
@@ -84,40 +82,47 @@ MinMaxTies <- MinMaxDates("EndDate", MM = "max")
 MinMaxTies <- MinMaxDates("FedStart", MM = "min")
 MinMaxTies <- MinMaxDates("FedEnd", MM = "max")
 
+# Standardise all FedStart and FedEnd to min and max
+IndvNames <- unique(MinMaxTies$Indv)
+
+MinMaxTies2 <- data.frame()
+for (i in IndvNames){
+  Temp <- subset(MinMaxTies, Indv == i)
+  Temp$FedStart <- min(Temp$FedStart)
+  Temp$FedEnd <- max(Temp$FedEnd)
+  Temp$StartDate <- min(Temp$StartDate)
+  Temp$EndDate <- max(Temp$EndDate)
+  MinMaxTies2 <- rbind.fill(MinMaxTies2, Temp)
+}
+
 # Drop duplicated and redundant
-MinMaxNoDups <- MinMaxTies[!duplicated(MinMaxTies[, c("Organisation",
+MinMaxTies2 <- MinMaxTies2[order(MinMaxTies$Indv,
+                               MinMaxTies$Organisation,
+                               MinMaxTies$FedStart),]
+
+MinMaxNoDups <- MinMaxTies2[!duplicated(MinMaxTies2[, c("Organisation",
                                        "Indv",
                                        "StartDate",
                                        "EndDate",
                                        "FedStart",
                                        "FedEnd")]), ]
-MinMaxNoDups <- MinMaxNoDups[order(MinMaxNoDups$Indv,
-                                  MinMaxNoDups$Organisation),]
 
-TiesUnique <- MinMaxNoDups[, c("Match.FedSpeech.x", "Organisation", "Indv", 
-                               "StartDate", "EndDate", "FedStart", "FedEnd",
-                               "YearsExp.x")]
-TiesUnique <- rename(TiesUnique, c("YearsExp.x" = "YearsExp",
-                                   "Match.FedSpeech.x" = "Match.FedSpeech"))
+TiesUnique <- MinMaxNoDups[, c("Organisation", "Indv", 
+                              "StartDate", "EndDate", "FedStart", 
+                              "FedEnd")]
 
-# Clean up individual FedStart and StopYears
 attach(TiesUnique)
-  TiesUnique$FedStart[Indv == "Doctor Ben S Bernanke"] <- 2002
-  TiesUnique$FedStart[Indv == "Doctor Karen Dynan"] <- 2004
-  TiesUnique$FedEnd[Indv == "Doctor Karen Dynan"] <- 2013
-  TiesUnique$FedStart[Indv == "Steven B Kamin"] <- 1999
-  TiesUnique$FedEnd[Indv == "Steven B Kamin"] <- 2013
   TiesUnique$FedStart[Indv == "Thomas P FitzGibbon Jr"] <- 2004
   TiesUnique$FedEnd[Indv == "Thomas P FitzGibbon Jr"] <- 2013
 detach(TiesUnique)
 
 # Create data frame with full years
-Year <- 1996:2013 
+Year <- c(1997:2013) 
 DummyID <- rep(1, length(Year))
 FullYears <- data.frame(DummyID, Year)
 
 # Merge in organisation-indv names 
-OrgIndvNames <- TiesUnique[, c("Match.FedSpeech", "Organisation", "Indv", 
+OrgIndvNames <- TiesUnique[, c("Organisation", "Indv", 
                           "StartDate", "EndDate", "FedStart", "FedEnd")]
 OrgIndvNames <- OrgIndvNames[!duplicated(OrgIndvNames), ]
 DummyID <- rep(1, nrow(OrgIndvNames))
@@ -137,6 +142,8 @@ FedConnect$Organisation <- "Federal Reserve"
 FedConnect <- MoveFront(FedConnect, "Organisation")
 
 FullYears <- rbind.fill(FullYears, FedConnect)
+
+FullYears <- subset(FullYears, FedEnd >= 1997)
 
 # Calculate years experience variable
 YearsExpCalc <- function(x){
@@ -171,7 +178,7 @@ rm(list = CleanOut)
 
 library(igraph)
 
-YearsList <- 1997:2012
+YearsList <- 1997:2013
 for (i in YearsList){
   # Subset the Data by year
   YearlyTies <- subset(FullTies, Year == i)
@@ -208,15 +215,15 @@ for (i in YearsList){
     vertex.label.color="black", vertex.label.family="sans", 
     vertex.label.cex=.5, vertex.label.degree = 1,
     main = i)
+}
   
-  
-  
+  # Save yearly network centrality scores
   evcentstore<-evcent(g1, scale=FALSE)
   NamesValue <- data.frame(evcentstore$vector)
   NamesValue$names <- row.names(NamesValue)
    NamesValue <- NamesValue[order(-NamesValue$evcentstore.vector),] 
-  View(NamesValue)
-  FileName <- paste0("CentralityScores/EVCentralityNO SCALE", i, ".csv")
+  FileName <- paste0("CentralityScores/EVCentralityNO SCALE", 
+                      i, ".csv")
   write.csv(NamesValue, file = FileName)
   
   
