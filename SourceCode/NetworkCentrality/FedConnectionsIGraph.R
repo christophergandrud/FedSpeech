@@ -41,7 +41,8 @@ NameRows <- 1:nrow(NameChange)
 
 for (i in NameRows){
 SubTies$Organisation <- str_replace(string = SubTies$Organisation, 
-                           pattern = gsub("\\\\", "\\", NameChange$From[i], fixed = TRUE), 
+                           pattern = gsub("\\\\", "\\", NameChange$From[i], 
+                                          fixed = TRUE), 
                            replacement = NameChange$To[i])
 }
 
