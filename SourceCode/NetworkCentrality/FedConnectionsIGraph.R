@@ -1,7 +1,7 @@
 ##############
 # Ties cumulative sum creation
 # Christopher Gandrud & Kevin Young
-# 8 June 2013
+# 9 June 2013
 ##############
 
 # Kevin
@@ -31,6 +31,22 @@ names(SubTies) <- c("Organisation", "YearsExp", "StartDate", "EndDate", "Indv", 
 # Keep only complete data for the 
 SubTies <- subset(SubTies, !is.na(StartDate))
 SubTies <- subset(SubTies, !is.na(FedStart))
+
+# Standardise Organisation Names
+NameChange <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/StandardisedOrgNames.csv", stringsAsFactors = FALSE)
+
+SubTies$Organisation <- as.character(SubTies$Organisation)
+SubTies$OldOrgs <- SubTies$Organisation
+NameRows <- 1:nrow(NameChange)
+
+for (i in NameRows){
+SubTies$Organisation <- str_replace(string = SubTies$Organisation, 
+                           pattern = gsub("\\\\", "\\", NameChange$From[i], fixed = TRUE), 
+                           replacement = NameChange$To[i])
+}
+
+SubTies <- MoveFront(SubTies, "OldOrgs")
+
 #### -------
 
 # Add in Connected Data 
