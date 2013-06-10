@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 7 June 2013
+% 10 June 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -122,9 +122,9 @@ Combining these indicators, we expect that periods of high scrutiny will be char
 \begin{figure}
     \caption{Congressional Scrutiny of the Federal Reserve Change Point Analysis: Full US House Committee on Financial Services \emph{with} Federal Reserve Testimony}
     \label{fig:HouseFedCP}
-<<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
+<<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.95\\linewidth'>>=
 # Scrutiny Change Point
-ScrutVarsHouse <- c("SumFedHouse", "FedAttend", "FedLaughterHouse")
+ScrutVarsHouse <- c("SumFedHouse", "FedAttend", "FedLetter", "FedLaughterHouse")
 e.divGG(data = HouseMonth, Vars = ScrutVarsHouse, TimeVar = "MonthYear", 
         sig.lvl = 0.05, R = 999, min.size = 24)
 @

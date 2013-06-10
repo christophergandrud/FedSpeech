@@ -1,7 +1,7 @@
 ##############
 # Fed Change Point Play 4: House
 # Christopher Gandrud
-# 9 June 2013
+# 10 June 2013
 ##############
 
 library(lubridate)
@@ -54,8 +54,6 @@ SubMain <- subset(SubMain, !is.na(attendance))
 
 # Numeric FedLetterCorrespondence #### 
 SubMain$FedLetterCorrespondence <- as.numeric(SubMain$FedLetterCorrespondence)
-##### Assume NA is 0 ####
-SubMain$FedLetterCorrespondence[is.na(SubMain$FedLetterCorrespondence)] <- 0
 
 # Hearings count filler
 SubMain$Any <- 1
@@ -73,7 +71,7 @@ MonthLaughter <- function(FedorNot, NewSumName, NewLaughName, NewAttendName, New
   SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMean = mean(laughter, na.rm = TRUE))
   SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMeanAttend = mean(attendance, na.rm = TRUE))
   if (FedorNot == 0){
-    SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMeanLetter = mean(FedLetterCorrespondence, na.rm = TRUE))
+    SubTemp <- ddply(SubTemp, .(MonthYear), transform, TempMeanLetter = mean(FedLetterCorrespondence, na.rm = FALSE))
     SubTemp <- SubTemp[!duplicated(SubTemp[, "MonthYear"]), ]
     SubTemp <- SubTemp[, c("MonthYear", "TempSum", "TempMean", 
                            "TempMeanAttend", "TempMeanLetter")]
@@ -128,7 +126,8 @@ attach(Combined)
   Combined$SumFedHouse[is.na(SumFedHouse)] <- 0
   Combined$FedAttend[is.na(FedAttend)] <- 0
   Combined$NonFedAttend[is.na(NonFedAttend)] <- 0
-  Combined$NonFedLetter[is.na(NonFedLetter)] <- 0
+  Combined$NonFedLetter[is.na(FedLetter)] <- 0
+  Combined$NonFedLetter[is.nan(FedLetter)] <- NA
   Combined$FedLetter[is.na(FedAttend)] <- 0
 detach(Combined)
 
