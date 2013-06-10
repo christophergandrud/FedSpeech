@@ -14,6 +14,8 @@ library(stringr)
 library(plyr)
 library(data.table)
 library(DataCombine)
+library(digest)
+library(devtools)
 
 # Set working directory
 setwd("~/Dropbox/Fed Hearings")
@@ -31,6 +33,17 @@ names(SubTies) <- c("Organisation", "YearsExp", "StartDate", "EndDate", "Indv", 
 # Keep only complete data for the 
 SubTies <- subset(SubTies, !is.na(StartDate))
 SubTies <- subset(SubTies, !is.na(FedStart))
+
+# Ad Hoc Fixes for miscoding (in original)
+attach(SubTies)
+  SubTies$FedStart[Indv == "Thomas P FitzGibbon Jr"] <- 2004
+  SubTies$FedEnd[Indv == "Thomas P FitzGibbon Jr"] <- 2013
+  SubTies$StartDate[Indv == "Doctor Morris A Davis" & 
+                    Organisation == "University of Wisconsin-Madison School of Business"] <- 2008
+  SubTies$EndDate[Indv == "Doctor Morris A Davis" & 
+                    Organisation == "University of Wisconsin-Madison School of Business"] <- 2013
+detach(SubTies)
+
 
 # Standardise Organisation Names
 NameChange <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/StandardisedOrgNames.csv", stringsAsFactors = FALSE)
@@ -61,13 +74,6 @@ SubTies$Organisation <- str_replace(string = SubTies$Organisation,
 SubTies$FedEnd[is.na(SubTies$FedEnd)] <- 2013
 SubTies$EndDate[is.na(SubTies$EndDate)] <- 2013
 # SubTies <- subset(SubTies, !is.na(EndDate))
-
-
-# Ad Hoc Fix for FitzGibbon miscoding (in original)
-attach(SubTies)
-  SubTies$FedStart[Indv == "Thomas P FitzGibbon Jr"] <- 2004
-  SubTies$FedEnd[Indv == "Thomas P FitzGibbon Jr"] <- 2013
-detach(SubTies)
 
 # Create data frame with full years
 Year <- c(1997:2013) 
@@ -121,6 +127,8 @@ FullYearExp <- YearsExpCalc(FullYears)
 FullTies <- subset(FullYearExp, Year >= FedStart)
 FullTies <- subset(FullTies, Year <= FedEnd)
 
+# write.csv(FullTies, file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/BasicFedNetwork.csv")
+
 # Clean workspace
 CleanOut <- setdiff(ls(), "FullTies")
 rm(list = CleanOut)
@@ -156,18 +164,18 @@ for (i in YearsList){
   E(g1)$width
   
   # this is a package that sets the default colour and default transparency...can come in handy later
-  colvec <- rep(rgb(2,200,1, 80, names = NULL, 
+  # colvec <- rep(rgb(2,200,1, 80, names = NULL, 
                 maxColorValue = 255), length(V(g1)$name))  
   
-  colvec[V(g1)$name=="Princeton"]<-rgb(200,25,15, 155, names=NULL, maxColorValue=255)
+  # colvec[V(g1)$name=="Princeton"]<-rgb(200,25,15, 155, names=NULL, maxColorValue=255)
   
   # this plots the network graphic
-  plot(g1, layout=layout.kamada.kawai, vertex.size=20,  
-    edge.width=E(g1)$width*.5, edge.arrow.size=0, 
-    edge.color="blue", vertex.color = colvec, vertex.label =g1$Name, 
-    vertex.label.color="black", vertex.label.family="sans", 
-    vertex.label.cex=.5, vertex.label.degree = 1,
-    main = i)
+  #plot(g1, layout=layout.kamada.kawai, vertex.size=20,  
+  #  edge.width=E(g1)$width*.5, edge.arrow.size=0, 
+  #  edge.color="blue", vertex.color = colvec, vertex.label =g1$Name, 
+  #  vertex.label.color="black", vertex.label.family="sans", 
+  #  vertex.label.cex=.5, vertex.label.degree = 1,
+  #  main = i)
   
   # Save yearly network centrality scores
   evcentstore<-evcent(g1, scale=FALSE)
@@ -177,11 +185,22 @@ for (i in YearsList){
   FileName <- paste0("CentralityScores/EVCentralityNO SCALE", 
                       i, ".csv")
   write.csv(NamesValue, file = FileName)
-  
-  
-  
-  
+   
 }
+
+
+#### ------------ Create JavaScript Network Graphs ------------- ####
+year <- c(1997, 2000, 2003, 2006, 2009, 2013)
+
+for (i in year){
+  FileName <- paste0("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Figures/FedBoard", i, ".html")
+  Sub <- subset(FullTies, Year == i)
+
+  d3SimpleNetwork(Sub, file = FileName, 
+               Source = "Indv", Target = "Organisation",
+                width = 1400, height = 1000)
+}
+
 
 
 #### ------------ Kevin, I haven't touched anything after this point ------- ###

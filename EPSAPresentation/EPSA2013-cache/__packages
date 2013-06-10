@@ -1,0 +1,8 @@
+base
+ecp
+ggplot2
+gridExtra
+knitr
+plyr
+Rcpp
+reshape2
