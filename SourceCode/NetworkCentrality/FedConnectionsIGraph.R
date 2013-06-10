@@ -36,7 +36,6 @@ SubTies <- subset(SubTies, !is.na(FedStart))
 NameChange <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/StandardisedOrgNames.csv", stringsAsFactors = FALSE)
 
 SubTies$Organisation <- as.character(SubTies$Organisation)
-SubTies$OldOrgs <- SubTies$Organisation
 NameRows <- 1:nrow(NameChange)
 
 for (i in NameRows){
@@ -45,8 +44,6 @@ SubTies$Organisation <- str_replace(string = SubTies$Organisation,
                                           fixed = TRUE), 
                            replacement = NameChange$To[i])
 }
-
-SubTies <- MoveFront(SubTies, "OldOrgs")
 
 #### -------
 
@@ -62,76 +59,15 @@ SubTies <- MoveFront(SubTies, "OldOrgs")
 # Keep only when the person started working for the Fed after 1997, the year our data begins
 #SubTies$EndDate[is.na(SubTies$EndDate)] <- 2013
 SubTies$FedEnd[is.na(SubTies$FedEnd)] <- 2013
-SubTies <- subset(SubTies, !is.na(EndDate))
+SubTies$EndDate[is.na(SubTies$EndDate)] <- 2013
+# SubTies <- subset(SubTies, !is.na(EndDate))
 
-# Keep min (max) StartDate, EndDate, FedStart and FedEnd 
-MinMaxTies <- merge(SubTies, SubTies, by = c("Organisation", "Indv"))
 
-MinMaxTies$Copied <- 0
-attach(MinMaxTies)
-  MinMaxTies$Copied[StartDate.x == StartDate.y &
-                    EndDate.x == EndDate.y &
-                    FedStart.x == FedStart.x &
-                    FedEnd.x == FedEnd.y] <- 1
-detach(MinMaxTies)
-
-MinMaxTies <- subset(MinMaxTies, Copied == 0)
-
-# Function to find minimum or maximum value
-MinMaxDates <- function(x, MM){
-  Rows <- 1:nrow(MinMaxTies)
-  VarX <- paste0(x, ".x")
-  VarY <- paste0(x, ".y")
-  for (i in Rows){
-    if (MM == "min"){
-      MinMaxTies[i, x] <- min(MinMaxTies[i, VarX], MinMaxTies[i, VarY])
-    }
-    if (MM == "max"){
-      MinMaxTies[i, x] <- max(MinMaxTies[i, VarX], MinMaxTies[i, VarY])
-    }
-  }
-  MinMaxTies
-}
-
-MinMaxTies <- MinMaxDates("StartDate", MM = "min")
-MinMaxTies <- MinMaxDates("EndDate", MM = "max")
-
-MinMaxTies <- MinMaxDates("FedStart", MM = "min")
-MinMaxTies <- MinMaxDates("FedEnd", MM = "max")
-
-# Standardise all FedStart and FedEnd to min and max
-IndvNames <- unique(MinMaxTies$Indv)
-
-MinMaxTies2 <- data.frame()
-for (i in IndvNames){
-  Temp <- subset(MinMaxTies, Indv == i)
-  Temp$FedStart <- min(Temp$FedStart)
-  Temp$FedEnd <- max(Temp$FedEnd)
-  Temp$StartDate <- min(Temp$StartDate)
-  Temp$EndDate <- max(Temp$EndDate)
-  MinMaxTies2 <- rbind.fill(MinMaxTies2, Temp)
-}
-
-# Drop duplicated and redundant
-MinMaxTies2 <- MinMaxTies2[order(MinMaxTies$Indv,
-                               MinMaxTies$Organisation,
-                               MinMaxTies$FedStart),]
-
-MinMaxNoDups <- MinMaxTies2[!duplicated(MinMaxTies2[, c("Organisation",
-                                       "Indv",
-                                       "StartDate",
-                                       "EndDate",
-                                       "FedStart",
-                                       "FedEnd")]), ]
-
-TiesUnique <- MinMaxNoDups[, c("Organisation", "Indv", 
-                              "StartDate", "EndDate", "FedStart", 
-                              "FedEnd")]
-
-attach(TiesUnique)
-  TiesUnique$FedStart[Indv == "Thomas P FitzGibbon Jr"] <- 2004
-  TiesUnique$FedEnd[Indv == "Thomas P FitzGibbon Jr"] <- 2013
-detach(TiesUnique)
+# Ad Hoc Fix for FitzGibbon miscoding (in original)
+attach(SubTies)
+  SubTies$FedStart[Indv == "Thomas P FitzGibbon Jr"] <- 2004
+  SubTies$FedEnd[Indv == "Thomas P FitzGibbon Jr"] <- 2013
+detach(SubTies)
 
 # Create data frame with full years
 Year <- c(1997:2013) 
@@ -139,7 +75,7 @@ DummyID <- rep(1, length(Year))
 FullYears <- data.frame(DummyID, Year)
 
 # Merge in organisation-indv names 
-OrgIndvNames <- TiesUnique[, c("Organisation", "Indv", 
+OrgIndvNames <- SubTies[, c("Organisation", "Indv", 
                           "StartDate", "EndDate", "FedStart", "FedEnd")]
 OrgIndvNames <- OrgIndvNames[!duplicated(OrgIndvNames), ]
 DummyID <- rep(1, nrow(OrgIndvNames))
@@ -150,7 +86,7 @@ FullYears <- FullYears[, -1]
 
 # Create Fed Connections
 FedConnect <- FullYears[, c("Indv", "FedStart", "FedEnd", "Year")]
-FedConnect <- FedConnect[!duplicated(FedConnect[, c("Indv", "Year")]),]
+FedConnect <- FedConnect[!duplicated(FedConnect[, c("Indv", "FedStart", "FedEnd", "Year")]),]
 
 FedConnect$StartDate <- FedConnect$FedStart
 FedConnect$EndDate <- FedConnect$FedEnd
@@ -307,3 +243,70 @@ View(NamesValue)
 NamesValue <- NamesValue[order(-NamesValue$evcentstore.vector),] 
 View(NamesValue)
 write.csv(NamesValue, file ="trial2.csv")
+
+
+#### -------------- Not used but maybe useful in the future ---------- ####
+# Keep min (max) StartDate, EndDate, FedStart and FedEnd 
+#MinMaxTies <- merge(SubTies, SubTies, by = c("Organisation", "Indv"))
+
+#MinMaxTies$Copied <- 0
+#attach(MinMaxTies)
+#  MinMaxTies$Copied[StartDate.x == StartDate.y &
+#                    EndDate.x == EndDate.y &
+#                    FedStart.x == FedStart.x &
+#                    FedEnd.x == FedEnd.y] <- 1
+#detach(MinMaxTies)
+
+#MinMaxTies <- subset(MinMaxTies, Copied == 0)
+
+# Function to find minimum or maximum value
+#MinMaxDates <- function(x, MM){
+#  Rows <- 1:nrow(MinMaxTies)
+#  VarX <- paste0(x, ".x")
+#  VarY <- paste0(x, ".y")
+#  for (i in Rows){
+#    if (MM == "min"){
+#      MinMaxTies[i, x] <- min(MinMaxTies[i, VarX], MinMaxTies[i, VarY])
+#    }
+#    if (MM == "max"){
+#      MinMaxTies[i, x] <- max(MinMaxTies[i, VarX], MinMaxTies[i, VarY])
+#    }
+#  }
+#  MinMaxTies
+#}
+
+#MinMaxTies <- MinMaxDates("StartDate", MM = "min")
+#MinMaxTies <- MinMaxDates("EndDate", MM = "max")
+
+#MinMaxTies <- MinMaxDates("FedStart", MM = "min")
+#MinMaxTies <- MinMaxDates("FedEnd", MM = "max")
+
+# Standardise all FedStart and FedEnd to min and max
+#IndvNames <- unique(MinMaxTies$Indv)
+
+#MinMaxTies2 <- data.frame()
+#for (i in IndvNames){
+#  Temp <- subset(MinMaxTies, Indv == i)
+#  Temp$FedStart <- min(Temp$FedStart)
+#  Temp$FedEnd <- max(Temp$FedEnd)
+#  Temp$StartDate <- min(Temp$StartDate)
+#  Temp$EndDate <- max(Temp$EndDate)
+#  MinMaxTies2 <- rbind.fill(MinMaxTies2, Temp)
+#}
+
+# Drop duplicated and redundant
+#MinMaxTies2 <- MinMaxTies2[order(MinMaxTies$Indv,
+#                               MinMaxTies$Organisation,
+#                               MinMaxTies$FedStart),]
+
+#MinMaxNoDups <- MinMaxTies2[!duplicated(MinMaxTies2[, c("Organisation",
+#                                       "Indv",
+#                                       "StartDate",
+#                                       "EndDate",
+#                                       "FedStart",
+#                                       "FedEnd")]), ]
+
+#TiesUnique <- MinMaxNoDups[, c("Organisation", "Indv", 
+#                              "StartDate", "EndDate", "FedStart", 
+#                              "FedEnd")]
+
