@@ -1,7 +1,7 @@
 ##############
 # Ties cumulative sum creation
 # Christopher Gandrud & Kevin Young
-# 9 June 2013
+# 10 June 2013
 ##############
 
 # Kevin
