@@ -77,7 +77,7 @@ stroke-width: 1.5px;
 } 
 
 text { 
-font: 10px serif; 
+font: 7px serif; 
 pointer-events: none; 
 } 
 

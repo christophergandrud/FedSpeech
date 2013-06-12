@@ -165,7 +165,7 @@ How Does the Fed Respond?
 
 ## WE NEED TO FILL IN
 
-Fed Board's Network: 199
+Fed Board's Network: 1999
 ========================================================
 
 ```{r Fed1997, echo=FALSE, results='asis'}
@@ -175,7 +175,7 @@ BaseNetwork <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/BasicFedNet
 Network1997 <- subset(BaseNetwork, Year == 1997)
 
 d3SimpleNetwork(Network1997, Source = "Indv", Target = "Organisation",
-                width = 100, height = 100)
+                width = 50, height = 50)
 ```
 
 Fed Board's Network: 2012

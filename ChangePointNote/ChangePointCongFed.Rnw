@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 10 June 2013
+% 12 June 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -115,7 +115,7 @@ One of our key scrutiny indicators is the number of hearings that Fed representa
 
 We also look at congress members' attendance at the hearings. Higher attendance implies that the hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Again, there may be high attendance and high salience for scrutiny not aimed directly at the Fed. Unfortunately attendance reporting was inconsistent across the committees. The HCFS had complete data on attendance. The SCB Committee did not consistently report attendance.
 
-Congress members are able to ask written questions to the Federal Reserve either before a hearing or as a follow up to it. We counted the number of such requests made to the Federal Reserve per hearing and included it as a scrutiny variable. Our prior is that members of congress will make more such requests if they wish to scrutinize the Fed more. Due to inconsistencies in the way that these requests are recorded we were only able to collect them for HCFS hearings.
+As an additional indicator of potential scrutiny of Congress over the Fed during a period in time, we also gathered data on formal letter correspondence between the Fed and members of Congress. As a government agency the Fed is required to respond formally to questions posed by members of Congress not only in formal oversight hearings but also in written correspondence, which is submitted as part of the congressional record as part of `additional material submitted for the record'. For each instance in which the Fed appeared in Congress, we counted the number of such letters of correspondence. All data is gathered from the publicly available printed hearing transcripts. This is a good indicator of Congressional scrutiny over the Fed for a variety of interrelated reasons. The Fed has good reason to take these letters as an indication of congressional interest in its activities precisely because of the formal nature of the exchange. A Congressperson is likely to ask questions that it wants a formal, written answer to on the record. In other instances, these letters constitute a follow-up to Congressional questioning that the Fed official could not answer to the satisfaction of the Committee at a given time. On this basis our expectation is that a spike in such letter correspondence represents a period of heightened scrutiny.
 
 Finally, we examine how many times instances of laughter were recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and Congress members who are less critical of the Fed.
 
