@@ -6,5 +6,5 @@
 *.bbl
 *.Rhistory
 figure/*
-EPSA2013-cache/*
-EPSA2013-figure/*
+EPSAPresentation/EPSA2013-cache/*
+EPSAPresentation/EPSA2013-figure/*
