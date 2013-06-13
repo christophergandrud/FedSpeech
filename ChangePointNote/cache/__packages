@@ -1,0 +1,11 @@
+base
+devtools
+digest
+ecp
+ggplot2
+gridExtra
+knitr
+plyr
+Rcpp
+repmis
+reshape2

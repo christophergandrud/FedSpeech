@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 12 June 2013
+% 13 June 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -39,6 +39,7 @@
     Pkgs <- c("repmis", "digest", "devtools", "plyr", "ecp", "gridExtra",
                 "ggplot2", "reshape2")
     repmis::LoadandCite(Pkgs, file = "PaperPackages.bib")
+    # repmis::LoadandCite(Pkgs) # Used for testing.
 
     # Load e.divGG function
     source_gist("5675688")
@@ -69,10 +70,10 @@
 %%%%%%% Abstract %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-\noindent\emph{Very Early Working draft. Comments welcome.}\footnote{Thank to you Rebecca Kanter, Natalie McClung, and Brent Ramsey for research assistance. \\
+\noindent\emph{Very Early Working draft. Comments welcome.}\footnote{Corresponding author: Christopher Gandrud (\href{mailto:christopher.gandrud@gmail.com}{christopher.gandrud@gmail.com}). \\ Thank to you Rebecca Kanter, Natalie McClung, and Brent Ramsey for research assistance. \\
 All data and source code needed to reproduce this paper are available at: \url{https://github.com/christophergandrud/FedSpeech}.}
 
-In this short research note we investigate trends in congressional scrutiny of the US Federal Reserve from the late 1990s through 2012. Though independent, the Federal Reserve is accountable to legislators. The purpose of this note is to develop indicators of high and low scrutiny that can be used in future research to examine how the Fed responds to pressures from legislators. We use change point analysis to estimate periods of high and low legislative scrutiny for both the US House of Representatives and Senate. Surprisingly, though the Senate has the power to approve Fed appointments, their scrutiny of the Fed does not seen to noticeably change over our time period. The House Committee on Financial Services did noticeably increase its scrutiny of the Fed, and other economic policy bureaucrats during the recent financial crisis. 
+In this short research note we investigate trends in congressional scrutiny of the US Federal Reserve from the late 1990s through 2012. Though independent, the Federal Reserve is accountable to legislators. The purpose of this note is to develop indicators of high and low scrutiny that can be used in future research to examine how the Fed responds to pressures from legislators. We use change point analysis to estimate periods of high and low legislative scrutiny for both the US House of Representatives and Senate. Surprisingly, though the Senate has the power to approve Fed appointments, their scrutiny of the Fed does not seen to noticeably change over our observation period. The House Committee on Financial Services did noticeably increase its scrutiny of the Fed, and other economic policy bureaucrats during the recent financial crisis. 
 
 \end{abstract}
 
@@ -80,51 +81,68 @@ In this short research note we investigate trends in congressional scrutiny of t
   \item [{\textbf{Keywords:}}] monetary policy, legislative oversight, change point analysis
 \end{description}
 
-Though politically independent, the US Federal Reserve (henceforth Fed) is nontheless subject to scrutiny from the US Congress. This includes both regular hearings, primarily the Fed governor's Semiannual Report to Congress, as well as irregularly to discuss specific issues such as the accounting problems at WorldCom in 2002 and US-EU regulatory dialog in 2004. In this short note we use change point analysis \citep{SenSrivastava1975, EckleyFearnheadKillick2011,Killick2012, Matteson2012, Killick2013} to develop indicators of higher and lower levels of congressional scrutiny. Ultimately, we hope to construct indicators that we can use to examine how Fed governors respond to legislative scrutiny by engaging with outside groups. 
+Though politically independent, the US Federal Reserve's (henceforth Fed) are nontheless scrutinized by the US Congress. This scrutiny includes both regular hearings, primarily the Fed governor's Semiannual Report to Congress, as well as irregular hearings called by Congress to discuss specific issues such as the state of the housing market and financial regulatory changes. In this short note we use change point analysis \citep{SenSrivastava1975, EckleyFearnheadKillick2011,Killick2012, Matteson2012, Killick2013} to develop indicators of higher and lower levels of congressional scrutiny. We will use these in another project to construct indicators for examining how Fed governors respond to legislative scrutiny by engaging with outside groups. 
 
-In this note we first discuss our sample of US Congressional hearings that involve representatives from the Fed. We then give a brief overview of change point analysis and justify why it is a useful tool for determining states of high and low scrutiny. We then present the results of change point analysis for three time-series derived from the Congressional hearings data: the number of hearings, the number of members present at the hearings, the number of times a member asks the Fed to respond to a question in writing, and the number of times someone laughs at a hearing. We conduct a corresponding change point analysis on a number of macroeconomic indicators, especially indicators of the Fed's performance--inflation and unemployment--, to help understand what may be influencing changes in scrutiny states.  
+In this note we first discuss our sample of US Congressional hearings that involve representatives from the Fed. We then give a brief overview of change point analysis and justify why it is a useful tool for determining states of high and low scrutiny. After this we present the results of change point analysis for four time-series derived from the Congressional hearings data: the number of hearings, the number of members present at the hearings, formal letter correspondence between Congress members and the Fed, and the number of times someone laughs at a hearing. We conduct a corresponding change point analysis on a number of macroeconomic indicators, especially indicators of the Fed's performance--inflation and unemployment--, to help understand what may be influencing changes in scrutiny states.  
 
 
-\section{Congressional Hearings Transcripts}
+\section{Congressional Hearings Data}
 
-We gathered data on congressional hearings--in both the Senate and the House of Representatives--that included the presence of a representative of the Federal Reserve. We aimed to gather (a) all of the transcripts for the hearings where a member Federal Reserve representative gave testimony and (b) all of the transcripts for the hearings of both the US House of Representatives Committee on Financial Services (HCFS)\footnote{From 1995 until 2000 it was known as the Committee on Banking and Financial Services.} and the Senate Committee on Banking, Housing, and Urban Affairs (SCB). Both of these committees have the normal responsibility for oversight of the Federal Reserve.
+We gathered data on congressional hearings--in both the Senate and the House of Representatives. We aimed to gather all of the hearing transcripts for (a) hearings where a Federal Reserve representative gave testimony and (b) any hearing of the US House of Representatives Committee on Financial Services (HCFS)\footnote{From 1995 until 2000 it was known as the Committee on Banking and Financial Services.} and the Senate Committee on Banking, Housing, and Urban Affairs (SCBUA) regardless of whether Fed testimony was given. Both of these committees have the normal responsibility for oversight of the Federal Reserve.
 
-We used the Federal Reserves' website\footnote{See: \url{http://www.federalreserve.gov/newsevents/default.htm}. Accessed Spring 2013.} to find information on all of the hearings where its representatives gave testimony. Currently it gives information on testimony made from 1996 through 2013. Only the prepared hearing statements are available at this website. To gather the full hearing transcripts we relied primarily on the US Government Printing Office (GPO) website.\footnote{See \url{http://www.gpo.gov/fdsys/browse/committeetab.action}. Accessed Spring 2013.} For most committees the GPO website only has full transcripts available from 2001 through 2012. We attempted to fill in missing transcripts with information available on individual committee's websites. Among the two major committees, the House Committee on Financial Services had the most complete set of transcripts available. Full committee hearings transcripts were available back to May 1997.\footnote{See: \url{http://financialservices.house.gov/archives/}. Accessed Spring 2013.} Unfortunately, the SCB archive website\footnote{See: \url{http://www.banking.senate.gov/public/index.cfm?FuseAction=Hearings.Home}. Accessed Spring 2013.} does not contain full hearing transcripts, so we could not include them in our sample. As such for full committee hearings, including Fed testimony and not, we only have a complete corpus for the House Committee on House Financial Services.
+\subsection{Data Availability}
+
+However, we were limited by data availability. We started by using the Federal Reserves' website\footnote{See: \url{http://www.federalreserve.gov/newsevents/default.htm}. Accessed Spring 2013.} to find information on all of the hearings at which its representatives gave testimony. Currently the cite gives information on testimony made from 1996 through 2013. Only the prepared hearing statements are available at this website. To gather the full hearing transcripts we relied primarily on the US Government Printing Office (GPO) website.\footnote{See \url{http://www.gpo.gov/fdsys/browse/committeetab.action}. Accessed Spring 2013.} For most committees the GPO website only has full transcripts available from 2001 through 2012. We attempted to fill in missing transcripts with information available on individual committee's websites. Among the two committees we focused on, the HCFS had the most complete set of transcripts. Full committee hearings transcripts were available back to May 1997.\footnote{See: \url{http://financialservices.house.gov/archives/}. Accessed Spring 2013.} Unfortunately, the SCBUA archive website\footnote{See: \url{http://www.banking.senate.gov/public/index.cfm?FuseAction=Hearings.Home}. Accessed Spring 2013.} does not contain full hearing transcripts, so we decided to not include non-Fed SCBUA transcripts in our sample. As such we only have a complete corpus of full committee hearings transcripts--i.e. hearings with Fed testimony and not--for the HCFA.
+
+\subsection{Indicators}
+
+We gathered four indicators of Congressional scrutiny from these transcripts. Possibly one of the closest indicators of scrutiny is the number of hearings that Fed representatives are asked to attend. Presumably if Congress holds more hearings in which it asks the Fed to send a representative in a given period of time, then they are scrutinizing it more. This is not a perfect measure of scrutiny, however, as the Fed may be asked to attend hearings scrutinizing not it, but another issue or financial regulatory agency. As discussed earlier we also gather information on all of the full HCFS hearings--i.e. not subcommittees. We will use these as a point of comparison.
+
+We also look at Congress members' attendance at the hearings. Higher attendance implies that a hearing has higher salience with members. Again, there may be high attendance and high salience for scrutiny not aimed directly at the Fed. Lower attendance may also result from unrelated issues, such as scheduling conflicts. Unfortunately attendance reporting was inconsistent across the committees. The HCFS had complete data on attendance. The SCBUA did not consistently report attendance, so we do not include it.
+
+Another indicator of potential scrutiny we gathered data is formal letter correspondence between the Fed and members of Congress. As a government agency the Fed is required to respond formally to questions posed by members of Congress not only in formal oversight hearings but also in written correspondence, which is submitted as part of the congressional record as part of `additional material submitted for the record'. For each instance in which the Fed appeared in Congress, we counted the number of such letters of correspondence. This is a good indicator of Congressional scrutiny over the Fed for a variety of interrelated reasons. The Fed has good reason to take these letters as an indication of congressional interest in its activities precisely because of the formal nature of the exchange. A Congressperson is likely to ask questions that it wants a formal, written answer to on the record. In other instances, these letters constitute a follow-up to Congressional questioning that the Fed official could not answer to the satisfaction of the Committee at a given time. On this basis our expectation is that a spike in such letter correspondence represents a period of heightened scrutiny. Unfortunately, formal correspondence letters were not recorded in SCBUA transcripts.
+
+Finally, we examine how many times instances of laughter were recorded in the testimony transcripts.\footnote{In all of our sets of transcripts instances of laughter are denoted "[Laughter]". Each instance does not indicate who or how many people are laughing.} We hypothesize that higher laughter counts indicate that the hearings have a more jovial atmosphere and the Fed has more reason to believe that Congresses' scrutiny level is low. For example, the highest hearing laughter count is from a February 2002 hearing where the Fed Chairman Alan Greenspan gave testimony at an annual SCBUA hearing on financial literacy and often includes the heads of other economic agencies.
 
 \section{Methods: Change Point Analysis}
 
-Our objective in this paper is to determine when the Fed is in a period of low or high scrutiny. An obvious method for using to determine change in states through a time series is change point analysis. Change point analysis is a general term used to describe methods aimed at detecting changes in the ``statistical properties of a sequence of observations'' \cite[2]{Killick2013}. Imagine we have a series of data $y_{1:n} = (y_{1},\ldots,\: y_{n})$, for example, monthly median number of hearings.  We can say that a change has happened at a time $\tau \in \{1,\ldots,\:n-1\}$ in the data if the statistical properties, such as mean and variance, are different in $(y_{1},\ldots,\: y_{\tau})$ and $(y_{\tau},\ldots,\: y_{\tau})$. We can extend this logic to the study of series with multiple change points $m$ such that $\tau_{1:m} = (\tau_{1},\ldots,\:\tau_{m})$ and the data broken into segments $m + 1$ \citep{Killick2012,Killick2013}. These segments could be periods of higher and lower legislative scrutiny of the Fed.
+Our objective in this paper is to determine when the Fed is in a period of low or high scrutiny. A useful method for determining if there are changes in states through a time series is change point analysis. Change point analysis is a general term used to describe methods aimed at detecting changes in the ``statistical properties of a sequence of observations'' \cite[2]{Killick2013}. Imagine we have a series of data $y_{1:n} = (y_{1},\ldots,\: y_{n})$, for example, the                 monthly number of hearings.  We can say that a change has happened at a time $\tau \in \{1,\ldots,\:n-1\}$ in the data if the statistical properties, such as the means and variances, are different in $(y_{1},\ldots,\: y_{\tau})$ and $(y_{\tau},\ldots,\: y_{\tau})$. We can extend this logic to the study of series with multiple change points $m$ such that $\tau_{1:m} = (\tau_{1},\ldots,\:\tau_{m})$ and the data broken into segments $m + 1$ \citep{Killick2012,Killick2013}. These segments could be periods of higher and lower legislative scrutiny of the Fed.
 
-There are a number of different ways to estimate change points' locations \cite[see][]{Killick2013,Matteson2012}. For our project we need a change point analysis method that (a) allows us to identify an unknown number of change points and (b) allows us to combine information from multiple observed variables. We want a method that allows us to estimate an unknown number of change points because we have no a priori reason to assume that there is any fixed number of points at which the level of scrutiny changes. It's likely that none of our variables individually indicate the scrutiny level. Therefore we would like to combine information from all of these observed variables to understand the latent scrutiny level.
+There are a number of different ways to estimate change points' locations \cite[see][]{Killick2013,Matteson2012}. For our project we need a change point analysis method that (a) allows us to identify an unknown number of change points and (b) allows us to combine information from multiple observed variables. We want a method that allows us to estimate an unknown number of change points because we have no \emph{a priori} reason to assume that there is any fixed number of points at which the level of scrutiny changes. Also, we have no variable that directly captures the 'legislative scrutiny' concept. It is instead a latent concept. The variables we do observe--hearing count, attendance, letter requests, and laughter--we expect to indicate in combination the level of scrutiny  Therefore we would like to combine information from all of these observed variables to understand the latent scrutiny level.
 
-Matteson and James' \citeyearpar{Matteson2012,James2013} energy divisive hierarchical change point estimation algorithm.\footnote{We specifically use the \texttt{e.divisive} function in their \emph{ecp} R package \citep{R-ecp}.} Their approach draws on Sz{\'e}kely and Rizzo's \citeyearpar{Szekely2005} work with hierarchical clustering. In particular they use the ``energy statistic'' method of determining statistical distances between probability distributions, e.g. the joint multivariate distributions of sequences of our observed Congressional hearing data. The time point where one sequence or cluster ends and another begins is a change point.
+Matteson and James' \citeyearpar{Matteson2012,James2013} energy divisive hierarchical change point estimation algorithm\footnote{We specifically use the \texttt{e.divisive} function in their \emph{ecp} R package \citep{R-ecp}.} allows us to achieve our two objectives. Their approach draws on Sz{\'e}kely and Rizzo's \citeyearpar{Szekely2005} work with hierarchical clustering. In particular they use the ``energy statistic'' method of determining statistical distances between probability distributions, e.g. the joint multivariate distributions of sequences of our observed Congressional hearing data. The time point where one sequence or cluster ends and another begins is a change point.
 
-\paragraph{Hypothesis Testing} 
+Of course, it may be that the the joint multivariate distributions of the estimated sequences are not in fact different, i.e. that every observation within the clusters are independent and identically distributed. In the language of hypothesis testing, this is the change point null hypothesis. Using \cite{Matteson2012}, we examine this possibility using a permutation test\footnote{Following \cite{Rizzo2010} we used a maximum of 999 permutations. This produced stable estimates.} to approximate the p-value for the hypothesis test. We used the standard 0.05 p-value as a criteria for rejecting or failing to reject the null hypothesis, i.e. whether there is evidence for selecting a given change point or not.
 
-Of course, it may be that the the joint multivariate distributions of the estimated sequences are not in fact different, i.e. that every observation within the clusters are independent and identically distributed. Using \cite{Matteson2012}, we examine this possibility using a permutation test\footnote{Following \cite{Rizzo2010} we used a maximum of 999 permutations.} to approximate the p-value for the hypothesis test. We used the standard 0.05 p-value as a criteria for selecting change points.
-
-\paragraph{Minimum Change Point Cluster Size}
-
-One potential disadvantage of Matteson and James' change point method is that the minimum cluster size must be set \emph{a priori} \citeyearpar[11]{Matteson2012}. In other words, we need to tell the algorithm the minimum number of time points that are between the change points. The minimum size is generally needs to be larger if the distance between the probability distributions is small. We chose to use a minimum size of 24 months.\footnote{The \texttt{ecp} default is 30.} For most of the time series this length proved adequate to estimate statistically significant change points that were substantively meaningful.
+One potential disadvantage of Matteson and James' change point method is that the minimum cluster size must be set \emph{a priori} \citeyearpar[11]{Matteson2012}. In other words, we need to tell the algorithm the minimum number of time points that may be between the change points. The minimum size is generally needs to be larger if the distance between the probability distributions is small. We chose to use a minimum size of 24 months.\footnote{The \texttt{ecp} default is 30.} Across cases where change points could be estimated this length proved adequate to estimate statistically significant change points that were substantively meaningful.
 
 \section{Scrutiny States}
 
-We use change point analysis with three indicators of Congressional scrutiny. None of the indicators directly and unequivocally capture legislative scrutiny. Instead they indicate some part of it. We are interested in the joint distribution of the multivariate. First we'll discuss the three scrutiny indicators then we will discuss the results from our multivariate change point analysis. 
+Combining our observed scrutiny indicators, we expect that periods of high scrutiny will be characterized by frequent hearings, that are attended by many members, accompanied by many formal letter correspondences, and where there is little or no laughter. Periods of of low scrutiny would have the opposite characteristics. See Table \ref{ExpectedTable} for a summary.
 
-One of our key scrutiny indicators is the number of hearings that Fed representatives are asked to attend. Presumably if Congress holds more hearings in which it asks the Fed to send a representative, then they are scrutinizing it more. This is not a perfect measure of scrutiny, however, as the Fed may be asked to attend hearings scrutinizing not it, but another issue or economic bureaucracy. We also gathered information on all of the full HCFS hearings--i.e. not subcommittees. 
+\begin{table}
+  \caption{Expected Relationship Between Hearing Indicators and Scrutiny States}
+  \label{ExpectedTable}
+  \begin{center}
+    \begin{tabular}{l | c c}
+      \hline
+      & High Scrutiny & Low Scrutiny \\
+      \hline \hline
+      Hearings & frequent & infrequent \\
+      Attendance & high & low \\
+      Letter Correspondence & many & few \\
+      Laughter & infrequent & frequent \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
-We also look at congress members' attendance at the hearings. Higher attendance implies that the hearings have a higher salience with members. \todo{cite literature on how congress members' statements are a type of signaling.} Again, there may be high attendance and high salience for scrutiny not aimed directly at the Fed. Unfortunately attendance reporting was inconsistent across the committees. The HCFS had complete data on attendance. The SCB Committee did not consistently report attendance.
-
-As an additional indicator of potential scrutiny of Congress over the Fed during a period in time, we also gathered data on formal letter correspondence between the Fed and members of Congress. As a government agency the Fed is required to respond formally to questions posed by members of Congress not only in formal oversight hearings but also in written correspondence, which is submitted as part of the congressional record as part of `additional material submitted for the record'. For each instance in which the Fed appeared in Congress, we counted the number of such letters of correspondence. All data is gathered from the publicly available printed hearing transcripts. This is a good indicator of Congressional scrutiny over the Fed for a variety of interrelated reasons. The Fed has good reason to take these letters as an indication of congressional interest in its activities precisely because of the formal nature of the exchange. A Congressperson is likely to ask questions that it wants a formal, written answer to on the record. In other instances, these letters constitute a follow-up to Congressional questioning that the Fed official could not answer to the satisfaction of the Committee at a given time. On this basis our expectation is that a spike in such letter correspondence represents a period of heightened scrutiny.
-
-Finally, we examine how many times instances of laughter were recorded in the testimony transcripts. Higher laughter counts could indicate that the hearings have a more jovial atmosphere and Congress members who are less critical of the Fed.
-
-Combining these indicators, we expect that periods of high scrutiny will be characterized by frequent hearings, that are attended by many members, and where there is little or no laughter. Periods of of low scrutiny would have the opposite characteristics. We focus on the number of days hearings were held per month.\footnote{Some hearings were held over two or more days.} In the case of member attendance and laughter counts we use monthly means. We have removed field hearings from the from the data. These meetings almost always have much lower attendance--fewer than ten members usually attend. The Fed also almost never gives testimony at field hearings.
+We aggregate our indicators by month (as most days there are no hearings). In the case of member attendance, correspondence, and laughter counts we use monthly means.\footnote{Though some of these data are highly skewed--particularly laughter--there is not much difference between the monthly mean and median as most months only have no more than one hearing for a given committee.} We have removed so called field hearings from the data. These meetings almost always have much lower attendance--fewer than ten members usually attend. Fed representatives also almost never gives testimony at field hearings.
 
 \begin{figure}
     \caption{Congressional Scrutiny of the Federal Reserve Change Point Analysis: Full US House Committee on Financial Services \emph{with} Federal Reserve Testimony}
     \label{fig:HouseFedCP}
-<<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.95\\linewidth'>>=
+<<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.95\\linewidth', cache=TRUE>>=
 # Scrutiny Change Point
 ScrutVarsHouse <- c("SumFedHouse", "FedAttend", "FedLetter", "FedLaughterHouse")
 e.divGG(data = HouseMonth, Vars = ScrutVarsHouse, TimeVar = "MonthYear", 
@@ -139,7 +157,7 @@ The data is aggregated on a monthly basis, i.e. observations represent monthly h
 \begin{figure}
     \caption{Congressional Scrutiny Change Point Analysis: US House Committee on Financial Services \emph{without} Federal Reserve Testimony}
     \label{fig:BaseNonFedCP}
-<<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
+<<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth', cache=TRUE>>=
 # Scrutiny Change Point
 NonFedVars <- c("SumNonFed", "NonFedAttend", "NonFedLaughter")
 e.divGG(data = HouseMonth, Vars = NonFedVars,
@@ -151,11 +169,16 @@ Minimum state width set at 24 months. \\
 The data is aggregated on a monthly basis, i.e. observations represent monthly hearing counts or averages.}}
 \end{figure}
 
+\subsection{Interpreting the Change Points}
+
+Now lets turn to examining the results of the change point analysis. The change point analysis by itself only estimates clusters of time that are different from their neighbors. To substantively interpret them we need to compare the variables' distributions in the states with our expectations, summarized in Table \ref{ExpectedTable}.
+
+We conducted three separate multivariate change point analyses to try to estimate congressional scrutiny states. The first used data from transcripts of hearings with the full HCFS where the Federal Reserve gave testimony. For comparison, we conducted an analysis on data from full HCFS hearings without Fed testimony. Obviously this analysis did not include letter correspondence with the Fed. Then we examined SCBUA hearings. As we discussed earlier, data was much more limited for the SCBUA. We have incomplete data on hearings without Fed testimony, especially before 2001. SCBUA transcripts also do not record formal letter correspondence and attendance. So our third change point analysis only included data on the number of hearings by the full SCBUA along with laughter.
 
 \begin{figure}
     \caption{Congressional Scrutiny Change Point Analysis: US Senate Full Committee on Banking, Housing, and Urban Affairs \emph{with} Federal Reserve Testimony}
-    \label{fig"SenateFedCP}
-<<ScrutinySenate, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth'>>=
+    \label{fig:SenateFedCP}
+<<ScrutinySenate, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth', cache=TRUE>>=
 # Create line graph of counts and means.
 SubMonth <- SenateMonth[, c("MonthYear", "SumFedSenate", "FedLaughterSenate")]
 SubMolten <- melt(data = SubMonth, id.vars = "MonthYear", 
@@ -174,27 +197,53 @@ eachVar <- unique(SubMolten$variable)
       do.call(grid.arrange, p)
 
 @   
-{\scriptsize{Note: no change points were estimated at conventional levels of statistical significance.}}
+{\scriptsize{Note: no change points were estimated at conventional levels of statistical significance and using a wide range of minimum state widths.}}
 \end{figure}
 
-\subsection{Interpreting the Change Points}
+Figure \ref{fig:HouseFedCP} shows the change points (and underlying data from which they were estimated) for the HCFS when the Fed testified. Two change points were estimated at the 95\% significance level. The first in April 2007 and the second in May 2010. The scrutiny state that proceeded the first change point fairly closely conforms to our expectations about what a low scrutiny state would be. There were relatively infrequent hearings, moderate attendance, and fairly frequent laughter. Formal letter correspondence, despite our expectations does not seem to vary between this state and the others.\footnote{In analyses that did not include formal letter correspondence (not shown) the results did not change.} The next state, between 2007 and 2010 largely corresponded to our expectations of a high scrutiny state. Hearings were very frequent, attendance was high, and laughter was fairly low, especially in near the end of the period when the number of hearings was very high. The final state was had characteristics of both high and low scrutiny states. The number of hearings was relatively low, but attendance was high and laughter was very low.
 
-The change point analysis by itself only estimates time periods that are different from each their neighbors. We would expect that
+We estimated one change point in the data from the full HFSC hearings without Fed testimony. It was in February 2007 (see Figure \ref{fig:BaseNonFedCP}). This change point is similar to the one we estimated with the HCFS hearings including Fed testimony. The values of the indicator variables in the states are also similar. Before the change point hearings per month are relatively infrequent, attendance is moderate as is laughter. Directly after the change point hearings become very frequent, attendance is moderate to high, and laughter is moderate. From about 2010, as in the HFSC, hearings become more infrequent, attendance--with a brief lull--remains high, and laughter is very low. However, we did not estimate a statistically significant change point in 2010.
+
+Increased scrutiny of the Fed appears to be closely related to scrutiny of other financial regulators. This finding is corroborated by \cite{SchonhardtBailey2012}. Using computer-assisted content analysis of the HCFS and SCBUA semi-annual monetary policy hearings during the recent financial crisis, she finds that a very large proportion of the discussion was about financial regulation, rather than monetary policy.
+
+Figure \ref{fig:SenateFedCP} shows the (limited) data from full SCBUA hearings where the Fed gave testimony. We did not estimate any change points in the observation period using only the frequency of hearings and laughter. Using these limited indicators it does not appear that the SCBUA changed its level of scrutiny from mid-1997 through 2012.
+
+\begin{table}
+  \caption{Summary of Observed Scrutiny States}
+  \label{ObservedTable}
+  \begin{center}
+    \begin{tabular}{p{1.5cm} p{2.2cm} | p{2cm} p{2cm} p{2cm} p{2cm}}
+    \hline
+    & & Number of Hearings & Attendance & Letter Correspond & Laughter \\
+    \hline \hline
+    HFSC with Fed & Beginning-March 2007 & somewhat infrequent & mixed & mixed & mixed to frequent \\[0.3cm]
+    & April 2007-May 2010 & very frequent & high & mixed & mixed \\[0.3cm]
+    & June 2010-End & somewhat infrequent & high & mixed & very infrequent \\[0.3cm]
+    HFSC without Fed &  Beginning-January 2007 & infrequent to moderate & moderate to high & & moderate to very low \\[0.3cm]
+    & February 207-End & frequent to infrequent & high & & moderate to very low \\[0.3cm]
+    SCBUA with Fed & Beginning to End & & &\\[0.3cm]
+    \hline
+    \end{tabular}
+  \end{center}
+  {\scriptsize{All interpretations are relative to the other states. \\ `Beginning' and `End' denote the beginning and end of the observation period.}}
+\end{table}
 
 \section{Scrutiny States Compared to Economic States}
 
-We conducted a similar change point analysis with key economic indicators that may influence Congress to increase its scrutiny of the Federal Reserve. All of the data was gathered from the Federal Reserve Bank's Economic Data (FRED) database.\footnote{See: \url{http://research.stlouisfed.org/fred2/}. Accessed Spring 2013.} The Fed's statutory obligations--as specified by the 1913 Federal Reserve Act--are to promote maximum employment and stable prices. Therefore we included measures of inflation\footnote{Specifically, the year on year percent change in the seasonally adjusted personal consumption expenditures chain-type price index. FRED symbol: PCEPI.} and the unemployment rate.\footnote{FRED symbol: U6RATE.} We also included a measure of general economic growth: the year on year percentage change of the gross domestic product per capita.\footnote{FRED symbol: GDPC96.} 
+We conducted a similar type of change point analysis with key economic indicators that may influence Congress to increase its scrutiny of the Federal Reserve. All of the data was gathered from the Federal Reserve Bank's Economic Data (FRED) database.\footnote{See: \url{http://research.stlouisfed.org/fred2/}. Accessed Spring 2013.} The Fed's statutory obligations--as specified by the 1913 Federal Reserve Act--are to promote maximum employment and stable prices. Therefore we included measures of inflation\footnote{Specifically, the year on year percent change in the seasonally adjusted personal consumption expenditures chain-type price index. FRED symbol: PCEPI.} and the unemployment rate.\footnote{FRED symbol: U6RATE.} We also included a measure of general economic growth: the year on year percentage change of the gross domestic product per capita.\footnote{FRED symbol: GDPC96.} 
 
-The results of the multivariate economic indicator change point analysis are in Figure \ref{fig:FullEconCP}. We estimate that there are six states in the economic data from mid-1997 through 2012.\footnote{These dates were chosen to match the available HCFS hearing data.} A number of the states correspond to relatively minor changes in the economic indicators. For example, the third state from late-2003 through late-2005 corresponds to a relatively minor increase in inflation and a similarly gradual fall in unemployment. The fifth state corresponds to fairly dramatic changes. This covers the Global Financial Crisis. 
+The results of the multivariate economic indicator change point analysis are in Figure \ref{fig:FullEconCP}. We estimate that there are 5 change points in the economic data from mid-1997 through 2012.\footnote{These dates were chosen to match the available congressional hearing data.} A number of the states correspond to relatively minor changes in the economic indicators. For example, the third state from late-2003 through late-2005 corresponds to a relatively minor increase in inflation and a similarly gradual fall in unemployment. The fifth state--between change points in October 2008 and October 2010--corresponds to fairly dramatic changes. This covers the Global Financial Crisis. 
 
-When we compare the estimated HCFS scrutiny states to the economic states we see that the high scrutiny states between mid-2007 and mid-2010 roughly corresponds to two economic state with the most severe changes in the observation period. The HCFS high scrutiny state for both the Fed and others--predates the start of the most severe economic changes by about one year. But the scrutiny of the Fed by the HCFS decreases only a few months before the end of the severe economic changes. Note that growth and inflation stabilize near their longer term trend before the end of the estimated severe economic crisis state ends around the same point at which HCFS scrutiny of the Fed changes. Unemployment, however, remains high. 
+When we compare the estimated HCFS scrutiny states to the economic states we see that the high scrutiny states between mid-2007 and mid-2010 roughly corresponds to two economic state with the most severe changes in the observation period. Though the HCFS high scrutiny state for both the Fed and others--predates the start of the most severe economic changes by about one year. Perhaps, using McCubbins and Schwartz's \citeyearpar{Mccubbins1984} terminology, Congress is responding to `fire-alarms' that indicate impending economic turmoil.
 
-There are two recessions in our sample. The first was in 2001 following the Dot Com crash and the second ran from late 2007 until mid-2009 and resulted from the Global Financial Crisis. As we can see in the Figure \ref{fig:FullEconCP} the first recession was relatively mild in terms of changes in inflation, unemployment and growth compared to the second. This indicates that Congress may only increase its scrutiny of the Fed and other economic policy bureaucrats when the economy is under extreme stress. Using McCubbins and Schwartz's \citeyearpar{Mccubbins1984} terminology, Congress and more specifically the HCFS increases its scrutiny when the fire alarm is ringing very loudly.
+The scrutiny of the Fed by the HCFS decreases a few months before the end of this severe economic changes state. Note that growth and inflation stabilize near their longer term trend before the end of the estimated severe economic crisis state ends around the same point at which HCFS scrutiny of the Fed changes. Unemployment, however, remains high, declining only slowly. Reflecting this mixed economic condition, the HCFS entered a moderate scrutiny state when inflation and growth return closer to normal, but unemployment remained high.     
+
+How big of a change does there need to be to inflation and other economic conditions for Congress to change its scrutiny on the Fed? There are two recessions in our sample.\footnote{Recession data is from FRED.} The first was in 2001 following the Dotcom crash/the aftermath of the 9/11 terrorist attacks. The second ran from late 2007 until mid-2009 and resulted from the Global Financial Crisis. As we can see in the Figure \ref{fig:FullEconCP} the first recession was relatively mild compared to the second in terms of changes in inflation, unemployment and growth compared to the second. This indicates that Congress may only increase its scrutiny of the Fed and other economic policy bureaucrats when the economy is under extreme stress. It seems that Congress and specifically the HCFS mostly increases its scrutiny when the fire-alarms are very loud.
 
 \begin{figure}
     \caption{Economic Indicator Change Point Analysis}
     \label{fig:FullEconCP}
-<<EconFullCP, echo=FALSE, out.width='0.8\\linewidth', message=FALSE, warning=FALSE>>=
+<<EconFullCP, echo=FALSE, out.width='0.8\\linewidth', message=FALSE, warning=FALSE, cache=TRUE>>=
 # Full
 EconVars <- c("Inflation", "Unemployment", "Growth")
 e.divGG(data = HouseMonth, Vars = EconVars, TimeVar = "MonthYear", 
@@ -208,7 +257,13 @@ Inflation is the percentage change in the chain-type personal consumption price 
 
 \section{Discussion}
 
-We intend to improve our measures of legislative scrutiny by including sentiment analysis of the hearing transcripts. This will allow us to include information on whether the or not the Fed is being challenged on its activities. We predict that positive sentiments will be positively associated with laughter. If so, this would provide more evidence for the scrutiny change point that we estimated at September 2008.
+In this short paper we have conducted a change point analysis of US congressional hearings to examine changes in legislative scrutiny of the Federal Reserve. The ultimate goal of this research has been to develop indicators that can be used in future research to study interactions between the Fed and their legislative principles. 
+
+We found that changes in scrutiny--at least as suggested by the transcript indicators--are different in the House Committee on Financial Services and Senate Committee on Banking and Urban Affairs. We found three scrutiny states in the HCFS transcripts, but none in the SCBUA. Though we initially expected there would be two types of scrutiny states--low and high--in the HCFS there seem to be three distinct types. From mid-1997 into 2007 there was a low scrutiny state, as we largely expected with our indicators.\footnote{The one exception is that formal letter correspondence does not seem to correspond to changing scrutiny} The second state, which over laps with a very severe economic crisis resulting from the 2008/2009 financial crisis, conforms to our expectations of being a high scrutiny state. The final HCFS state. however, seems to be between the two extremes. There are fewer hearings, but the hearings are well attended and almost no laughter occurs at them. Therefore, instead of using the change point analysis to create a simple dichotomous low/high legislative scrutiny variable it may be better to use the estimated change points to create a multinomial variable with distinct values for each cluster. 
+
+By comparing the estimated legislative scrutiny states to those estimated with key economic data, we have gained a better understanding of the conditions under which legislative scrutiny of the Federal Reserve changes. Firstly, it seems that the HCFS increased its scrutiny of the Fed, and other financial agencies before the worst part of the economic crisis began. This indicates that the HCFS was responding to `fire-alarms' indicating the onset of the crisis. Scrutiny declined somewhat when inflation and growth stabilized close to pre-crisis levels, though unemployment remained high.    
+
+We intend to improve our measures of legislative scrutiny by including sentiment analysis of the hearing transcripts. This will allow us to include information on whether the or not the Fed is being challenged on its activities. We predict that positive sentiments will be positively associated with laughter. If so, this would provide more evidence for the scrutiny change point that we estimated. This will also help us better understand the scrutiny dynamics in the SCBUA.
 
 %%%%%%% Bib and End File 
 \bibliographystyle{apsr}
