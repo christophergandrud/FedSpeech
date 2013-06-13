@@ -145,8 +145,10 @@ We aggregate our indicators by month (as most days there are no hearings). In th
 <<ScrutinyHouseFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.95\\linewidth', cache=TRUE>>=
 # Scrutiny Change Point
 ScrutVarsHouse <- c("SumFedHouse", "FedAttend", "FedLetter", "FedLaughterHouse")
+FedTitles <- c("Hearing Frequency", "Attendance", 
+                  "Letter Corrrespondence", "Laughter")
 e.divGG(data = HouseMonth, Vars = ScrutVarsHouse, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 999, min.size = 24)
+        sig.lvl = 0.05, R = 999, min.size = 24, Titles = FedTitles)
 @
 {\scriptsize{The red horizontal dashed line signifies the estimated change points at the 95\% significance level from an analysis including both of the variables.\\
 Minimum state width set at 24 months. \\
@@ -160,8 +162,9 @@ The data is aggregated on a monthly basis, i.e. observations represent monthly h
 <<ScrutinyNonFedCP, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth', cache=TRUE>>=
 # Scrutiny Change Point
 NonFedVars <- c("SumNonFed", "NonFedAttend", "NonFedLaughter")
+NonFedTitles <- c("Hearing Frequency", "Attendance", "Laughter")
 e.divGG(data = HouseMonth, Vars = NonFedVars,
-        TimeVar = "MonthYear", 
+        TimeVar = "MonthYear", Titles = NonFedTitles,
         sig.lvl = 0.05, R = 999, min.size = 24)
 @
 {\scriptsize{The red horizontal dashed line signifies the estimated change points at the 95\% significance level.\\
@@ -180,21 +183,25 @@ We conducted three separate multivariate change point analyses to try to estimat
     \label{fig:SenateFedCP}
 <<ScrutinySenate, echo=FALSE, message=FALSE, warning=FALSE, out.width='0.8\\linewidth', cache=TRUE>>=
 # Create line graph of counts and means.
+SenateTitles <- c("Hearing Frequency", "Laughter")
 SubMonth <- SenateMonth[, c("MonthYear", "SumFedSenate", "FedLaughterSenate")]
 SubMolten <- melt(data = SubMonth, id.vars = "MonthYear", 
                     meansure.vars = c("SumFedSenate", "FedLaughterSenate"))
 SubMolten$MonthYear <- as.POSIXct(SubMolten$MonthYear)
 eachVar <- unique(SubMolten$variable)
-      p <- list()
-      for (i in eachVar){
-        SubData <- subset(SubMolten, variable == i)
+VarLabels <- data.frame(eachVar, SenateTitles, stringsAsFactors = FALSE)
+Rows <- 1:nrow(VarLabels)
+p <- list()
+      for (i in Rows){
+        SubData <- subset(SubMolten, variable == VarLabels[i, 1])
+        Title_i <- VarLabels[i, 2]
         p[[i]] <-   ggplot(data = SubData, 
                            aes(x = MonthYear, y = value)) +
                           geom_line() +
-                          xlab("") + ylab("") + ggtitle(paste(i, "\n")) +
+                          xlab("") + ylab("") + ggtitle(paste(Title_i, "\n")) +
                           theme_bw()
       }
-      do.call(grid.arrange, p)
+      suppressWarnings(do.call(grid.arrange, p))
 
 @   
 {\scriptsize{Note: no change points were estimated at conventional levels of statistical significance and using a wide range of minimum state widths.}}

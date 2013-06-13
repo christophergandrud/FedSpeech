@@ -12,6 +12,7 @@
 #' @param Grid Logical. If \code{TRUE} then each variable will be given its own plot. If \code{FALSE} then values from all of the variables in \code{Var} will be plotted on the same figure.
 #' @param palette If a string, it will use that named palette. If a number, will index into the list of palettes of appropriate type,
 #' @param leg.name A character string. If \code{Facet = FALSE}, it allows you to specify the legend name.
+#' @param Titles A character vector of the same lenght as \code{Vars} giving alternative title names for the plot titles. Only applies if \code{Grid = TRUE}.
 #' 
 #' @return a ggplot2 object 
 #' 
@@ -20,13 +21,18 @@
 #' @source James N.A., Matteson D.S. (2013). ecp: An R Package for Nonparametric Multiple Change Point Analysis of Multivariate Data.
 #' 
 
-e.divGG <- function(data, Vars, TimeVar, sig.lvl = 0.05, R = 199, eps = 1e-3, half = 1000, k = NULL, min.size = 30, alpha = 1, PlotVars = NULL, Grid = TRUE, palette = "Set1", leg.name = "")
+e.divGG <- function(data, Vars, TimeVar, sig.lvl = 0.05, R = 199, eps = 1e-3, half = 1000, k = NULL, min.size = 30, alpha = 1, PlotVars = NULL, Grid = TRUE, palette = "Set1", leg.name = "", Titles = NULL)
 {
   # Load required packages
   require(ecp)
   require(reshape2)
   require(ggplot2)
   require(gridExtra)
+
+    # Create plot titles if non specified
+  if (is.null(Titles)){
+    Titles <- Vars 
+  }
   
   # Create T x d matrix
   DataMatrix <- as.matrix(data[, Vars])
@@ -94,18 +100,21 @@ e.divGG <- function(data, Vars, TimeVar, sig.lvl = 0.05, R = 199, eps = 1e-3, ha
     }
     else if (Grid == TRUE){
       eachVar <- unique(DataMolten$GroupVar)
+      VarLabels <- data.frame(eachVar, Titles, stringsAsFactors = FALSE)
+      Rows <- 1:nrow(VarLabels)
       p <- list()
-      for (i in eachVar){
-        SubData <- subset(DataMolten, GroupVar == i)
+      for (i in Rows){
+        SubData <- subset(DataMolten, GroupVar == VarLabels[i, 1])
+        Title_i <- VarLabels[i, 2]
         p[[i]] <-   ggplot(data = SubData, 
                            aes(x = Time, y = Value)) +
                           geom_line() +
                           geom_vline(aes(xintercept = as.numeric(Lines)), 
                                      linetype = "longdash", colour = "#DE2D26") +
-                          xlab("") + ylab("") + ggtitle(paste(i, "\n")) +
+                          xlab("") + ylab("") + ggtitle(paste(Title_i, "\n")) +
                           theme_bw()
       }
-      do.call(grid.arrange, p)
+      suppressWarnings(do.call(grid.arrange, p))
     }
   }
 }
