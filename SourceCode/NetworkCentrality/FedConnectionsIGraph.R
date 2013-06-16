@@ -1,7 +1,7 @@
 ##############
 # Ties cumulative sum creation
 # Christopher Gandrud & Kevin Young
-# 10 June 2013
+# 16 June 2013
 ##############
 
 # Kevin
@@ -165,7 +165,7 @@ for (i in YearsList){
   
   # this is a package that sets the default colour and default transparency...can come in handy later
   # colvec <- rep(rgb(2,200,1, 80, names = NULL, 
-                maxColorValue = 255), length(V(g1)$name))  
+  #              maxColorValue = 255), length(V(g1)$name))  
   
   # colvec[V(g1)$name=="Princeton"]<-rgb(200,25,15, 155, names=NULL, maxColorValue=255)
   
@@ -190,15 +190,18 @@ for (i in YearsList){
 
 
 #### ------------ Create JavaScript Network Graphs ------------- ####
+library(d3Network)
+
 year <- c(1997, 2000, 2003, 2006, 2009, 2013)
 
 for (i in year){
-  FileName <- paste0("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Figures/FedBoard", i, ".html")
+  FileName <- paste0("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Figures/FedOrgs/FedBoard", i, ".html")
   Sub <- subset(FullTies, Year == i)
 
-  d3SimpleNetwork(Sub, file = FileName, 
-               Source = "Indv", Target = "Organisation",
-                width = 1400, height = 1000)
+  d3Network(Sub, file = FileName, 
+                Source = "Indv", Target = "Organisation",
+                linkDistance = 40, charge = -100,
+                width = 1000, height = 500)
 }
 
 

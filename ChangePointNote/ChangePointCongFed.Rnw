@@ -268,7 +268,7 @@ We also intend to improve our measures of legislative scrutiny by including sent
 
 %%%%%%% Bib and End File 
 \bibliographystyle{apsr}
-\bibliography{MainBib,PaperPackages}
+\bibliography{~/Dropbox/Fed_Speeches_Paper/MainBib,PaperPackages}
 
 
 %%%%%%%%%%%%% Extras %%%%%%%%%%%%%%%%%%%%%%%%%

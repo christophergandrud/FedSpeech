@@ -1,49 +1,136 @@
-To,From,
-American Capital Agency Corp,American Capital Agency Corp \\(Listed 05/2008\\),
-American Capital Agency Corp,AMERICAN CAPITAL AGENCY CORP,
-American Capital Mortgage Investment Corp,AMERICAN CAPITAL MORTGAGE INVESTMENT CORP,
-American Capital Mortgage Investment Corp,American Capital Mortgage Investment Corp \\(Listed 08/2011\\),
-BANK OF MONTREAL (BMO),BMO Financial Group,
-BANK OF MONTREAL (BMO),BMO Nesbitt Burns Inc,
-BANK OF MONTREAL (BMO),BMO Bankcorp Inc \\(Formerly known as Harris Bankcorp Inc\\),
-BANK OF MONTREAL (BMO),BMO Nesbitt Burns Corp Ltd,
-BANK OF MONTREAL (BMO),BMO Harris Bank NA \\(Harris NA prior to 07/2011\\),
-BANK OF MONTREAL (BMO),BMO Capital Markets Corp,
-Chase Manhattan Bank Ltd,Chase Manhattan Community Development Group,
-Chase Manhattan Bank Ltd,CHASE MANHATTAN CORP \\(De-listed 12/2000\\),
-Deutsche Bank,DEUTSCHE BANK AG,
-Deutsche Bank,DEUTSCHE BANK CAPITAL FUNDING TRUST,
-Deutsche Bank,"Deutsche Bank Trust Company Americas \\(Bankers Trust Co, New York prior to 04/2002\\)",
-Dominion Virginia Power Corp,DOMINION RESOURCES INC \\(VIRGINIA\\),
-EQUIFAX INC,Equifax Information Services LLC,
-First Tennessee Bank NA,First Tennessee National Corp,
-First Tennessee Bank NA,FIRST HORIZON NATIONAL CORP (First Tennessee National prior to 04/2004),
-Fulton Bank NA,FULTON FINANCIAL CORP,
-Harvard University,Harvard Business School,
-Harvard University,Harvard College,
-Harvard University,Harvard Law School,
-KEYCORP,KeyBank National Association,
-LINCOLN ELECTRIC HLDGS INC,Lincoln Electric Co,
-MB Financial Bank NA,MB FINANCIAL INC,
-Morgan Stanley,MORGAN STANLEY \\(Morgan Stanley Dean Witter & Co prior to 07/2002\\),
-Morgan Stanley,MORGAN STANLEY GROUP INC \\(De-listed 05/1997\\),
-New York University (NYU),"Leonard N Stern School of Business, New York University",
-New York University (NYU),New York University School of Law,
-Oxford University,"Nuffield College, Oxford University",
-Princeton University,"Princeton Environmental Institute \\(PEI\\), Princeton University",
-Society National Bank,Society Corp,
-Stanford University,"Stanford University, Graduate School of Business",
-Swiss Re,Swiss Re America Holding Corp,
-Swiss Re,SWISS REINSURANCE CO \\(De-list 12/2011\\),
-TD Bank NA,TORONTO-DOMINION BANK,
-TD Bank NA,TD BANKNORTH INC \\(De-listed 04/2007\\),
-TD Bank NA,TD BANKNORTH INC \\(De-listed 04/2007\\),
-TD Bank NA,TD Waterhouse Investor Services Inc,
-Tufts University,"Fletcher School of Law and Diplomacy, Tufts University",
-"University of California, Berkeley","Haas School of Business, University of California, Berkeley",
-University of Michigan,University of Michigan Law School,
-Wachovia,WACHOVIA CORP (De-listed 12/2008),
-Wachovia,WACHOVIA PREFERRED FUNDING CORP,
-University of Wisconsin School of Business,University of Wisconsin-Madison School of Business,
-Zurich Insurance Co,Zurich Holding Company of America Inc,
-Zurich Insurance Co,ZURICH INSURANCE GROUP AG \\(Zurich Financial Services Ltd prior to 04/2012\\)\\(Zurich Financial Services Group prior to 04/2009\\),
+To,From
+American Bankers Association,ABA Government Relations Council
+American Bankers Association,ABA National Compliance School
+American Bankers Association,ABA Securities Association \\(ABASA\\)
+American Bankers Association,ABA Securities Association \\(ABASA\\)
+American Bankers Association,ABA Stonier Graduate School of Banking
+American Bankers Association,American Bankers Association
+American Bankers Association,American Bankers Association \\(ABA\\)
+American Capital Agency Corp,American Capital Agency Corp \\(Listed 05/2008\\)
+American Capital Agency Corp,AMERICAN CAPITAL AGENCY CORP
+American Capital Mortgage Investment Corp,AMERICAN CAPITAL MORTGAGE INVESTMENT CORP
+American Capital Mortgage Investment Corp,American Capital Mortgage Investment Corp \\(Listed 08/2011\\)
+BANK OF MONTREAL (BMO),BMO Financial Group
+BANK OF MONTREAL (BMO),BMO Nesbitt Burns Inc
+BANK OF MONTREAL (BMO),BMO Bankcorp Inc \\(Formerly known as Harris Bankcorp Inc\\)
+BANK OF MONTREAL (BMO),BMO Nesbitt Burns Corp Ltd
+BANK OF MONTREAL (BMO),BMO Harris Bank NA \\(Harris NA prior to 07/2011\\)
+BANK OF MONTREAL (BMO),BMO Capital Markets Corp
+Levy Economics Institute,Bard College
+Chase Manhattan Bank Ltd,Chase Manhattan Community Development Group
+Chase Manhattan Bank Ltd,CHASE MANHATTAN CORP \\(De-listed 12/2000\\)
+Deutsche Bank,DEUTSCHE BANK AG
+Deutsche Bank,DEUTSCHE BANK CAPITAL FUNDING TRUST
+Deutsche Bank,"Deutsche Bank Trust Company Americas \\(Bankers Trust Co, New York prior to 04/2002\\)"
+Dominion Virginia Power Corp,DOMINION RESOURCES INC \\(VIRGINIA\\)
+EQUIFAX INC,Equifax Information Services LLC
+First Tennessee Bank NA,First Tennessee National Corp
+First Tennessee Bank NA,FIRST HORIZON NATIONAL CORP (First Tennessee National prior to 04/2004)
+Fulton Bank NA,FULTON FINANCIAL CORP
+Harvard University,Harvard Business School
+Harvard University,Harvard College
+Harvard University,Harvard Law School
+KEYCORP,KeyBank National Association
+LINCOLN ELECTRIC HLDGS INC,Lincoln Electric Co
+MB Financial Bank NA,MB FINANCIAL INC
+Morgan Stanley,MORGAN STANLEY \\(Morgan Stanley Dean Witter & Co prior to 07/2002\\)
+Morgan Stanley,MORGAN STANLEY GROUP INC \\(De-listed 05/1997\\)
+New York University (NYU),"Leonard N Stern School of Business, New York University"
+New York University (NYU),New York University School of Law
+Oxford University,"Nuffield College, Oxford University"
+Princeton University,"Princeton Environmental Institute \\(PEI\\), Princeton University"
+Princeton University,"Woodrow Wilson School of Public and International Affairs, Princeton University"
+Princeton University,Princeton Alumni Schools Committee
+Princeton University,Princeton University Press
+Society National Bank,Society Corp
+Stanford University,"Stanford University, Graduate School of Business"
+Swiss Re,Swiss Re America Holding Corp
+Swiss Re,SWISS REINSURANCE CO \\(De-list 12/2011\\)
+New York University (NYU),"Leonard N Stern School of Business, New York University"
+New York University (NYU),New York University School of Law
+New York University (NYU),NYU Langone Medical Center \\(New York University Medical Center prior to 04/2008\\)
+Securities Industry and Financial Markets Association (SIFMA),Security Industry Association \\(SIA\\)
+TD Bank NA,TORONTO-DOMINION BANK
+TD Bank NA,TD BANKNORTH INC \\(De-listed 04/2007\\)
+TD Bank NA,TD BANKNORTH INC \\(De-listed 04/2007\\)
+TD Bank NA,TD Waterhouse Investor Services Inc
+Tufts University,"Fletcher School of Law and Diplomacy, Tufts University"
+"University of California, Berkeley","Haas School of Business, University of California, Berkeley"
+University of Michigan,University of Michigan Law School
+Wachovia,WACHOVIA CORP (De-listed 12/2008)
+Wachovia,WACHOVIA PREFERRED FUNDING CORP
+University of Wisconsin School of Business,University of Wisconsin-Madison School of Business
+Zurich Insurance Co,Zurich Holding Company of America Inc
+Zurich Insurance Co,ZURICH INSURANCE GROUP AG \\(Zurich Financial Services Ltd prior to 04/2012\\)\\(Zurich Financial Services Group prior to 04/2009\\)
+National Association for Business Economics,National Association of Business Economists
+Federal Reserve Bank of Dallas,Dallas Federal Reserve
+New York Clearing House Association (NYCHA),Clearing House
+Brookings Institution (BI),The Brookings Institution
+American Economic Association (AEA),American Economics Association
+Bard College,Jerome Levy Economics Institute of Bard College
+Conference of State Bank Supervisors (CSBS),Conference of State Bank Supervisors
+New York University,Stern School of Business
+New York University,Leonard N. Stern School of Business
+Stanford University,Center for Economic Policy Research at Stanford University
+Stanford University,Stanford Institute for Economic Policy Research \\(SIEPR\\)
+Fordham University,Fordham University School of Law
+American Economic Association (AEA),American Economic Association and the American Finance Association
+Georgetown University,Georgetown University Public Policy Institute
+Federal Reserve Bank of Chicago,Federal Reserve Bank of Chic
+New York University,New York University
+Securities Industry and Financial Markets Association (SIFMA),Securities Industry Association
+Ernst & Young LLP,Ernst & Young and AEI-Brookings Joint Center on Regulatory Studies
+American Bankers Association (ABA),the American Bankers Association
+Georgetown University,Georgetown U
+New York University,NYU Stern School of B
+New York University,New York University \\(NYU\\)
+US Department of Labor,US Dept of Labour
+Securities Industry and Financial Markets Association (SIFMA),Security Industry Association and U North Carolina
+Federal Reserve Bank of St Louis,Federal Reserve Bank of St. Louis
+National Association of Business Economists (NABE),the National Association of Business Economics
+US Department of Labor,Department of Labor
+Harvard University,Harvard Law School
+University of Illinois (UIC),University of Illinois at Chicago
+US Department of Labor,U.S. Department of Labor and American Enterprise Institute
+Federal Reserve Bank of San Francisco (FRBSF),Federal Reserve Bank of San Francisco
+National Bureau of Economic Research (NBER) (USA),National Bureau of Economic Research
+World Bank,The World Bank
+Securities Industry and Financial Markets Association (SIFMA),Securities Industry Association
+National Association for Business Economics,National Association for Business Economics \\(NABE\\) and the Association for University Business and Economic Research \\(AUBER\\)
+Duke University,"Fuqua School of Business, Duke University"
+Federal Reserve Bank of San Francisco (FRBSF),Federal Reserve Bank of San Francisco (Seattle Branch) and the University of Washington
+Securities Industry and Financial Markets Association (SIFMA),Securities Industry Association
+University of North Carolina (UNC),Economics Club of the University of North Carolina at Chapel Hill
+Bard College,"The Levy Economics Institute of Bard College,"
+European Central Bank,The European Central Bank
+New York University (NYU),New York University Law School
+The Johns Hopkins University,The Johns Hopkins University Applied Physics Laboratory
+European Central Bank,European Central Bank and Federal Reserve Bank of Chicago
+London School of Economics (LSE),London School of Economics
+Federal Reserve Bank of Atlanta,Federal Reserve Bank of AtlantaÃ
+Federal Reserve Bank of Chicago,Federal Reserve Bank of ChicagoÃ
+Massachusetts Institute of Technology (MIT),Massachusetts Institute of Technology
+New York Stock Exchange (NYSE) Inc,New York Stock Exchange
+Federal Reserve Bank of Richmond (FRBR),Charlotte Branch of the Federal Reserve Bank of Richmond
+Duke University,Econometric Society at Duke University
+National Bureau of Economic Research (NBER) (USA),National Bureau of Economic Research Summer Institute
+American Economic Association,American Economic Association (AEA)
+Princeton University,Princeton University Center for Economic Policy Studies
+Federal Reserve Bank of Richmond (FRBR),Federal Reserve Bank of Richmond
+Federal Reserve Bank of Boston,Federal Reserve Bank of BostonÃ•s
+US Department of the Treasury,U.S. Department of the Treasury
+Brookings Institution (BI),Brookings
+Georgetown University,Georgetown University Wall Street Alliance
+Federal Reserve Bank of Boston,Federal Reserve Bank of Boston and Federal Reserve Bank of San Francisco
+Bank for International Settlements (BIS),BIS
+Brookings Institution (BI),Brookings Institution
+Harvard University,Harvard Law School Program on International Financial Systems
+Federal Reserve Bank of San Francisco (FRBSF),Federal Reserve Bank of San Francisco
+Federal Reserve Bank of Kansas City,Federal Reserve Bank of Kansas
+Princeton University,"Center for Economic Policy Studies and the Bendheim Center for Finance, Princeton University"
+Harvard University,Harvard University Program on International Financial Systems
+Harvard University,Harvard Law School Program on International Financial Systems
+Securities Industry and Financial Markets Association (SIFMA),American Institute of Certified Public Accountants and the Financial Management Division of the Securities Industry and Financial Markets Association \\(SIFMA\\)
+Securities Industry and Financial Markets Association (SIFMA),American Institute of Certified Public Accountants and the Financial Management Division of the Securities Industry Association
+American Institute of Certified Public Accountants,American Institute of Certified Public Accountants National Conference
+Federal Reserve Bank of Chicago,Federal Reserve Bank of Chicagoago
