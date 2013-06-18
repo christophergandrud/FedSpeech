@@ -1,7 +1,7 @@
 #################
 # Merge Fed Speeches with Fed Orgs
 # Christopher Gandrud
-# 16 June 2013
+# 18 June 2013
 #################
 
 library(lubridate)

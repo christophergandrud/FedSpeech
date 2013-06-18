@@ -1,13 +1,8 @@
 ##############
 # Ties cumulative sum creation
 # Christopher Gandrud & Kevin Young
-# 16 June 2013
+# 18 June 2013
 ##############
-
-# Kevin
-####I also converted all 'current' dates to 2013.
-####I also changed all 'date' obs to 'year' obs in excel.
-
 
 # Load libraries
 library(stringr)
