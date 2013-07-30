@@ -68,8 +68,21 @@ TopicWide10 <- LongDataMake(obj = CombClean10, TopicLabels = TopicLabels10)
 ###### ------- Preliminary Change Point ---------- ####
 
 #### 5
-CleanNames <- c("Financial Markets", "Macroeconomics", "Monetary Policy", 
+CleanNames5 <- c("Financial Markets", "Macroeconomics", "Monetary Policy", 
                 "International Economy",  "Local Housing and Dev", 
                 "Banking Regulation")
-e.divGG(data = TopicWide, Vars = TopicLabels, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames)
+
+e.divGG(data = TopicWide5, Vars = TopicLabels5, TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames5)
+
+#### 10 
+TopicLabels10 <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy",      
+                   "International.Economy", "Local.Housing.Dev",
+                   "Banking.Regulation")  
+
+CleanNames10 <- c("Financial Markets", "Macroeconomics", "Monetary Policy",      
+                  "International Economy", "Local Housing Dev",
+                  "Banking Regulation")  
+
+e.divGG(data = TopicWide10, Vars = TopicLabels10, TimeVar = "MonthYear", 
+        sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames10)
