@@ -54,7 +54,7 @@
 %%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Creating Scrutiny Indicators: A Change Point Exploration of Congressional Scrutiny of the US Federal Reserve}
 
-\author{Kevin Young \\ {\emph{University of Massachusetts, Amherst}} \\ \& \\ Christopher Gandrud \\ {\emph{Hertie School of Governance}}}
+\author{Christopher Gandrud \\ {\emph{Hertie School of Governance}} \\ \& \\ Kevin Young \\ {\emph{University of Massachusetts, Amherst}}} 
 
 \begin{document}
 
@@ -81,7 +81,7 @@ In this note we first discuss our sample of US Congressional hearings. We then g
 
 \section{Congressional Hearings Data}
 
-We gathered data on congressional hearings--in both the Senate and the House of Representatives. We aimed to gather all of the hearing transcripts for (a) hearings where a Federal Reserve representative gave testimony and (b) any hearing of the US House of Representatives Committee on Financial Services (HCFS)\footnote{From 1995 until 2000 it was known as the Committee on Banking and Financial Services.} and the Senate Committee on Banking, Housing, and Urban Affairs (SCBUA) regardless of whether Fed testimony was given. Both of these committees have the normal responsibility for scrutinizing the Federal Reserve.
+We gathered data on congressional hearings--in both the Senate and the House of Representatives.\footnote{Our focus on hearings is different from \cite{Kettl1988}. He counted bills pertaining to the Fed introduced in Congress. Over the periods 1951-1983, he found that there were more such bills introduced when there was higher inflation.} We aimed to gather all of the hearing transcripts for (a) hearings where a Federal Reserve representative gave testimony and (b) any hearing of the US House of Representatives Committee on Financial Services (HCFS)\footnote{From 1995 until 2000 it was known as the Committee on Banking and Financial Services.} and the Senate Committee on Banking, Housing, and Urban Affairs (SCBUA) regardless of whether Fed testimony was given. Both of these committees have the normal responsibility for scrutinizing the Federal Reserve.
 
 \subsection{Data Availability}
 
@@ -268,7 +268,7 @@ We also intend to improve our measures of legislative scrutiny by including sent
 
 %%%%%%% Bib and End File 
 \bibliographystyle{apsr}
-\bibliography{~/Dropbox/Fed_Speeches_Paper/MainBib,PaperPackages}
+\bibliography{MainBib,PaperPackages}
 
 
 %%%%%%%%%%%%% Extras %%%%%%%%%%%%%%%%%%%%%%%%%
