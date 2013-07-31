@@ -1,7 +1,7 @@
 ##############
 # Ties cumulative sum creation
 # Christopher Gandrud & Kevin Young
-# 18 June 2013
+# 31 July 2013
 ##############
 
 # Load libraries
@@ -129,15 +129,29 @@ CleanOut <- setdiff(ls(), "FullTies")
 rm(list = CleanOut)
 
 #### ----------- --------------------------- ----------- 
+#### ----------- Constrict to non-rotating Board Members ---- ####
+
+MembFile <- "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/FRB_Members_and_Spellings.csv"
+MembNames <- read.csv(MembFile)
+MembNames <- MembNames[, c("BoardStart", "BoardEnd", "BX_spelling")]
+names(MembNames) <- c("BoardStart", "BoardEnd", "Indv")
+
+# Merge with Fill Ties
+BoardTies <- merge(FullTies, MembNames, by = "Indv")
+BoardTies <- subset(BoardTies, FedStart >= BoardStart & FedEnd <= BoardEnd)
+
+
+#### ----------- --------------------------- ----------- 
 #### ----------- Network Centrality Analysis ----------- ####
 #### ----------- --------------------------- ----------- 
 
 library(igraph)
 
 YearsList <- 1997:2013
+DataToUse <- BoardTies
 for (i in YearsList){
   # Subset the Data by year
-  YearlyTies <- subset(FullTies, Year == i)
+  YearlyTies <- subset(DataToUse, Year == i)
 
   Var <- c("Organisation", "Indv", "YearsExp")
   foredgelist <- YearlyTies[, Var]
@@ -177,10 +191,9 @@ for (i in YearsList){
   NamesValue <- data.frame(evcentstore$vector)
   NamesValue$names <- row.names(NamesValue)
    NamesValue <- NamesValue[order(-NamesValue$evcentstore.vector),] 
-  FileName <- paste0("CentralityScores/EVCentralityNO SCALE", 
+  FileName <- paste0("~/Dropbox/Fed Hearings/EVScores31July2013/", 
                       i, ".csv")
   write.csv(NamesValue, file = FileName)
-   
 }
 
 
