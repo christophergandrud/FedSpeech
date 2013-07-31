@@ -1,7 +1,7 @@
 ##############
 # Download econ data and save as monthly data file.
 # Christopher Gandrud
-# 30 May 2013
+# 31 July 2013
 ##############
 
 # Packages 
@@ -20,11 +20,11 @@ library(xtable)
 ## GDPDEF = Gross Domestic Product: Implicit Price Deflator
 ## GDPC96 = Real Gross Domestic Product, 3 Decimal
 ## U6RATE = Total unemployed, plus all marginally attached workers plus total employed part time for economic reasons
-##
+## SPCS10RSA = S&P Case-Shiller 10-City Home Price Index
 ##
 
-Symbols <- c("CPIAUCNS", "PCEPI", "INTDSRUSM193N", "DFF", "FEDFUNDS", "GDPDEF", "GDPC96", "U6RATE")
-getSymbols(Symbols, src = "FRED")
+Symbols <- c("CPIAUCNS", "PCEPI", "INTDSRUSM193N", "DFF", "FEDFUNDS", "GDPDEF", "GDPC96", "U6RATE", "SPCS10RSA")
+# getSymbols(Symbols, src = "FRED")
 
 # Convert to data frames
 
@@ -69,9 +69,9 @@ Quart <- function(data, Var){
   LagsDF <- data.frame(data[, 1], Q2, Q3)
   names(LagsDF) <- c("DateField", "Q2", "Q3")
   TempComb <- FillIn(data, LagsDF, Var1 = Var, Var2 = "Q2", KeyVar = "DateField")
-  TempComb <- TempComb[, -2]
+  # TempComb <- TempComb[, -2]
   TempComb <- FillIn(TempComb, LagsDF, Var1 = Var, Var2 = "Q3", KeyVar = "DateField")
-  TempComb <- TempComb[, -2]
+  # TempComb <- TempComb[, -2]
   TempComb
 }
 
@@ -97,13 +97,20 @@ CombinedEconSlim <- YearChange(data = CombinedEconSlim,
 CombinedEconSlim <- YearChange(data = CombinedEconSlim, 
                                Var = "GDPC96", 
                                NewVar = "GDPC96Percent")
+CombinedEconSlim <- YearChange(data = CombinedEconSlim, 
+                               Var = "SPCS10RSA", 
+                               NewVar = "CaseShillerChange")
+CombinedEconSlim <- YearChange(data = CombinedEconSlim, 
+                               Var = "U6RATE", 
+                               NewVar = "UnemploymentRateChange")
 
 # Save as EconData.csv
 write.csv(CombinedEconSlim,
-          file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.csv")
+          file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/FREDEconData.csv",
+          row.names = FALSE)
 
 ####----------- Variable Description Table ----------####
-ColNames <- names(CombinedEconSlim[, 2:9])
+ColNames <- names(CombinedEconSlim[, 2:10])
 Description <- c("Consumer Price Index for All Urban Consumers: All Items",
    "Personal Consumption Expenditures: Chain-type Price Index (PCEPI), (monthly, seasonally adjusted)",
   "Interest Rates, Discount Rate for United States",
@@ -111,7 +118,8 @@ Description <- c("Consumer Price Index for All Urban Consumers: All Items",
   "Effective Federal Funds Rate (monthly)",
   "GDPDEF = Gross Domestic Product: Implicit Price Deflator",
   "GDPC96 = Real Gross Domestic Product, 3 Decimal",
-  "U6RATE = Total unemployed, plus all marginally attached workers plus total employed part time for economic reasons)")
+  "U6RATE = Total unemployed, plus all marginally attached workers plus total employed part time for economic reasons)",
+  "SPCS10RSA = S&P Case-Shiller 10-City Home Price Index")
 Source <- "FRED: http://research.stlouisfed.org/fred2/"
 
 VarList <- cbind(ColNames, Description, Source)

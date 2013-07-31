@@ -32,7 +32,6 @@ for (i in 1:2){
 
 ####-------- EconData -----------------------------####
 EconData <- read.csv("FREDEconData.csv")
-EconData <- EconData[, -1]
 
 # Add lag variables
 EconVars <- names(EconData[, -1])

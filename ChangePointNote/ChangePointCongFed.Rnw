@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Testimony Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 14 June 2013
+% 31 July 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -220,7 +220,7 @@ Figure \ref{fig:SenateFedCP} shows the (limited) data from full SCBUA hearings w
     & April 2007-May 2010 & very frequent & high & mixed & mixed \\[0.3cm]
     & June 2010-End & somewhat infrequent & high & mixed & very infrequent \\[0.3cm]
     HCFS without Fed &  Beginning-January 2007 & infrequent to moderate & moderate to high & & moderate to very low \\[0.3cm]
-    & February 207-End & frequent to infrequent & high & & moderate to very low \\[0.3cm]
+    & February 2007-End & frequent to infrequent & high & & moderate to very low \\[0.3cm]
     SCBUA with Fed & Beginning to End & & &\\[0.3cm]
     \hline
     \end{tabular}

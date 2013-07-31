@@ -155,11 +155,6 @@ for (i in YearsList){
 
   Var <- c("Organisation", "Indv", "YearsExp")
   foredgelist <- YearlyTies[, Var]
-   
-  ###Christopher right here I am trying to write the edgelist for each year but I don't know how to do this...
-  ##the reason why I want the edgelist for each year is because we want to see which institutions we need to correct the name of
-  # e.g. haas school of business, UC Berkeley is the same as UC Berkeley...so we need to make these changes before generating the netwwork graphics and data
-  #write.csv(foredgelist, file = i.csv)
   
   # renaming the variables so they can be used in igraph
 
@@ -191,9 +186,11 @@ for (i in YearsList){
   NamesValue <- data.frame(evcentstore$vector)
   NamesValue$names <- row.names(NamesValue)
    NamesValue <- NamesValue[order(-NamesValue$evcentstore.vector),] 
+  names(NamesValue) <- c("FedBoardCentrality", "Organisation")
+  NamesValue$year <- i
   FileName <- paste0("~/Dropbox/Fed Hearings/EVScores31July2013/", 
                       i, ".csv")
-  write.csv(NamesValue, file = FileName)
+  write.csv(NamesValue, file = FileName, row.names = FALSE)
 }
 
 
