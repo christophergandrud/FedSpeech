@@ -4,6 +4,9 @@
 # 1 August 2013
 #############
 
+# Load package
+library(lubridate)
+
 # Load data
 SpeechesData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/FedSpeechesCorrected-NEW.csv")
 
@@ -54,15 +57,29 @@ MergeNonRotate <- function(year){
 yearList <- 1997:2013
 SpeechComb <- MergeNonRotate(yearList)
 
+SpeechComb$date_of_speech <- dmy(SpeechComb$date_of_speech) 
+SpeechComb <- SpeechComb[order(SpeechComb$date_of_speech), ]
+
+
+#### Total number of speeches per year
+library(plyr)
+
+SpeechComb$Dumb <- 1
+SpeechTemp <- ddply(SpeechComb, .(year), transform, YearTotal = sum(Dumb))
+
+SpeechNoDups <- SpeechTemp[!duplicated(SpeechTemp$year), ]
+SpeechNoDups <- subset(SpeechNoDups, year != 2013)
+plot(SpeechNoDups$year, SpeechNoDups$YearTotal)
+
 #### Change Point 1st Go
 # Load e.divGG function
 library(devtools)
-source_gist("5675688")
-
-library(lubridate)
-
-SpeechComb$date <- dmy(SpeechComb$date_of_speech)
+# source_gist("5675688")
 
 ConVars <- c("SpeakerConnect", "HFSC_CombConnect", "FedBoardCentrality")
-e.divGG(data = SpeechComb, Vars = "FedBoardCentrality", TimeVar = "date", 
-        Titles = ConVars, sig.lvl = 0.1, R = 999, min.size = 40)
+
+e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "date_of_speech", 
+        Titles = ConVars, sig.lvl = 0.1, R = 999, min.size = 60)
+
+e.divGG(data = SpeechComb, Vars = "FedBoardCentrality", TimeVar = "date_of_speech", 
+        Titles = "Fed. Board Centrality", sig.lvl = 0.05, R = 999, min.size = 40)

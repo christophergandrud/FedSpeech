@@ -1,0 +1,186 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fed Full Change Point Analysis
+% Kevin Young and Christopher Gandrud
+% 1 August 2013
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% !Rnw weave = knitr
+
+\documentclass[a4paper]{article}
+\usepackage{fullpage}
+\usepackage[authoryear]{natbib}
+\usepackage{setspace}
+    \doublespacing
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=cyan,
+    urlcolor=cyan
+}
+\usepackage{dcolumn}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{lscape}
+
+\usepackage{todonotes}
+\usepackage[utf8]{inputenc} 
+
+% Set knitr global options and load packages
+<<ParentGlobalOpts, include=FALSE>>=
+    # Global options
+    opts_chunk$set(concordance=TRUE)
+    opts_chunk$set(fig.align='center')
+
+    # Load packages
+    Pkgs <- c("repmis", "digest", "devtools", "plyr", "ecp", "gridExtra",
+                "ggplot2", "reshape2")
+    repmis::LoadandCite(Pkgs, file = "PaperPackages.bib")
+    # repmis::LoadandCite(Pkgs) # Used for testing.
+
+    # Load e.divGG function
+    source_gist("5675688")
+
+    # Set working directory
+    setwd("~/Dropbox/Fed_Speeches_Paper/FedSpeech/ChangePointNote/")
+
+    SenateMonth <- read.csv("SenateFullHearings.csv")
+    HouseMonth <- read.csv("HouseFullHearings.csv")
+    # Topics
+    # EconData
+    # Connectivity 
+@
+
+%%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{How the Fed Manages its External Environment: An Analysis of Political Stressors and Social Network Responses, 1996-2012}
+
+\author{Kevin Young \\ {\emph{University of Massachusetts, Amherst}} \\ \& \\  Christopher Gandrud \\ {\emph{Hertie School of Governance}}} 
+
+\begin{document}
+
+\maketitle
+
+%%%%%%% Abstract %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+\noindent\emph{Very Early Working Draft Prepared for the 2013 Meeting of the American Political Science Association. Comments welcome.}\footnote{Contact: Kevin Young (\href{kevinlyoung@polsci.umass.edu}{kevinlyoung@polsci.umass.edu}) or Christopher Gandrud (\href{mailto:christopher.gandrud@gmail.com}{christopher.gandrud@gmail.com}). \\ Thank to you Rebecca Kanter, Natalie McClung, and Brent Ramsey for research assistance. \\
+All data and source code needed to reproduce this paper are available at: \url{https://github.com/christophergandrud/FedSpeech}.}
+
+Existing political economy literature has established a number of ways in which the policy output of central banks can be affected by various outside forces in contemporary politics. What has not been investigated, however, is what resources central banks possess which might allow them to manage these manifold pressures by using subtle, non-economic means of persuasion. In this paper we seek to understand the ways in which the US Federal Reserve ( `the Fed') reacts to its political environment by adapting its engagement with the public and the US Congress. To do this, we conduct a new dataset of public speeches and Congressional testimony by senior Fed officials from 1996 to 2012. Using automated content, network, and change point analysis we aim to understand how pressures in the Fed’s political environment affect the frequency of contact that the Fed has with different types of outside groups and what topics they discuss. Our analysis allows us to examine the ways in which the Fed attempts to persuade its critics during times of threat to its bureaucratic autonomy.
+
+\end{abstract}
+
+\begin{description}
+  \item [{\textbf{Keywords:}}] monetary policy, legislative oversight, change point analysis, automated text analysis, network analysis
+\end{description}
+
+It is well known that monetary authorities such as central banks occupy a key position in the management of contemporary economic life. The tasks of setting and managing interest rates, influencing market liquidity and, for many central banks, conducting financial regulation, are all relatively well-known economic management functions in this regard. Yet as much of the political economy of central bank literature has established, central banks are not simply perfectly rational bureaucracies carrying out their business in a disinterested manner, shielded from the manifold pressures of the political world outside their walls. Central banks are political entities. As highly important economic governance institutions, their decisions have distributive implications, and as such many actors take an active interest in their policy decisions, trying to influence them.
+
+Existing political economy literature has established a number of ways in which the policy output of central banks can be affected by various outside forces in contemporary politics–for example how central banks have been lobbied by interest coalitions, how they have responded to media pressure, and how they have reacted to conditions of partisan politics. What has not been investigated, however, is what resources central banks possess which might allow them to manage these manifold pressures. While central banks are among the most formally independent government agencies, this does not necessarily mean that their actual behavior does not adapt to the socio-political environment that they are embedded in. But how do they adapt? Under what conditions?
+
+In this paper we seek to understand the ways in which the US Federal Reserve (henceforth ‘the Fed’), among the most prominent central banks in the world, reacts to the economic and political environments it inhabits by adapting its interlocution with the public. By exploring the patterns of public engagement of this institution, we aim to gain insight into the means the Fed utilizes in pursuit of its assumed objective of institutional autonomy. Our analysis proceeds by way of a quantitative analysis of the patterns by which Fed officials engage with the public from 1996 to 2012.
+
+Key to our analysis is the use of public speeches by Fed officials–a key element of the Fed’s active engagement with the public. By studying the groups that the Fed engaged with at a given time, and the topics that it raised in its speeches, it is possible to ascertain a `normal state' of public engagement over a given time period. Deviations from this normal state can be analyzed in relation to particular conditions in the Fed’s political environment–such as times in which it might expect political discipline to be more likely on the horizon. Support for a null hypothesis under such an analysis would be that the Fed’s political environment (independent variable) does not meaningfully affect its engagement with the public (dependent variable). Yet if indeed there is a relationship between the Fed’s political environment and its engagement with the public, we still need to know how it reacts.
+
+Our analysis is divided into five parts. In Section 1 we describe existing literature on the Fed as a political actor and how it may respond to its environment by changing its interlocution with the public. In Section 2 we then describe our principle data sources for our dependent variable of interest including the network centrality and automated text analysis methods we used to estimate the Fed's engagement. In Section 3 we discuss the economic and political variables we used to try to understand the Fed's behavior. We finally discuss the empirical model we used to estimate the relationships between these variables and the results (Section 5).  
+
+\section{The Fed as a Political Actor}
+
+There is a relative consensus that government bureaucracies respond to their external political environment. While the precise political
+stimuli that bureaucracies respond to has been less well developed \citep[see][498]{wood1993dynamics}, there has been renewed interest
+in recent years in the political influence over normally ``independent" agencies of the government such as central banks and regulatory agencies.
+The actions and non-actions of such institutions have huge ramifications for society. Yet as important as the policies of these institutions
+are they have been intentionally designed to be highly independent from the rest of the government and the political process. Central
+banks occupy a particularly special niche in this environment: they control not just one regulatory area, but essentially the hugely consequential
+and far-reaching levers of monetary policy, and often of financial regulatory policy as well. Even before the rise of the ``regulatory
+state" \citep{majone1998europe} and the intense interest in the ``logic of delegation'' \citep{thatcherstone2002,mcnamara2002},
+central banks often have stood apart from other agencies of government: powerful, but powerfully independent at the same time.
+
+The Federal Reserve is arguably the most important central bank in the world, as it not only commands the US economy but makes decisions which ultimately effect the entire global economy given the centrality of the US dollar, US treasury bills, and US demand in the global financial system \citep[see][]{konings2007institutional,wade2003invisible}. A wide variety of existing literature has sought to investigate the
+de facto independence of the Fed in political economy terms. Such literature has investigated how external pressures--such
+as pressure from the media, from interest groups, from Congress and the President has affected Fed policy.
+
+The institutional autonomy of the Fed has been investigated for some time. Many early works have explored the Fed's institutional
+autonomy from a descriptive historical analysis, pointing out the Fed's policy moves in response to particular political events such as Congressional oversight \citep{Toniolo1988,Grieder1987}. A variety of ``structuralist'' analyses within international political economy scholarship have long
+situated the Fed close to the center of global economic system, and have sought to understand how the Fed plays a global governance role
+in response to changing circumstances \citep{konings2007institutional,Panitch2008}. A much more extensive literature, centered in American politics has
+sought to examine, through quantitative analysis, the conditions under which the Fed responds to particular political stimuli \citep[for a review see][7-20]{corder1998central}.
+
+This quantitative literature has been hotly contested, with clear camps developing on the question of the Fed's autonomy.
+For example Grier (1984) finds that the proxy for preferences of the Senate Banking Committee are a statistically significant predictor
+of money supply growth; yet \citet{beck1990congress} replicated this study with more recent data at the time and found no such relationship
+\citep[cited in ][92]{munger1990federal}. \citet{havrilesky1995pressures} was among the first to examine outside pressure on the Fed in a quantitative
+fashion, and analyzed this through counts of different categories of news articles, examining positive and negative sentiment directed
+toward the Fed's monetary policy. \citet{Posen1993} examined pressure on the Fed through an analysis of supportive or oppositional coalitions for different monetary policy goals. 
+
+There is something common to all of these studies and the many others that have come in their wake: the dependent variable is always the
+Fed's own policy moves. Typically, this is operationalized in the monetary policy actions that the Fed pursues, whether it be
+particular rates of monetary growth, interest rate adjustments, allowable rates of inflation, or some variant thereof. Otherwise the dependent
+variable of interest are the Fed's regulatory policy actions, such as how it engages with other regulatory agencies at home and abroad to coordinate banking regulation, or simply efforts to strengthen or weaken the stringency of banking regulation under its purview.
+
+What this literature neglects is the notion that the Fed might actively manage its political environment, rather than simply respond to it.
+In other words, most existing literature seems to assume that the Feds response function is channeled entirely through its policy levers. For instance, if under some kind of threat, the Fed adjusts an inflation target, moves and interest rate, or looks the other way on a banking regulation. Yet the very fact that the Fed reacts to such external pressures at all suggests that it values its autonomy. Indeed the notion that the Fed wants to maintain its institutional autonomy is relatively uncontroversial within the existing literature. 
+
+The fact that the Fed values its autonomy means that it is likely to take steps to protect and nurture that autonomy. While its main
+policy tools are one way it might pursue such efforts, this is clearly not the only avenue available to the Fed. In particular, the Fed can
+engage with the wider public through a process of communication and contact. While it is widely acknowledged that the Fed engages in ``signalling''
+of its monetary policy decisions, the Fed also speaks directly to a wide variety of different groups, making contact in outreach programs,
+speaking at conferences and making formal contact with different private sector groups. We are interested in whether the Fed might adjust this
+kind of engagement with different groups based on different pressures in its external environment. 
+
+\subsection{The Fed is Special}
+
+The Fed is not like other government agencies, for a variety of reasons. The policy decisions of the Fed affect virtually all other government agencies,
+since the Fed controls the levers of both banking regulation and supervision and monetary policy. No other branch of the government has policy
+levers which have such a broad and substantive scope over the operation of the entire economy. The Fed's monetary policy decisions are not subject to approval by any entity within the executive branch of government, up to and including the President. The Fed enjoys a significant degree of independence from the normal mechanisms of government oversight. Most exemplary in this regard is the fact that the Fed does not have its budgetary decisions approved by Congress. The Fed is self-funded through its own operations. While this is substantial, this is not the limit to its exceptional status. For example since 1978 the Fed has been purposefully excluded from the scope of potential audits by the Government Accountability Office (GAO) in areas such as monetary policy and dealings with foreign entities. 
+
+As the literature on bureaucratic autonomy has long understood, legislative oversight can operate in a diffuse way that only reveals its disciplinary
+power when a bureau engages in activities not congenial to legislative preferences. Legislatures don't discipline bureaucracies like the Fed on a constant basis, but only when it is needed \citep{weingast1983bureaucratic}, often relying on the `fire alarms' model of oversight \citep{Mccubbins1984}. In this manner, the Fed's exceptional independence as a branch of the government is essentially a privilege, not a right. The independence of the Fed is itself periodically called into question. In the 1970s this was a regular occurrence--the Fed was subject to a variety of legislative threats not coincidental to the recessions and economic turbulence of that period \cite[for an overview of the period, see][140-166]{Kettl1988}.
+The ``Sunshine Act" of 1976 (HR 11656) threatened to reduce the level of official secrecy at the Fed; the ``Humphrey-Hawkins Act" of 1978 required the Fed to report on its projections for various economic indicators in the upcoming year and to justify projections that were inconsistent with the present \citep[141]{Wooley1984}. In the early 1980s there were many bills introduced in Congress reflecting frustration about the high interest rates induced by the Volcker Shock of that period \citep[see][141, ref on Volker shock from blue book]{Wooley1984}. More recently, while the Fed budget is not subject to congressional approval, as \citet[26]{axilrod2012federal} notes ``the threat that it could remains very real. It is reported in the budget. And the possibility of bringing it under the appropriation process encourages great watchfulness at the Board to insure that not even
+Ceasar's wife could be more pure." Since the 2008/09 financial crisis the Fed has been forced to disclose more information than it had previously. A variety of GAO audits were undertaken on the Fed's operations, largely related to its unprecedented lending activities during the worst of the crisis \citep[26]{axilrod2012federal}. 
+
+\subsection{What Constrains the Fed's Autonomy?}
+
+The Fed faces a complex set of political conditions in its external environment, and knowing something about its remit and its incentives
+as an institution helps us to operationalize which conditions it may be more or less concerned about. Broadly speaking, the political environment
+in which the Fed operates can be operationalized as a series of indicators which relate to the potential for political discipline. As a bureaucratic
+institution within the Executive branch of the US Federal Government, the Fed faces a constant potential for scrutiny and threats to its
+bureaucratic autonomy, in the form of Congressional oversight, legislation that may actively intervene in its operations, or the removal/non-renewal
+of its Chair by the US President. If we assume that the Fed cares about its bureaucratic autonomy, we can operationalize potential threats
+to its autonomy in its political environment. Such potential threats consist of direct and indirect indications that its bureaucratic autonomy
+might be under threat. 
+
+The Fed's remit is interpreted by Congress, and its activities are subject to formal scrutiny by Congress. Thus instances
+of official congressional oversight offer a very direct indicator of the level of pressure the Fed is under at a given time. The public
+at large also plays a key role in defining the political environment in which the Fed operates. As a public institution, the Fed is supposed
+to serve the general public interest, and furthermore its formal remit defines which standards the public should use to define whether it
+is fulfilling this function: the level of employment, and the level of inflation. The Fed's performance on these two benchmark
+macroeconomic indicators can thus be operationalized as indicators of the diffuse or indirect pressure that the Fed might face from the
+public channeling its scrutiny through Congress and the President.
+
+Several aspects of the Fed's reporting structure serve as additional mechanisms of accountability to the public and to the rest of the government. The Board of Governors prepares an Annual Report summarizing activities of the Board and all Reserve Banks; the annual report is delivered to the Congress. To ensure financial accountability, the financial statements of the Federal Reserve Banks and the Board of Governors are audited annually by an independent outside auditor. In addition, the Government Accountability Office, as well as the Board's Office of Inspector General, frequently audit many Federal Reserve activities. During the recent financial crisis, the Federal Reserve provided information about its lending programs on its public website and in a special monthly report to Congress. The Fed has also actively defended its political independence during times when the Congress has contemplated revising existing oversight mechanisms. An example of this is in 2009 when the House Committee on Financial Services contemplated revising the GAO restrictions on how the Fed can be audited. The Fed Board very actively argued against this proposal, and argued that being subject to audits by the GAO would undermine its ability to carry out its core functions effectively \citep[see][]{Kohn2009}. Indeed, the extent of formal auditing by the GAO since the crisis has increased, due to heightened congressional scrutiny of the Fed's activities. Specifically, Section 129 of the Emergency Economic Stabilization Act of 2008 requires the Fed to generate regular reports to Congress on its lending facilities. Since July 2010, the Fed has been subject to Section 1101 of the Dodd-Frank Act, which subjects it to further reporting requirements. Any time the Fed authorizes a new emergency loan or financial assistance, it is now required to publish and issue a report to Congress within seven days of doing so. 
+
+\subsection{Approach and Hypotheses}
+
+Even as a highly independent bureaucracy, there are grounds to suggest that the Fed is cautious about the political environment in which it is operating. Insider views on the Fed suggest support for the notion that, as a matter of organizational culture the Fed seeks to avoid decisions ``that might draw political fire" \citep[56]{meyer2009term}, and the notion the the Fed reacts to political events is a stylized fact that seems to be supported throughout its political history \citep[see][]{Meltzer2010}. As an independent bureaucracy the Fed seeks to guard its autonomy, and we can assume that it is mindful of its external political environment for this reason. As Larry Meyer, former Fed Governor reports, ``The Fed thinks of itself as apolitical and does not want to become a political issue" \citeyearpar[56]{meyer2009term}. The Fed is mindful of the Congressional committees which oversee its activities because of the omnipresent possibility of congressional oversight interfering with its prestige and with its own internal operations, for all of the reasons stated above. 
+
+Our main aim in this project is to assess whether or not the Fed changes its behavior in light of political and economic stressors in its environment. There are, of course, multiple ways in which the Fed's behavior might be observed other than its policy decisions. Some existing scholarship has examined the deliberative process behind the process of monetary policy decision-making \citep{SchonhardtBaily2013}. Other recent work has looked at the publications of the Fed's forward-looking expectations on inflation and unemployment \citep{gandrud2012does}. Indeed the language of central bankers has been of interest  to scholars for some time, from early observations of the effect of policy statements (see NEED) to a deciphering central bank speech as `code' (NEED) and analyses of central bankers' rhetoric more generally \citep{maier2002politicalpress}. In this project we seek to assess the Fed's behavior on the basis of which groups in society it chooses to engage with by delivering speeches to their organization. Who the Fed makes contact with (and conversely, who it doesn't) can send important signals about the Fed's own internal concerns. For example during a period of financial crisis and controversy the Fed might roll back it's encounters with financial sector associations like the American Bankers' Association, and increase its engagement with community groups, or more broad business associations like the American Chamber of Commerce, in an attempt to communicate a message on where it stands with respect to financial regulation. Such decisions are as much about symbolism as they are about actually engaging with different groups in society. 
+
+DISCUSS POSSIBILITY OF TALKING TO HIGH PRESTIGE ORGS IN HIGH SCRUTINY
+
+
+%%%%%%% Bib and End File 
+\bibliographystyle{apsr}
+\bibliography{MainBib,PaperPackages}
+
+
+
+
+
+
+
+
+\end{document}

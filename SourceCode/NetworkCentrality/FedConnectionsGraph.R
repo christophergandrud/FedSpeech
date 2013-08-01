@@ -1,7 +1,7 @@
 ##############
 # Ties cumulative sum creation
 # Christopher Gandrud & Kevin Young
-# 31 July 2013
+# 1 August 2013
 ##############
 
 # Load libraries
@@ -197,13 +197,13 @@ for (i in YearsList){
 #### ------------ Create JavaScript Network Graphs ------------- ####
 library(d3Network)
 
-year <- c(1997, 2000, 2003, 2006, 2009, 2013)
+year <- c(1997, 1999, 2000, 2001, 2003, 2006, 2009, 2013)
 
 for (i in year){
-  FileName <- paste0("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Figures/FedOrgs/FedBoard", i, ".html")
-  Sub <- subset(FullTies, Year == i)
+  FileName <- paste0("~/Desktop/FedBoard/", i, ".html")
+  Sub <- subset(BoardTies, Year == i)
 
-  d3Network(Sub, file = FileName, 
+  d3SimpleNetwork(Sub, file = FileName, 
                 Source = "Indv", Target = "Organisation",
                 linkDistance = 40, charge = -100,
                 width = 1000, height = 500)
