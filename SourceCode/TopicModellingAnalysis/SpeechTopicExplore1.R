@@ -1,7 +1,7 @@
 ##############
 # Fed Speeches Topics Change Point Explore
 # Christopher Gandrud
-# 30 July 2013
+# 1 August 2013
 ##############
 
 # Load e.divGG function
@@ -10,6 +10,7 @@ source_gist("5675688")
 
 # Depends on data created by SpeechesTopicClean.R
 
+source("~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/DataCleanMerge/SpeechesTopicClean.R")
 
 LongDataMake <- function(obj, TopicLabels){
   #### Convert to format for change point analysis
