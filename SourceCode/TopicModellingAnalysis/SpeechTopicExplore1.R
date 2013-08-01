@@ -4,13 +4,12 @@
 # 1 August 2013
 ##############
 
+# Depends on data created by SpeechesTopicClean.R
+source("~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/DataCleanMerge/SpeechesTopicClean.R")
+
 # Load e.divGG function
 library(devtools)
 source_gist("5675688")
-
-# Depends on data created by SpeechesTopicClean.R
-
-source("~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/DataCleanMerge/SpeechesTopicClean.R")
 
 LongDataMake <- function(obj, TopicLabels){
   #### Convert to format for change point analysis
@@ -81,9 +80,9 @@ TopicLabels10 <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy",
                    "International.Economy", "Local.Housing.Dev",
                    "Banking.Regulation")  
 
-CleanNames10 <- c("Financial Markets", "Macroeconomics", "Monetary Policy",      
-                  "International Economy", "Local Housing Dev",
-                  "Banking Regulation")  
+# CleanNames10 <- c("Financial Markets", "Macroeconomics", "Monetary Policy",      
+#                  "International Economy", "Local Housing Dev",
+#                  "Banking Regulation")  
 
-e.divGG(data = TopicWide10, Vars = TopicLabels10, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames10)
+# e.divGG(data = TopicWide10, Vars = TopicLabels10, TimeVar = "MonthYear", 
+#        sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames10)
