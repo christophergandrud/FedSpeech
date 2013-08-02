@@ -1,7 +1,7 @@
 #############
 # Merge Non-Rotating Board/Org Connectivity data in to create main connectivity
 # Christopher Gandrud
-# 1 August 2013
+# 2 August 2013
 #############
 
 # Load package
@@ -76,10 +76,16 @@ plot(SpeechNoDups$year, SpeechNoDups$YearTotal)
 library(devtools)
 # source_gist("5675688")
 
+# All connectivity vars
 ConVars <- c("SpeakerConnect", "HFSC_CombConnect", "FedBoardCentrality")
-
 e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "date_of_speech", 
         Titles = ConVars, sig.lvl = 0.1, R = 999, min.size = 60)
 
+# Only board centrality
 e.divGG(data = SpeechComb, Vars = "FedBoardCentrality", TimeVar = "date_of_speech", 
+        Titles = "Fed. Board Centrality", sig.lvl = 0.05, R = 999, min.size = 40)
+
+# Board centrality, dropping direct speaker connection
+SpeechInDirect <- subset(SpeechComb, SpeakerConnect == 0)
+e.divGG(data = SpeechInDirect, Vars = "FedBoardCentrality", TimeVar = "date_of_speech", 
         Titles = "Fed. Board Centrality", sig.lvl = 0.05, R = 999, min.size = 40)
