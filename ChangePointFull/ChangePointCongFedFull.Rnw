@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Full Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 1 August 2013
+% 5 August 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -167,10 +167,232 @@ Several aspects of the Fed's reporting structure serve as additional mechanisms 
 
 Even as a highly independent bureaucracy, there are grounds to suggest that the Fed is cautious about the political environment in which it is operating. Insider views on the Fed suggest support for the notion that, as a matter of organizational culture the Fed seeks to avoid decisions ``that might draw political fire" \citep[56]{meyer2009term}, and the notion the the Fed reacts to political events is a stylized fact that seems to be supported throughout its political history \citep[see][]{Meltzer2010}. As an independent bureaucracy the Fed seeks to guard its autonomy, and we can assume that it is mindful of its external political environment for this reason. As Larry Meyer, former Fed Governor reports, ``The Fed thinks of itself as apolitical and does not want to become a political issue" \citeyearpar[56]{meyer2009term}. The Fed is mindful of the Congressional committees which oversee its activities because of the omnipresent possibility of congressional oversight interfering with its prestige and with its own internal operations, for all of the reasons stated above. 
 
-Our main aim in this project is to assess whether or not the Fed changes its behavior in light of political and economic stressors in its environment. There are, of course, multiple ways in which the Fed's behavior might be observed other than its policy decisions. Some existing scholarship has examined the deliberative process behind the process of monetary policy decision-making \citep{SchonhardtBaily2013}. Other recent work has looked at the publications of the Fed's forward-looking expectations on inflation and unemployment \citep{gandrud2012does}. Indeed the language of central bankers has been of interest  to scholars for some time, from early observations of the effect of policy statements (see NEED) to a deciphering central bank speech as `code' (NEED) and analyses of central bankers' rhetoric more generally \citep{maier2002politicalpress}. In this project we seek to assess the Fed's behavior on the basis of which groups in society it chooses to engage with by delivering speeches to their organization. Who the Fed makes contact with (and conversely, who it doesn't) can send important signals about the Fed's own internal concerns. For example during a period of financial crisis and controversy the Fed might roll back it's encounters with financial sector associations like the American Bankers' Association, and increase its engagement with community groups, or more broad business associations like the American Chamber of Commerce, in an attempt to communicate a message on where it stands with respect to financial regulation. Such decisions are as much about symbolism as they are about actually engaging with different groups in society. 
+Our main aim in this project is to assess whether or not the Fed changes its behavior in light of political and economic stressors in its environment. There are, of course, multiple ways in which the Fed's behavior might be observed other than its policy decisions. Some existing scholarship has examined the deliberative process behind monetary policy decision-making \citep{SchonhardtBaily2013}. Other recent work has looked at the publications of the Fed's forward-looking expectations on inflation and unemployment \citep{gandrud2012does}. Indeed the language of central bankers has been of interest  to scholars for some time, from early observations of the effect of policy statements (see NEED) to a deciphering central bank speech as `code' (NEED) and analyses of central bankers' rhetoric more generally \citep{maier2002politicalpress}. In this project we seek to assess the Fed's behavior on the basis of which groups in society it chooses to engage with by delivering speeches to their organization and what they say in these speeches. Who the Fed makes contact with (and conversely, who it doesn't) can send important signals about the Fed's own internal concerns. For example during a period of financial crisis and controversy the Fed might roll back it's encounters with private financial sector associations like the American Bankers' Association, and increase its engagement with community groups, or choose to give speeches at broad based, high prestige institutions such as elite universities. It could do this inorder to reaffirm its `apolitical' status. Conversely, the Fed may attempt to more directly influence its legislative principles by speaking to organizations that influence it, primarily important political donors to members of congress.
 
-DISCUSS POSSIBILITY OF TALKING TO HIGH PRESTIGE ORGS IN HIGH SCRUTINY
+It is well established that the Fed's communication with the public operates on the basis of `signaling'. Indeed, a vast academic \citep{Schnidman2013,GoukasianWhitney2006} and a whole industry \citep{MeyerBonfim2012} seeks to assess the subtle and not-so-subtle ways in which the Fed indicates it will chose this policy or that, whether it is considering moving in direction A or direction B. There are good reasons to believe that the groups that the Fed chooses to engage with also represent a form of signaling. While less important in terms of communicating a `signal' to the public at large, certain members of the public, such as the attentive interest group community that monitors the Fed's behavior are likely to try to interpret the meaning of the Fed's engagement with groups. The groups who the Fed is actually engaging with are likely to view the Fed very positively when it comes to their events, such as speeches at their luncheons, and keynote addresses at their institutions. The Fed is a prestigious institution and its words often make headlines, increasing the exposure of the group they are speaking to. Public officials--such as the members of congress who sit on the House and Senate banking committees--are also likely to see significance in the Fed's engagement with outside groups as well, especially since some groups are more closely tied to some members of Congress, and some agendas, than others. For all of these reasons it seems at least plausible that the Fed may adjust its engagement with outside groups in line with particular objectives of managing its political environment. We seek to test the plausibility of this claim through empirical evidence.
 
+We seek to investigate whether the Fed will change its engagement with outside groups as the result of political and economic stressors. In an environment in which the Fed comes under political fire and faces economic challenges, we hypothesize that the Fed will change the composition of the groups that it makes contact with as well as what it says to them. Conversely the null hypothesis is that the Fed does not change its engagement with outside groups when in a stressed state. Evidence for this would be powerful support for the Fed's political independence. Investigating how the Fed reacts to political stressors can be broken down into three different sets of hypotheses. The first set concerns how the Fed might react to political stressors in its environment: 
+
+\begin{quote}
+H1b: Elite Apolitical.  In a stressed state, the Fed will choose to speak more to elite apolitical organizations.
+
+H1b: Political Connectedness. In a stressed state, the Fed will increase its engagement with politically connected organizations.
+\end{quote}
+
+The first hypothesis is based on the idea that the Fed aims to maintain its autonomy by projecting an image of elite apoliticism through the types of organizations it speaks to. The second hypothesis presents a competing scenario. It is based on the idea that the Fed tries to maintain its autonomy with a more direct lobbying-type approach.
+
+Our second set of hypotheses concern the topics the Fed decides to discuss while speaking during stressed as opposed to non stressed states.
+
+\begin{quote}
+H2a: TODO: FILL IN
+
+\end{quote}
+
+Our third set of hypotheses concern the particular stressors that the Fed may react to (or not). While we have developed a variety of indicators in this regard, there are two general hypotheses: 
+
+\begin{quote}
+H3a: The stressors that motivate the Fed's behavior change are associated with its agency performance.
+
+H3b: The stressors that motivate the Fed's behavior change are associated with congressional scrutiny. 
+\end{quote}
+
+\section{Data and Methods}
+
+To empirically assess these hypotheses we gathered two sets of data. The first captures characteristics of the speeches the Fed gave to the public including who they talked to, who the organizations were connected to, and what the Fed said to them. The second set captures the Fed's environment, particularly the political and economic stressors that may influence its behavior. In many cases we aggregated this data using topic, network centrality, and change point analysis. 
+
+\subsection{Measures of the Fed's Contact with Organizations}
+
+To understand how the Fed manages its relations with its external environment we gathered data on the Fed\textquoteright{}s most direct contact with the public: speeches it delivers to various organizations. Specifically, we gathered data on every publicly available Federal Reserve speech delivered from June 1996 to April 2013 by the members of the Federal Reserve Board of Governors.\footnote{The speeches are archived on the Federal Reserve Board of Governors website: \url{http://www.federalreserve.gov/newsevents/speech/2013speech.htm} (Accessed May 2013).} The Fed Governors, including the Chairmen and Vice-Chairmen, are essentially the governing body of the Fed, and constitute the public face of the institution. It is not surprising that, for this reason, Fed Governors speak a great deal to the public about a wide variety of issues. We gathered 1116 speeches in total. 
+
+For each speech we generated basic identifier information--the most important of which is the individual giving the speech, and the organization
+that the Fed spoke to. For example, on 20 March 2010, Fed Chairmen Ben Bernanke spoke to the \textquoteleft{}Independent Community Bankers of America\textquoteright{}; on 16 November 2009 Bernanke spoke to the \textquoteleft{}Economic Club of New York\textquoteright{}. Fed Governors can choose which groups they speak to. The data that is most valuable to us about these speeches is not a given organization itself, but what is associated with a given organization at a specific period of time. 
+
+\begin{figure}
+\caption{The Federal Open Market Committee's Network in 2003}
+
+
+\begin{center}\includegraphics[scale=0.5]{figures/Network2003.png}\end{center}
+\end{figure}
+
+For each organization we gathered data on each organization's relationships with the Fed and Congress, at a given period of time. The first kind of data in this regard is information on the Fed's social network ties to the organization in question. We want to know from the outset whether a given Fed Governor speaking at, say, the Brookings Institution, might have had a prior social connection to that same institution in the past. In this case, `reaching out' to the Brookings Institution is not surprising if, for example, the Fed Governor in question worked at Brookings prior to becoming a Governor of the Fed. In this sense simple social network data on each of the Fed Governors helps us to `control for' an important confounder. Our data source for such network data is a dataset used by private industry to map elite's social networks and covers mainly occupational and educational ties, called Boardex. We obtained it as part of the Leveraged Interests project carried out by \citet{PagliariYoung2013}.
+
+Data on social network ties between the Federal Reserve Board members and the organizations it speaks to are also important for another, more analytically central reason: utilizing data on the Fed's prior ties to a large universe of organizations allows us to generate a simple model of its social network, and therefore situate each organization it engages with in terms of the relative importance of this organization vis-a-vis others. Using eigenvector centrality scores of organizations within the Fed's network allows us to gauge when the Fed chose to speak to an organization that was `central' to the Fed's overall social network, or whether or not it chose to engage with an organization with a more `remote' relationship. The professional backgrounds of Fed Chairmen, from their education, to their former employment to their broader social network ties, has been of particular interest to those trying to understand the basis of Fed behavior \citep[see][]{VanOvertveldt2009,Woodward2000}. This includes, notably, interest in individual Fed Board members and their professional backgrounds as well \citep[see][173-184]{Wells2004}. Yet we know of no existing scholarship which analyzes the Fed's social network from a quantitative perspective. Figure 1 provides an example of a social network of the Fed, and displays the wide array of organizations that top Fed personnel have prior social ties to, either as members of executive boards, as professors within universities, etc.
+
+TODO: MAYBE ADD MORE ON NETWORK CENTRALITY METHODS
+
+We also gathered data on each organization's political connections--specifically each organization's political ties to the main Congressional committee chairman and ranking members. Existing literature suggests that it is the chairmen of the Congressional banking committees which represent \textquotedblleft{}the most important public officials to the Fed\textquotedblright{} \citep[25]{axilrod2012federal}. We have begun with data on the  political campaign contributions to the House Committee on Financial Services. This seems like a natural place to start given that  compared to Senators, members of the House must raise more money more frequently. To obtain this data we consulted the list of the top 100 contributors to the Chairmen and Ranking member of the House Committee on Financial Services, between 1996 to 2013. Our data source is the Center for Responsive Politics (CRP). \footnote{The Center for Responsive Politics runs an excellent website witH extensive publicly available data on campaign contributions, called Open Secrets and can be found at \url{http://www.OpenSecrets.org/} } These data were unfortunately truncated as the CRP does not store data before the 1998 electoral cycle and data for 2013 is not yet disclosed. 
+
+TODO: ADD DESCRIPTIVE GRAPHS OF CONNECTIVITY AND TOPICS
+
+TODO: ADD INFO ON TOPIC ANALYSIS
+
+\subsection{Data on the Fed's Environment}
+
+Our key indicator of stressors within the Fed's environment uses a variety of data. Existing literature would suggests that there are at least three specific phenomena that the Fed must concern itself with in its external environment: the indicators of its performance, as measured by growth, inflation, and financial stability, critical views of well connected interest groups, and the Congressional committees through which both of the latter concerns get channeled \citep{axilrod2012federal,Skaggs1986}. It is possible to view these as two separate channels: one a `diffuse' channel through which the Fed may be in a stressed state--such as when economic performance is lackluster; and the other more `direct' channel, which is the intensity of congressional oversight. Data on the Fed's performance is easy to obtain,\footnote{All of these data were gathered from the Federal Reserve Bank's Economic Data (FRED) database. See: \url{http://research.stlouisfed.org/fred2/}. Accessed Spring 2013.}  and quite clearly defined: The Fed's statutory obligations--as specified by the 1913 Federal Reserve Act--are to promote maximum employment and stable prices. Therefore we included measures of inflation\footnote{Specifically, the year on year percent change in the seasonally adjusted personal consumption expenditures chain-type price index. FRED symbol: PCEPI.
+} and the unemployment rate.\footnote{FRED symbol: U6RATE.} We also included a measure of general economic growth: the year on
+year percentage change of the gross domestic product per capita.\footnote{FRED symbol: GDPC96.}
+
+In addition, we considered two other factors that may act as stressors in the Fed's environment. The first is simply the year-on-year percentage change in the Gross Domestic Product.\footnote{FRED symbol: GDPC96.} The second was the Case-Shiller Index of house price changes in ten cities.\footnote{FRED symbol: SPCS10RSA.} We also converted this to a year-on-year percentage change in the index.
+
+The data we gathered on Congress helps us measure political stress on the Fed. Existing literature has assessed scrutiny over the Fed in terms of simple counts of appearances within Congressional hearings--primarily the Senate Banking Committee and the House Financial Services Committee. For example \citet[182-183]{Kettl1988} measures congressional oversight over the Fed by counting the number of bills that Congress introduced that concerned the Fed (looking over the period 1951-1983, he noted that congressional interest tends to be highest when interest rates are highest). We sought to engage in a more systematic analysis of the Fed's congressional environment, developing several different indicators (described below), but all starting with simple counts of different kinds of congressional events. 
+
+We gathered data on all available congressional hearing transcripts
+where (a) a Federal Reserve representative gave testimony and (b)
+any hearing of the US House of Representatives Committee on Financial
+Services (HCFS)%
+\footnote{From 1995 until 2000 it was known as the Committee on Banking and
+Financial Services.%
+} and the Senate Committee on Banking, Housing, and Urban Affairs (SCBUA)
+regardless of whether Fed testimony was given. Both of these committees
+have the normal responsibility for scrutinizing the Federal Reserve.
+Data availabilty truncated our sample. We started by using the Federal
+Reserves' website%
+\footnote{See: \url{http://www.federalreserve.gov/newsevents/default.htm}.
+Accessed Spring 2013.%
+} to find information on all of the hearings at which its representatives
+gave testimony, from 1996-2013 (where data are available). To gather
+full hearing transcripts we relied primarily on the US Government
+Printing Office (GPO) website.%
+\footnote{See \url{http://www.gpo.gov/fdsys/browse/committeetab.action}. Accessed
+Spring 2013.%
+} For most committees however, the GPO website only has full transcripts
+available from 2001 through 2012. We attempted to fill in missing
+transcripts with information available on individual committee's websites.
+Among the two committees we focused on, the HCFS as it had the most
+complete set of transcripts. Full HCFS hearing transcripts were available
+back to May 1997.%
+\footnote{See: \url{http://financialservices.house.gov/archives/}. Accessed
+Spring 2013.%
+} Unfortunately, the SCBUA archive website%
+\footnote{See: \url{http://www.banking.senate.gov/public/index.cfm?FuseAction=Hearings.Home}.
+Accessed Spring 2013.%
+} does not contain full hearing transcripts that we could have used
+to fill in transcripts missing from the GPO. So we decided to not
+include non-Fed SCBUA transcripts in our sample. As such we only have
+a complete corpus of full committee hearings transcripts (hearings
+with Fed testimony and those eithout) for the HCFA.
+
+From this wealth of data (698 hearings total) we generated four different
+indicators of congressional scrutiny. The first is the number of hearings
+that Fed representatives are asked to attend. Presumably if Congress
+holds more hearings in which it asks the Fed to send a representative
+in a given period of time, then they are scrutinizing it more. They
+are actually using their ability to compel transparency. This is not
+a perfect measure of scrutiny, however, as the Fed may be asked to
+attend hearings scrutinizing not it, but another financial regulatory
+agency, or simply calling on the Fed's expertise over some particularly
+salient issue at the time. As discussed earlier we also gather information
+on all of the full HCFS hearings--i.e. not subcommittees, which we
+can use as a point of comparison.
+
+The second indicator of congressional scrutiny is the congressional
+committees' attendance at the hearings. Higher attendance implies
+that legislators are actually exposed to information the Fed provides
+and have opportunities to directly question the Fed's actions. Again,
+this is not a perfect indicator of scrutiny. Lower attendance at any
+given meeting may, for example, result from unrelated issues such
+as scheduling conflicts. Unfortunately attendance reporting was inconsistent
+across the committees. The HCFS had complete data on attendance. The
+SCBUA did not consistently report attendance, so we can not include
+it in our analyses.
+
+The third indicator of congressional scrutiny is the formal letter
+correspondence between the Fed and members of Congress. As a government
+agency the Fed is required to respond formally to questions posed
+by congress members not only in oversight hearings but also in written
+correspondence, which is submitted as part of the congressional record
+as part of `additional material submitted for the record'. For each
+instance in which the Fed appeared in Congress, we counted the number
+of such letters of correspondence. This is a good indicator of congressional
+scrutiny over the Fed for a variety of interrelated reasons. The Fed
+has good reason to take these letters as an indication of congressional
+interest in its activities precisely because of the formal nature
+of the exchange. A Congressperson is likely to ask questions that
+it wants a formal, written answer to on the record. In other instances,
+these letters constitute a follow-up to Congressional questioning
+that the Fed official could not answer to the satisfaction of a congress
+member during the hearing. On this basis our expectation is that a
+spike in such letter correspondence represents a period of heightened
+scrutiny. Unfortunately, formal correspondence letters were not recorded
+in SCBUA transcripts.
+
+Our fourth indicator measures the instances of laughter that were
+recorded in the testimony transcripts.%
+\footnote{In all of our sets of transcripts instances of laughter are denoted
+``[Laughter]". Each instance does not indicate
+who or how many people are laughing.%
+} We hypothesize that higher laughter counts indicate that the hearings
+have a more jovial non-adversarial atmosphere and the Fed has more
+reason to believe that Congresses is less concerned about their activities
+under such conditions. For example, the highest hearing laughter count
+is from a February 2002 hearing where the Fed Chairman Alan Greenspan
+gave testimony at an annual SCBUA hearing on financial literacy.
+
+
+\paragraph{Generating Scrutiny States Using Change Point Analysis}
+
+Our analysis necessitates relating different levels of stressors on the Fed with its observed behavior. A key component of this analysis is ascertaining when the Fed is in a stressed state and when it is not. For this we utilize a method called Change Point Analysis, which is a general term used to describe methods aimed at detecting changes in the ``statistical properties of a sequence of observations'' \citep[2]{Killick2013}. Imagine we have a series of data $y_{1:n}=(y_{1},\ldots,\: y_{n})$, for example, the monthly number of hearings. We can say that a change has happened at a time $\tau\in\{1,\ldots,\: n-1\}$ in the data if the statistical properties, such as the means and variances, are different in $(y_{1},\ldots,\: y_{\tau})$ and $(y_{\tau},\ldots,\: y_{\tau})$. We can extend this logic to the study of series with multiple change points $m$ such that $\tau_{1:m}=(\tau_{1},\ldots,\:\tau_{m})$ and the data is broken into segments $m+1$ \citep{Killick2012,Killick2013}. These segments could be periods of higher or lower legislative scrutiny of the Fed.
+
+This is a desirable method to use because it is well calibrated to
+existing theoretical literature which suggests that bureacratic response
+functions are dynamic and gradual. While early literature modeled
+bureaucratic response to discrete political events \citet{Wood1990,Wood1988,Moe1982},
+\citet[pp. 503-504]{wood1993dynamics} were the first to establish
+grounds that bureaucratic responses are likely to play out over time,
+rather than be immediately manifest, and our approach of assessing
+the different states the Fed is operating under seems well aligned
+with this insight.
+
+There are a number of different ways to estimate change points' locations
+\citep[see][]{Killick2013,Matteson2012}. For our project we need
+a change point analysis method that (a) allows us to identify an unknown
+number of change points and (b) allows us to combine information from
+multiple observed variables to make inferences about latent scrutiny
+states. We want a method that allows us to estimate an unknown number
+of change points because we have no \emph{a priori} reason to assume
+that there is any fixed number of points at which the level of scrutiny
+changes. Also, we have no variable that directly captures the `legislative
+scrutiny' concept. It is instead a latent variable. The variables
+we do observe--hearing count, attendance, letter requests, and laughter--we
+expect to indicate in combination the level of scrutiny Therefore
+we would like to combine information from all of these observed variables
+to understand the latent scrutiny level.
+
+Matteson and James' \citeyearpar{Matteson2012,James2013} energy divisive
+hierarchical change point estimation algorithm%
+\footnote{We specifically use the \texttt{e.divisive} function in their \emph{ecp}
+R package \citep{R-ecp}.%
+} allows us to achieve our two objectives. Their approach draws on
+Sz{È}kely and Rizzo's \citeyearpar{Szekely2005} work with hierarchical
+clustering. In particular they use the ``energy statistic'' method
+of determining statistical distances between probability distributions,
+e.g. the joint multivariate distributions of sequences of our observed
+Congressional hearing data. The time point where one sequence or cluster
+ends and another begins is a change point.
+
+Of course, it may be that the the joint multivariate distributions
+of the estimated sequences are not in fact different, i.e. that every
+observation within the clusters are independent and identically distributed.
+In the language of hypothesis testing, this is the change point null
+hypothesis. Using \citet{Matteson2012}, we examine this possibility
+using a permutation test%
+\footnote{Following \citet{Rizzo2010} we used a maximum of 999 permutations.
+This produced stable estimates.%
+} to approximate the p-value for the hypothesis test. We used the standard
+0.05 p-value as a criteria for rejecting or failing to reject the
+null hypothesis, i.e. whether there is evidence for selecting a given
+change point or not.
+
+One potential disadvantage of Matteson and James' change point method
+is that the minimum cluster size must be set \emph{a priori} \citeyearpar[11]{Matteson2012}.
+In other words, we need to tell the algorithm the minimum number of
+time points that may be between the change points. The minimum size
+generally needs to be larger if the distance between the probability
+distributions is small. We chose to use a minimum size of 24 months.%
+\footnote{The \texttt{ecp} default is 30.%
+} Across cases where change points could be estimated this size proved
+adequate to estimate statistically significant change points that
+were substantively meaningful.
 
 %%%%%%% Bib and End File 
 \bibliographystyle{apsr}
