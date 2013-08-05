@@ -78,8 +78,13 @@ source_gist("5675688")
 
 # All connectivity vars
 ConVars <- c("SpeakerConnect", "HFSC_CombConnect", "FedBoardCentrality")
-Test <- e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "date_of_speech", 
-        Titles = ConVars, sig.lvl = 0.1, R = 999, min.size = 60, JustGraph = TRUE)
+ConTitles <- c("Speaker Connected", "HCFS Connected", "Fed. Board Centrality")
+
+e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "date_of_speech", 
+        Titles = ConTitles, sig.lvl = 0.05, R = 999, min.size = 60, JustGraph = FALSE)
+
+e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "date_of_speech", 
+        Titles = ConTitles, sig.lvl = 0.05, R = 999, min.size = 60, JustGraph = TRUE)
 
 # Only board centrality
 e.divGG(data = SpeechComb, Vars = "FedBoardCentrality", TimeVar = "date_of_speech", 

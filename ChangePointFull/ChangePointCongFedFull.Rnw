@@ -209,20 +209,28 @@ that the Fed spoke to. For example, on 20 March 2010, Fed Chairmen Ben Bernanke 
 
 \begin{figure}
 \caption{The Federal Open Market Committee's Network in 2003}
-
-
-\begin{center}\includegraphics[scale=0.5]{figures/Network2003.png}\end{center}
+\label{Network2003}
+  \begin{center}\includegraphics[scale=0.5]{figures/Network2003.png}\end{center}
 \end{figure}
 
 For each organization we gathered data on each organization's relationships with the Fed and Congress, at a given period of time. The first kind of data in this regard is information on the Fed's social network ties to the organization in question. We want to know from the outset whether a given Fed Governor speaking at, say, the Brookings Institution, might have had a prior social connection to that same institution in the past. In this case, `reaching out' to the Brookings Institution is not surprising if, for example, the Fed Governor in question worked at Brookings prior to becoming a Governor of the Fed. In this sense simple social network data on each of the Fed Governors helps us to `control for' an important confounder. Our data source for such network data is a dataset used by private industry to map elite's social networks and covers mainly occupational and educational ties, called Boardex. We obtained it as part of the Leveraged Interests project carried out by \citet{PagliariYoung2013}.
 
-Data on social network ties between the Federal Reserve Board members and the organizations it speaks to are also important for another, more analytically central reason: utilizing data on the Fed's prior ties to a large universe of organizations allows us to generate a simple model of its social network, and therefore situate each organization it engages with in terms of the relative importance of this organization vis-a-vis others. Using eigenvector centrality scores of organizations within the Fed's network allows us to gauge when the Fed chose to speak to an organization that was `central' to the Fed's overall social network, or whether or not it chose to engage with an organization with a more `remote' relationship. The professional backgrounds of Fed Chairmen, from their education, to their former employment to their broader social network ties, has been of particular interest to those trying to understand the basis of Fed behavior \citep[see][]{VanOvertveldt2009,Woodward2000}. This includes, notably, interest in individual Fed Board members and their professional backgrounds as well \citep[see][173-184]{Wells2004}. Yet we know of no existing scholarship which analyzes the Fed's social network from a quantitative perspective. Figure 1 provides an example of a social network of the Fed, and displays the wide array of organizations that top Fed personnel have prior social ties to, either as members of executive boards, as professors within universities, etc.
+Data on social network ties between the Federal Reserve Board members and the organizations it speaks to are also important for another, more analytically central reason: utilizing data on the Fed's prior ties to a large universe of organizations allows us to generate a simple model of its social network, and therefore situate each organization it engages with in terms of the relative importance of this organization vis-a-vis others. Using eigenvector centrality scores of organizations within the Fed's network allows us to gauge when the Fed chose to speak to an organization that was `central' to the Fed's overall social network, or whether or not it chose to engage with an organization with a more `remote' relationship. The professional backgrounds of Fed Chairmen, from their education, to their former employment to their broader social network ties, has been of particular interest to those trying to understand the basis of Fed behavior \citep[see][]{VanOvertveldt2009,Woodward2000}. This includes, notably, interest in individual Fed Board members and their professional backgrounds as well \citep[see][173-184]{Wells2004}. Yet we know of no existing scholarship which analyzes the Fed's social network from a quantitative perspective. Figure \ref{Network2003} provides an example of a social network of the Fed, and displays the wide array of organizations that top Fed personnel have prior social ties to, either as members of executive boards, as professors within universities, etc.
 
 TODO: MAYBE ADD MORE ON NETWORK CENTRALITY METHODS
 
 We also gathered data on each organization's political connections--specifically each organization's political ties to the main Congressional committee chairman and ranking members. Existing literature suggests that it is the chairmen of the Congressional banking committees which represent \textquotedblleft{}the most important public officials to the Fed\textquotedblright{} \citep[25]{axilrod2012federal}. We have begun with data on the  political campaign contributions to the House Committee on Financial Services. This seems like a natural place to start given that  compared to Senators, members of the House must raise more money more frequently. To obtain this data we consulted the list of the top 100 contributors to the Chairmen and Ranking member of the House Committee on Financial Services, between 1996 to 2013. Our data source is the Center for Responsive Politics (CRP). \footnote{The Center for Responsive Politics runs an excellent website witH extensive publicly available data on campaign contributions, called Open Secrets and can be found at \url{http://www.OpenSecrets.org/} } These data were unfortunately truncated as the CRP does not store data before the 1998 electoral cycle and data for 2013 is not yet disclosed. 
 
 TODO: ADD DESCRIPTIVE GRAPHS OF CONNECTIVITY AND TOPICS
+
+\begin{figure}
+\caption{Fed Board/Congress/Organization Spoken To Connectivity}
+\label{BasicConnectivity}
+  \begin{center}
+    \includegraphics[scale=0.8]{figures/ConnectivityBaseGraph.pdf}
+  \end{center}
+\end{figure}
+
 
 TODO: ADD INFO ON TOPIC ANALYSIS
 
