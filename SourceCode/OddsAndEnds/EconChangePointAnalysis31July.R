@@ -1,7 +1,7 @@
 ############
 # Econ Change Point with Case-Shiller 
 # Christopher Gandrud
-# 31 July 2013
+# 6 August 2013
 ###########
 
 # Load e.divGG function
@@ -23,3 +23,10 @@ e.divGG(data = EconData, Vars = EconVars, TimeVar = "DateField",
 
 e.divGG(data = EconData, Vars = "CaseShillerChange", TimeVar = "DateField", 
         Titles = "Case-Shiller Index % Change", sig.lvl = 0.05, R = 999, min.size = 24)
+
+# No change point analysis, just descriptives
+EconVarsAll <- c("PCEPIPercent", "GDPC96Percent", "U6RATE", "UnemploymentRateChange", "SPCS10RSA", "CaseShillerChange")
+EconTitlesAll <- c("Inflation", "Growth", "Unemployment Rate", "Unemployment (% Change)", "Case-Shiller Index", "Case-Shiller Index (% Change)")
+e.divGG(data = EconData, Vars = EconVarsAll, TimeVar = "DateField", 
+        Titles = EconTitlesAll, sig.lvl = 0.05, R = 999, min.size = 24, 
+        JustGraph = TRUE)

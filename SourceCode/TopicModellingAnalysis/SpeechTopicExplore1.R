@@ -73,7 +73,8 @@ CleanNames5 <- c("Financial Markets", "Macroeconomics", "Monetary Policy",
                 "Banking Regulation")
 
 e.divGG(data = TopicWide5, Vars = TopicLabels5, TimeVar = "MonthYear", 
-        sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames5)
+        sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames5, 
+        JustGraph = TRUE)
 
 #### 10 
 # TopicLabels10 <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy",      
