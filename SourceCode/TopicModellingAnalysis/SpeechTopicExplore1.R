@@ -1,7 +1,7 @@
 ##############
 # Fed Speeches Topics Change Point Explore
 # Christopher Gandrud
-# 1 August 2013
+# 6 August 2013
 ##############
 
 # Depends on data created by SpeechesTopicClean.R
@@ -76,9 +76,9 @@ e.divGG(data = TopicWide5, Vars = TopicLabels5, TimeVar = "MonthYear",
         sig.lvl = 0.05, R = 999, min.size = 6, Titles = CleanNames5)
 
 #### 10 
-TopicLabels10 <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy",      
-                   "International.Economy", "Local.Housing.Dev",
-                   "Banking.Regulation")  
+# TopicLabels10 <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy",      
+#                   "International.Economy", "Local.Housing.Dev",
+#                   "Banking.Regulation")  
 
 # CleanNames10 <- c("Financial Markets", "Macroeconomics", "Monetary Policy",      
 #                  "International Economy", "Local Housing Dev",

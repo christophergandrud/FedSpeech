@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fed Full Change Point Analysis
 % Kevin Young and Christopher Gandrud
-% 5 August 2013
+% 6 August 2013
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % !Rnw weave = knitr
@@ -167,7 +167,7 @@ Several aspects of the Fed's reporting structure serve as additional mechanisms 
 
 Even as a highly independent bureaucracy, there are grounds to suggest that the Fed is cautious about the political environment in which it is operating. Insider views on the Fed suggest support for the notion that, as a matter of organizational culture the Fed seeks to avoid decisions ``that might draw political fire" \citep[56]{meyer2009term}, and the notion the the Fed reacts to political events is a stylized fact that seems to be supported throughout its political history \citep[see][]{Meltzer2010}. As an independent bureaucracy the Fed seeks to guard its autonomy, and we can assume that it is mindful of its external political environment for this reason. As Larry Meyer, former Fed Governor reports, ``The Fed thinks of itself as apolitical and does not want to become a political issue" \citeyearpar[56]{meyer2009term}. The Fed is mindful of the Congressional committees which oversee its activities because of the omnipresent possibility of congressional oversight interfering with its prestige and with its own internal operations, for all of the reasons stated above. 
 
-Our main aim in this project is to assess whether or not the Fed changes its behavior in light of political and economic stressors in its environment. There are, of course, multiple ways in which the Fed's behavior might be observed other than its policy decisions. Some existing scholarship has examined the deliberative process behind monetary policy decision-making \citep{SchonhardtBaily2013}. Other recent work has looked at the publications of the Fed's forward-looking expectations on inflation and unemployment \citep{gandrud2012does}. Indeed the language of central bankers has been of interest  to scholars for some time, from early observations of the effect of policy statements (see NEED) to a deciphering central bank speech as `code' (NEED) and analyses of central bankers' rhetoric more generally \citep{maier2002politicalpress}. In this project we seek to assess the Fed's behavior on the basis of which groups in society it chooses to engage with by delivering speeches to their organization and what they say in these speeches. Who the Fed makes contact with (and conversely, who it doesn't) can send important signals about the Fed's own internal concerns. For example during a period of financial crisis and controversy the Fed might roll back it's encounters with private financial sector associations like the American Bankers' Association, and increase its engagement with community groups, or choose to give speeches at broad based, high prestige institutions such as elite universities. It could do this inorder to reaffirm its `apolitical' status. Conversely, the Fed may attempt to more directly influence its legislative principles by speaking to organizations that influence it, primarily important political donors to members of congress.
+Our main aim in this project is to assess whether or not the Fed changes its behavior in light of political and economic stressors in its environment. There are, of course, multiple ways in which the Fed's behavior might be observed other than its policy decisions. Some existing scholarship has examined the deliberative process behind monetary policy decision-making \citep{SchonhardtBaily2013}. Other recent work has looked at the publications of the Fed's forward-looking expectations on inflation and unemployment \citep{gandrud2012does}. Indeed the language of central bankers has been of interest  to scholars for some time, from early observations of the effect of policy statements (see NEED) to a deciphering central bank speech as `code' (NEED) and analyses of central bankers' rhetoric more generally \citep{maier2002politicalpress}. In this project we seek to assess the Fed's behavior on the basis of which groups in society it chooses to engage with by delivering speeches to their organization and what they say in these speeches. Who the Fed makes contact with (and conversely, who it doesn't) can send important signals about the Fed's own internal concerns. For example during a period of financial crisis and controversy the Fed might roll back it's encounters with private financial sector associations like the American Bankers' Association, and increase its engagement with community groups, or choose to give speeches at broad based, high prestige institutions such as elite universities. It could do this in order to reaffirm its `apolitical' status. Speaking at elite institutions also conveys an image of competence, which can be especially important for reassuring private sector actors, political principles, and the public during times of economic stress \citep[see][]{Hallerberg2013}. Conversely, the Fed may attempt to more directly influence its legislative principles by speaking to organizations that influence it, primarily important political donors to members of congress.
 
 It is well established that the Fed's communication with the public operates on the basis of `signaling'. Indeed, a vast academic \citep{Schnidman2013,GoukasianWhitney2006} and a whole industry \citep{MeyerBonfim2012} seeks to assess the subtle and not-so-subtle ways in which the Fed indicates it will chose this policy or that, whether it is considering moving in direction A or direction B. There are good reasons to believe that the groups that the Fed chooses to engage with also represent a form of signaling. While less important in terms of communicating a `signal' to the public at large, certain members of the public, such as the attentive interest group community that monitors the Fed's behavior are likely to try to interpret the meaning of the Fed's engagement with groups. The groups who the Fed is actually engaging with are likely to view the Fed very positively when it comes to their events, such as speeches at their luncheons, and keynote addresses at their institutions. The Fed is a prestigious institution and its words often make headlines, increasing the exposure of the group they are speaking to. Public officials--such as the members of congress who sit on the House and Senate banking committees--are also likely to see significance in the Fed's engagement with outside groups as well, especially since some groups are more closely tied to some members of Congress, and some agendas, than others. For all of these reasons it seems at least plausible that the Fed may adjust its engagement with outside groups in line with particular objectives of managing its political environment. We seek to test the plausibility of this claim through empirical evidence.
 
@@ -179,7 +179,7 @@ H1b: Elite Apolitical.  In a stressed state, the Fed will choose to speak more t
 H1b: Political Connectedness. In a stressed state, the Fed will increase its engagement with politically connected organizations.
 \end{quote}
 
-The first hypothesis is based on the idea that the Fed aims to maintain its autonomy by projecting an image of elite apoliticism through the types of organizations it speaks to. The second hypothesis presents a competing scenario. It is based on the idea that the Fed tries to maintain its autonomy with a more direct lobbying-type approach.
+The first hypothesis is based on the idea that the Fed aims to maintain its autonomy by projecting an image of elite apolitical competence through the types of organizations it speaks to. The second hypothesis presents a competing scenario. It is based on the idea that the Fed tries to maintain its autonomy with a more direct lobbying-type approach.
 
 Our second set of hypotheses concern the topics the Fed decides to discuss while speaking during stressed as opposed to non stressed states.
 
@@ -221,18 +221,38 @@ TODO: MAYBE ADD MORE ON NETWORK CENTRALITY METHODS
 
 We also gathered data on each organization's political connections--specifically each organization's political ties to the main Congressional committee chairman and ranking members. Existing literature suggests that it is the chairmen of the Congressional banking committees which represent \textquotedblleft{}the most important public officials to the Fed\textquotedblright{} \citep[25]{axilrod2012federal}. We have begun with data on the  political campaign contributions to the House Committee on Financial Services. This seems like a natural place to start given that  compared to Senators, members of the House must raise more money more frequently. To obtain this data we consulted the list of the top 100 contributors to the Chairmen and Ranking member of the House Committee on Financial Services, between 1996 to 2013. Our data source is the Center for Responsive Politics (CRP). \footnote{The Center for Responsive Politics runs an excellent website witH extensive publicly available data on campaign contributions, called Open Secrets and can be found at \url{http://www.OpenSecrets.org/} } These data were unfortunately truncated as the CRP does not store data before the 1998 electoral cycle and data for 2013 is not yet disclosed. 
 
-TODO: ADD DESCRIPTIVE GRAPHS OF CONNECTIVITY AND TOPICS
+Figure \ref{BasicConnectivity} shows the connectivity of the organizations the Fed spoke to over time. The top panel is a simple dummy of whether or not the Fed speaker had a professional connection to the organization (coded as 1) or not (coded as 0). The second measure measures the donations to the HCFS chairman and ranking member of the organization spoken to as a proportion of their total donations from the member's top 100 donors. We summed these proportions for the chairman and ranking member. The third panel shows the eigenvector centrality scores for how central the organization was in the year of the speech to the Fed Board of Governors' professional network. It ranges from zero--not connected--to one--very highly central. 
+
+TODO: CHANGEPOINT
+
+THOUGHT: The form of this distribution does not change when we remove speakers with a professional connection to the organization. This suggests that the speakers are not simply choosing familiar venues during times of high stress.  
 
 \begin{figure}
 \caption{Fed Board/Congress/Organization Spoken To Connectivity}
 \label{BasicConnectivity}
+% From MergeSpeechesOrgCentrality.R
   \begin{center}
     \includegraphics[scale=0.8]{figures/ConnectivityBaseGraph.pdf}
   \end{center}
 \end{figure}
 
+\paragraph{Topic Analysis of Fed Public Speeches}
 
-TODO: ADD INFO ON TOPIC ANALYSIS
+FILL IN
+
+Figure \ref{BasicTopics} shows the distribution of the six topics over time. The lines represent the proportion of a speech estimated to discuss a given topic. They range from zero--i.e. the topic was not discussed--to about 0.8, a topic was discussed in 80 percent of the speech. We will cover change point analysis and results below in more detail. At this point it is sufficient to note a few general trends. First we can see the increased discussion of financial markets around the financial crisis. This is relatively unsurprising. More interesting is the comparative lack of discussion of monetary policy, the international economy, and banking regulation at the height of the 2007/09 financial crisis and afterwards. 
+
+\begin{figure}
+\caption{Topics Discussed in Fed. Public Speeches and Change Points}
+\label{BasicTopics}
+% From SpeechTopicsExplore1.R
+  \begin{center}
+    \includegraphics[scale=0.55]{figures/TopicsChangePoint.pdf}
+  \end{center}
+{\scriptsize{
+  Red horizontal dashed lines show the estimated change points at the 95\% significance level. Minimum state width set at 6. 
+}}
+\end{figure}
 
 \subsection{Data on the Fed's Environment}
 
