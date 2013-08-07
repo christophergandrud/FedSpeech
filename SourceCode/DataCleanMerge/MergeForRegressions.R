@@ -66,11 +66,16 @@ Speeches$month_year <- floor_date(Speeches$full_date, "month")
 
 #### Congressional Scrutiny States ####
 ### See ChangePointCongFed.Rnw
-Speeches$Scrutiny[Speeches$month_year < as.POSIXct("2007-04-01")] <- "Low" 
-Speeches$Scrutiny[Speeches$month_year >= as.POSIXct("2007-04-01")] <- "High" 
-Speeches$Scrutiny[Speeches$month_year >= as.POSIXct("2010-06-01")] <- "Medium"
-Speeches$Scrutiny <- as.factor(Speeches$Scrutiny)
+Speeches$Scrutiny[Speeches$month_year < as.POSIXct("2007-04-01")] <- "1" 
+Speeches$Scrutiny[Speeches$month_year >= as.POSIXct("2007-04-01")] <- "3" 
+Speeches$Scrutiny[Speeches$month_year >= as.POSIXct("2010-06-01")] <- "2"
+Speeches$Scrutiny <- ordered(Speeches$Scrutiny, 
+                            labels = c("Low", "Medium", "High"))
 
 #### Final Merge and Clean #### 
 Combined <- merge(Speeches, Topics, by = c("full_date", "name"))
 Combined <- merge(Combined, EconData, by = "month_year")
+
+DeleteObj <- setdiff(ls(), c("Combined"))
+rm(list = DeleteObj)
+rm(DeleteObj)
