@@ -81,7 +81,7 @@ CombinedEconSlim <- Quart(CombinedEconSlim, "GDPDEF")
 # Create Year-on-Year percent change variables
 YearChange <- function (data, Var, NewVar)
 {
-  Temp <- slide(data = data, Var = Var, slideBy = - 12)
+  Temp <- slide(data = data, Var = Var, slideBy = -12)
   Temp$TempVar <- ((Temp[, Var] - Temp[, length(Temp)])/Temp[, Var]) * 100
   RMVar <- length(Temp) - 1
   Temp <- Temp[, -RMVar]

@@ -63,7 +63,8 @@ TopicLabels10 <- c("Local.Housing.Dev", "Financial.Markets", "Monetary.Policy",
 TopicWide5 <- LongDataMake(obj = CombClean5, TopicLabels = TopicLabels5)
 TopicWide10 <- LongDataMake(obj = CombClean10, TopicLabels = TopicLabels10)
 
-
+write.csv(TopicWide5, "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/TopicsSpoken.csv", 
+          row.names = FALSE)
 
 ###### ------- Preliminary Change Point ---------- ####
 

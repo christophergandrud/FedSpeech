@@ -11,12 +11,12 @@ library(lubridate)
 SpeechesData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/FedSpeechesCorrected-NEW.csv")
 
 # Clean data
-VarsKeep <- c("date_of_speech", "year_of_speech", "BX_spelling", "HFSC_donate_chair",
-              "HFSC_rankmem", "X")
+VarsKeep <- c("date_of_speech", "year_of_speech", "name", "BX_spelling", 
+              "HFSC_donate_chair", "HFSC_rankmem", "X")
 
 SpeechSmall <- SpeechesData[, VarsKeep]
 
-names(SpeechSmall) <- c("date_of_speech", "year", "Organisation", 
+names(SpeechSmall) <- c("full_date", "year", "name", "Organisation", 
                         "HFSC_ChairConnect", "HFSC_RankMembConnect", 
                         "SpeakerConnect")
 
@@ -57,9 +57,12 @@ MergeNonRotate <- function(year){
 yearList <- 1997:2013
 SpeechComb <- MergeNonRotate(yearList)
 
-SpeechComb$date_of_speech <- dmy(SpeechComb$date_of_speech) 
-SpeechComb <- SpeechComb[order(SpeechComb$date_of_speech), ]
+SpeechComb$full_date <- dmy(SpeechComb$full_date) 
+SpeechComb <- SpeechComb[order(SpeechComb$full_date), ]
 
+write.csv(SpeechComb, 
+          file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/ConnectivityClean.csv",
+          row.names = FALSE)
 
 #### Total number of speeches per year
 library(plyr)
@@ -80,19 +83,19 @@ source_gist("5675688")
 ConVars <- c("SpeakerConnect", "HFSC_CombConnect", "FedBoardCentrality")
 ConTitles <- c("Speaker Connected", "HCFS Connected", "Fed. Board Centrality")
 
-e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "date_of_speech", 
+e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "full_date", 
         Titles = ConTitles, sig.lvl = 0.05, R = 999, min.size = 60, JustGraph = FALSE)
 
-e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "date_of_speech", 
+e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "full_date", 
         Titles = ConTitles, sig.lvl = 0.05, R = 999, min.size = 60, JustGraph = TRUE)
 
 # Only board centrality
-e.divGG(data = SpeechComb, Vars = "FedBoardCentrality", TimeVar = "date_of_speech", 
+e.divGG(data = SpeechComb, Vars = "FedBoardCentrality", TimeVar = "full_date", 
         Titles = "Fed. Board Centrality", sig.lvl = 0.05, R = 999, min.size = 40)
 
 # Board centrality, dropping direct speaker connection
 SpeechInDirect <- subset(SpeechComb, SpeakerConnect == 0)
-e.divGG(data = SpeechInDirect, Vars = "FedBoardCentrality", TimeVar = "date_of_speech", 
+e.divGG(data = SpeechInDirect, Vars = "FedBoardCentrality", TimeVar = "full_date", 
         Titles = "Fed. Board Centrality", sig.lvl = 0.05, R = 999, min.size = 40)
 
 
