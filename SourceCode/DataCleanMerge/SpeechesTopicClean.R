@@ -62,8 +62,8 @@ for (i in TopCols){
 CombinedSpeeches <- cbind(MalletOrder, OrgData)
 
 # Keep specific variables
-ToKeep <- c("MonthYear", "QuarterYear", "name", "position_cat", "SpeechID",
-            "top1", "top1Prop", "top2", "top2Prop", "top3", "top3Prop",
+ToKeep <- c("MonthYear", "QuarterYear", "full_date", "name", "position_cat", 
+            "SpeechID", "top1", "top1Prop", "top2", "top2Prop", "top3", "top3Prop",
             "top4", "top4Prop", "top5", "top5Prop", "bankersfinance",
             "other_private", "otherregulators", "io", "community_organisations",
             "thinktank", "press_association", "prof_econ_assoc", "university",
@@ -71,6 +71,18 @@ ToKeep <- c("MonthYear", "QuarterYear", "name", "position_cat", "SpeechID",
             "social_events", "economic_literacy", "other")
 
 CombClean5 <- CombinedSpeeches[, ToKeep]
+
+# Clean up titles
+RemoveTitle <- function(data){
+  data[, "name"] <- gsub(pattern = "Governor†", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Governor", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Chairman†", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Chairman", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Vice Chair†", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Vice Chair", "", data[, "name"])
+  data
+}
+CombClean5 <- RemoveTitle(data = CombClean5)
 
 # Clean up workspace
 DeleteObj <- setdiff(ls(), c("CombClean5", "OrgData"))

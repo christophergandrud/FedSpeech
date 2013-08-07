@@ -4,12 +4,12 @@
 # 6 August 2013
 ##############
 
-# Depends on data created by SpeechesTopicClean.R
-source("~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/DataCleanMerge/SpeechesTopicClean.R")
-
 # Load e.divGG function
 library(devtools)
 source_gist("5675688")
+
+# Depends on data created by SpeechesTopicClean.R
+source("~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/DataCleanMerge/SpeechesTopicClean.R")
 
 LongDataMake <- function(obj, TopicLabels){
   #### Convert to format for change point analysis
@@ -18,8 +18,8 @@ LongDataMake <- function(obj, TopicLabels){
 
   TempDFi <- data.frame()
   for (i in TopCols){
-      Temp <- obj[, c("MonthYear", "QuarterYear", "SpeechID", i)]
-      names(Temp) <- c("MonthYear", "QuarterYear", "SpeechID", "Topic")
+      Temp <- obj[, c("full_date", "name", "SpeechID", i)]
+      names(Temp) <- c("full_date", "name", "SpeechID", "Topic")
       TempDFi <- rbind(TempDFi, Temp)
   }
 
@@ -40,9 +40,10 @@ LongDataMake <- function(obj, TopicLabels){
   for (v in TopicLabels){
     Temp <- subset(LongTopic, Topic == v)
     Temp <- Temp[, -4]
-    names(Temp) <- c("MonthYear", "QuarterYear", "SpeechID", v)
+    names(Temp) <- c("full_date", "name", "SpeechID", v)
     TopicWide <- merge(TopicWide, Temp, 
-                       by = c("MonthYear", "QuarterYear", "SpeechID"), all = TRUE )
+                       by = c("full_date", 
+                              "name", "SpeechID"), all = TRUE )
   }
 
   TopicWide <- TopicWide[!duplicated(TopicWide[, 1:3]), ]
@@ -56,12 +57,13 @@ TopicLabels5 <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy",
                  "International.Economy",  "Local.Housing.Dev", 
                  "Banking.Regulation") 
 
-TopicLabels10 <- c("Local.Housing.Dev", "Financial.Markets", "Monetary.Policy", 
-                 "Risk.Regulation", "Housing", "International.Economy", "Banking",
-                 "Prices", "Technology", "Macroeconomics")  
+# TopicLabels10 <- c("Local.Housing.Dev", "Financial.Markets", "Monetary.Policy", 
+#                 "Risk.Regulation", "Housing", "International.Economy", "Banking",
+#                 "Prices", "Technology", "Macroeconomics")  
 
 TopicWide5 <- LongDataMake(obj = CombClean5, TopicLabels = TopicLabels5)
-TopicWide10 <- LongDataMake(obj = CombClean10, TopicLabels = TopicLabels10)
+TopicWide5 <- TopicWide5[order(TopicWide5$SpeechID),]
+# TopicWide10 <- LongDataMake(obj = CombClean10, TopicLabels = TopicLabels10)
 
 write.csv(TopicWide5, "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/TopicsSpoken.csv", 
           row.names = FALSE)
