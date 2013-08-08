@@ -66,7 +66,7 @@ OrgClass <- RemoveTitle(data = OrgClass)
 # Merge
 Speeches <- merge(Connect, OrgClass, by = c("full_date", "name"), all = TRUE)
 Speeches <- subset(Speeches, !is.na(full_date))
-Speeches <- MoveFront(Speeches, c("month_year", "year"))
+Speeches <- MoveFront(Speeches, c("month_year"))
 
 # Drop duplicates
 Speeches <- Speeches[!duplicated(Speeches[, c("full_date", "name")]), ]
