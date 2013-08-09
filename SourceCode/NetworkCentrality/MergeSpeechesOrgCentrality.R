@@ -60,12 +60,13 @@ SpeechComb <- MergeNonRotate(yearList)
 SpeechComb$full_date <- dmy(SpeechComb$full_date) 
 SpeechComb <- SpeechComb[order(SpeechComb$full_date), ]
 
-write.csv(SpeechComb, 
-          file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/ConnectivityClean.csv",
-          row.names = FALSE)
+# write.csv(SpeechComb, 
+#          file = "~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/ConnectivityClean.csv",
+#          row.names = FALSE)
 
 #### Total number of speeches per year
 library(plyr)
+library(ggplot2)
 
 SpeechComb$Dumb <- 1
 SpeechTemp <- ddply(SpeechComb, .(year), transform, YearTotal = sum(Dumb))
