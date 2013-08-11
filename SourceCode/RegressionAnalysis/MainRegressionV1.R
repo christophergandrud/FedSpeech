@@ -130,8 +130,8 @@ MC3 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3 +
 MC4 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3 +
             UnemploymentRateChangeLag3, 
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
-MC5 <- zelig(Monetary.Policy ~ FedSpoketoFed + ScrutinyLag3 +
-            pres_party + house_dem_rep + senate_dem_rep, 
+MC5 <- zelig(Monetary.Policy ~ FedSpoketoFed + PCEPIPercentLag3 + 
+               pres_party + house_dem_rep + senate_dem_rep, 
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 
 # Local Housing and Development
