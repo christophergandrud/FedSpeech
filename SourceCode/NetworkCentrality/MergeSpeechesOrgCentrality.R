@@ -1,7 +1,7 @@
 #############
 # Merge Non-Rotating Board/Org Connectivity data in to create main connectivity
 # Christopher Gandrud
-# 5 August 2013
+# 21 August 2013
 #############
 
 # Load package
@@ -81,8 +81,8 @@ library(devtools)
 source_gist("5675688")
 
 # All connectivity vars
-ConVars <- c("SpeakerConnect", "HFSC_CombConnect", "FedBoardCentrality")
-ConTitles <- c("Speaker Connected", "HCFS Connected", "Fed. Board Centrality")
+ConVars <- c("HFSC_CombConnect", "SpeakerConnect", "FedBoardCentrality")
+ConTitles <- c("HCFS Connected", "Speaker Connected", "Fed. Board Centrality")
 
 e.divGG(data = SpeechComb, Vars = ConVars, TimeVar = "full_date", 
         Titles = ConTitles, sig.lvl = 0.05, R = 999, min.size = 60, JustGraph = FALSE)
