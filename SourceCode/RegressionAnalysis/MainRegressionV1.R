@@ -1,7 +1,7 @@
 #############
 # Main Regression Analysis (v1)
 # Christopher Gandrud
-# 9 August 2013
+# 22 August 2013
 #############
 
 # Load packages
@@ -206,7 +206,8 @@ Topics1 <- stargazer(MC1, MC2, MC3, MC4, MC5, MC6, MC7, MC8, MC9, MC10,
 cat(Topics1, file = "~/Dropbox/Fed_Speeches_Paper/tables/TopicRegress1.tex")
 
 CovarLabs4 <- c("HCFS Donor", "Scrutiny Med.", "Scrutiny High", 
-                "Case-Shiller Change", "Inflation", "Unemploy. Change")
+                "Case-Shiller Change", "Inflation", "Unemploy. Change", 
+                "Pres. Party", "House Dem Prop.", "Senate Dem Prop.")
 ColLabs4 <- c("D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "
               D10")
 Topics2 <- stargazer(MC11, MC12, MC13, MC14, MC15, MC16, 
