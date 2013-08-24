@@ -1,7 +1,7 @@
 #############
 # Main Regression Analysis (v1)
 # Christopher Gandrud
-# 22 August 2013
+# 24 August 2013
 #############
 
 # Load packages
@@ -119,7 +119,7 @@ for (u in TopicVars){
 + 
             pres_party + house_dem_rep + senate_dem_rep
 # Monetary Policy
-MC1 <- zelig(Monetary.Policy ~ FedSpoketoFed + ScrutinyLag3, data = Combined, 
+MC1 <- zelig(Monetary.Policy ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
 MC2 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3, 
              data = Combined, 
@@ -130,61 +130,61 @@ MC3 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3 +
 MC4 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3 +
             UnemploymentRateChangeLag3, 
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
-MC5 <- zelig(Monetary.Policy ~ FedSpoketoFed + PCEPIPercentLag3 + 
+MC5 <- zelig(Monetary.Policy ~ FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3 + 
                pres_party + house_dem_rep + senate_dem_rep, 
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 
 # Local Housing and Development
-MC6 <- zelig(Local.Housing.Dev ~ ScrutinyLag3, data = Combined, 
+MC6 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC7 <- zelig(Local.Housing.Dev ~ CaseShillerChangeLag3, 
+MC7 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3, 
              data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC8 <- zelig(Local.Housing.Dev ~ CaseShillerChangeLag3 +PCEPIPercentLag3, data = Combined, 
+MC8 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3 + PCEPIPercentLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC9 <- zelig(Local.Housing.Dev ~ CaseShillerChangeLag3 + 
+MC9 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3 + 
              UnemploymentRateChangeLag3 + pres_party, 
              data = Combined, model = "ls", robust = "month_year", cite = FALSE)
-MC10 <- zelig(Local.Housing.Dev ~ ScrutinyLag3 + pres_party + 
+MC10 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3 + pres_party + 
              house_dem_rep + senate_dem_rep, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
 
 # Financial Markets
-MC11 <- zelig(Financial.Markets ~ HFSC_CombConnect + ScrutinyLag3,
+MC11 <- zelig(Financial.Markets ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3,
              data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC12 <- zelig(Financial.Markets ~ CaseShillerChangeLag3, 
+MC12 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3, 
              data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC13 <- zelig(Financial.Markets ~ CaseShillerChangeLag3 +
+MC13 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3 +
              PCEPIPercentLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC14 <- zelig(Financial.Markets ~ CaseShillerChangeLag3 + 
+MC14 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3 + 
             UnemploymentRateChangeLag3, 
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
-MC15 <- zelig(Financial.Markets ~ HFSC_CombConnect + ScrutinyLag3+ 
+MC15 <- zelig(Financial.Markets ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3+ 
              pres_party + house_dem_rep + senate_dem_rep,
              data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
 
 # Banking Regulation
-MC16 <- zelig(Banking.Regulation ~ HFSC_CombConnect + ScrutinyLag3, data = Combined, 
+MC16 <- zelig(Banking.Regulation ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC17 <- zelig(Banking.Regulation ~ CaseShillerChangeLag3, data = Combined, 
+MC17 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC18 <- zelig(Banking.Regulation ~ CaseShillerChangeLag3 + 
+MC18 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3 + 
              PCEPIPercentLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC19 <- zelig(Banking.Regulation ~ CaseShillerChangeLag3 + 
+MC19 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3 + 
              UnemploymentRateChangeLag3, data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
-MC20 <- zelig(Banking.Regulation ~ HFSC_CombConnect + ScrutinyLag3 +
+MC20 <- zelig(Banking.Regulation ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3 +
              pres_party + house_dem_rep + senate_dem_rep, 
              data = Combined, 
              model = "ls", robust = "month_year", cite = FALSE)
 
 # Create results table
-CovarLabs3 <- c("Fed. Venue", "Scrutiny Med.", "Scrutiny High", 
+CovarLabs3 <- c("Fed. Venue", "HCFS Donor", "Scrutiny Med.", "Scrutiny High", 
                 "Case-Shiller Change", "Inflation", "Unemploy. Change",
                 "Pres. Party", "House Dem Prop.", "Senate Dem Prop.")
 ColLabs3 <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", 
@@ -205,7 +205,7 @@ Topics1 <- stargazer(MC1, MC2, MC3, MC4, MC5, MC6, MC7, MC8, MC9, MC10,
             omit.stat = c("f", "SER"))
 cat(Topics1, file = "~/Dropbox/Fed_Speeches_Paper/tables/TopicRegress1.tex")
 
-CovarLabs4 <- c("HCFS Donor", "Scrutiny Med.", "Scrutiny High", 
+CovarLabs4 <- c("Fed. Venue", "HCFS Donor", "Scrutiny Med.", "Scrutiny High", 
                 "Case-Shiller Change", "Inflation", "Unemploy. Change", 
                 "Pres. Party", "House Dem Prop.", "Senate Dem Prop.")
 ColLabs4 <- c("D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "
