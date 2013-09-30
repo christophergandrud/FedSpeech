@@ -7,6 +7,7 @@
 library(ExpAgenda)
 library(stringr)
 library(lubridate)
+library(plyr)
 library(ggplot2)
 
 RemoveTitle <- function(data){
@@ -37,21 +38,22 @@ Est1 <- ExpAgendaVonmon(obj = DocTerm, n.cats = 6)
 ## Find main stems associated with each topic and main topic of each speech
 TopicsStems <- TopicSummary(Est1, NStems = 5)
 
-Labels <- c("Topic1", "Topic2", "Topic3", "Topic4")
 TopicDoc <- DocTopics(Est1)
 
 ## Graph by speaker over time
 MetaDataSub <- subset(MetaData, name != "Brian F. Madigan")
 TopicDocComb <- cbind(MetaDataSub[, "full_date"], TopicDoc[,2:3])
 TopicDocComb$year <- year(dmy(TopicDocComb[,1]))
+TopicDocComb$Names <- as.character(TopicDocComb$Names)
 
 # Create counts
 Years <- unique(TopicDocComb$year)
-Speakers <- unique(TopicDocComb$Names)
+Speakers <- as.character(unique(TopicDocComb$Names))
 OutDF <- data.frame()
 for (i in Years){
   YearSub <- subset(TopicDocComb, year == i)
-  for (u in Speakers){
+  SpeakersYear <- subset(Speakers, Speakers %in% YearSub$Names) 
+  for (u in SpeakersYear){
     SpeakSub <- subset(YearSub, Names == u)
     temp <- data.frame(table(SpeakSub$Topic))
     temp$Year <- i
@@ -60,9 +62,12 @@ for (i in Years){
   }
 }
 
-OutDF <- subset(OutDF, Freq != 0)
+SubCount <- subset(OutDF, Freq != 0)
+SubCount <- ddply(SubCount, .(Names, Year), transform, TotalSpeaches = sum(Freq))
+SubCount$TopicPropTotal <- SubCount$Freq / SubCount$TotalSpeaches
 
-ggplot(OutDF, aes(Year, Freq, colour = Names)) +
-  geom_line() +
+ggplot(SubCount, aes(Year, TopicPropTotal, colour = Names)) +
+  geom_line(aes(size = Freq)) +
   facet_grid(Var1~.) +
   theme_bw()
+
