@@ -1,11 +1,13 @@
 #############
 # Prepare speeches for text analysis
 # Christopher Gandrud
-# 29 September 2013
+# 30 September 2013
 #############
 
 library(ExpAgenda)
 library(stringr)
+library(lubridate)
+library(ggplot2)
 
 RemoveTitle <- function(data){
   data[, "name"] <- gsub(pattern = "Governor†", "", data[, "name"])
@@ -29,6 +31,38 @@ DocTerm <- PreProcess(textsPattern = "*.txt", authorsDF = MetaData,
                       AuthorCol = "name", removeAuthors = "Brian F. Madigan", 
                       sparse = 0.8)
 
-## Run text analysis
-TestEA <- ExpAgendaVonmon(obj = DocTerm)
+ ## Run text analysis
+Est1 <- ExpAgendaVonmon(obj = DocTerm, n.cats = 6)
 
+## Find main stems associated with each topic and main topic of each speech
+TopicsStems <- TopicSummary(Est1, NStems = 5)
+
+Labels <- c("Topic1", "Topic2", "Topic3", "Topic4")
+TopicDoc <- DocTopics(Est1)
+
+## Graph by speaker over time
+MetaDataSub <- subset(MetaData, name != "Brian F. Madigan")
+TopicDocComb <- cbind(MetaDataSub[, "full_date"], TopicDoc[,2:3])
+TopicDocComb$year <- year(dmy(TopicDocComb[,1]))
+
+# Create counts
+Years <- unique(TopicDocComb$year)
+Speakers <- unique(TopicDocComb$Names)
+OutDF <- data.frame()
+for (i in Years){
+  YearSub <- subset(TopicDocComb, year == i)
+  for (u in Speakers){
+    SpeakSub <- subset(YearSub, Names == u)
+    temp <- data.frame(table(SpeakSub$Topic))
+    temp$Year <- i
+    temp$Names <- u
+    OutDF <- rbind(OutDF, temp)
+  }
+}
+
+OutDF <- subset(OutDF, Freq != 0)
+
+ggplot(OutDF, aes(Year, Freq, colour = Names)) +
+  geom_line() +
+  facet_grid(Var1~.) +
+  theme_bw()
