@@ -1,0 +1,79 @@
+%%%%%%%%%%%%%%%%
+% Bayesian heirarchical topic modeling of Fed Speeches
+% Christopher Gandrud
+% 4 October 2013
+%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{lscape}
+\usepackage[authoryear]{natbib}
+\usepackage{setspace}
+    \doublespacing
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=cyan,
+    urlcolor=cyan
+}
+\usepackage{booktabs}
+\usepackage{dcolumn}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{todonotes}
+\usepackage{verbatim}
+\usepackage{endnotes}
+
+\setlength{\belowcaptionskip}{0.5cm}
+
+% Set knitr global options
+<<ParentGlobalOpts, include=FALSE>>=
+    opts_chunk$set(concordance=TRUE)
+    opts_chunk$set(fig.align='center')
+
+# Load packages and create package bibliography
+PkgsToLoad <- c("ExpAgenda", "ggplot2", "lubridate", "stringr")
+
+repmis::LoadandCite(pkgs = PkgsToLoad, file = "RPackages.bib")
+
+# Load data & Do preliminary cleaning
+RemoveTitle <- function(data){
+  data[, "name"] <- gsub(pattern = "Governor†", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Governor", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Chairman†", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Chairman", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Vice Chair†", "", data[, "name"])
+  data[, "name"] <- gsub(pattern = "Vice Chair", "", data[, "name"])
+  data[, "name"] <- str_trim(data[, "name"])
+  data
+}
+
+setwd("~/Dropbox/Fed_Speeches_Data/May2013Speeches/FedSpeechIndvParsed_20May/")
+
+MetaData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/FedSpeechesVersionMay2013.csv",
+                     stringsAsFactors = FALSE)
+
+MetaData <- RemoveTitle(MetaData)
+
+@
+
+\title{Supplementary Material: How the Fed Manages its External Environment: An Analysis of
+Topical Responses to Political and Economic Stress (1997-2012)}
+
+\author{Kevin Young \& Christopher Gandrud}
+
+
+\begin{document}
+
+\maketitle{}
+
+\section*{Bayesian heirarchical topic modeling of Federal Reserve Governor Speeches}
+
+To examine whether or not it is valid to assume that the `Fed' is a homogenous actor when it comes to the topics spoken about, we conducted Bayesian heirarchical topic modeling. Primarily we used the method developed by \cite{Grimmer2010} to identify each speaker's agenda per text. 
+
+\bibliographystyle{apsr}
+\bibliography{MainBib,RPackages}
+
+\end{document}

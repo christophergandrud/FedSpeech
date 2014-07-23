@@ -1,7 +1,7 @@
 ######################
 # Gather Fed Governor Speeches, Parse HTML/XML
 # Christopher Gandrud
-# Updated 20 May 2013
+# Updated 15 May 2014
 ######################
 
 library(XML)
@@ -9,33 +9,41 @@ library(XML)
 #######################
 ## CSV file with Fed governor speech URLs
 
-SpeechesData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/FedSpeechesVersionMay2013.csv")
+#This is the original
+#SpeechesData <- read.csv("~/Dropbox/Fed_Speeches_Paper/FedSpeech/Data/Raw/FedSpeechesVersionMay2013.csv")
 
+#Christopher why does this path not work?
+##I think the problem arises here...
+setwd("C:/Users/Kevin/Dropbox")
+SpeechesData <- read.csv("Fed_Speeches_Paper/FedSpeech/Data/Raw/FedSpeechesCorrected-NEW.csv")
+
+
+# Gather links
 Addresses <- as.character(SpeechesData[, "vars.link"])
 x <- 1:length(Addresses)
 Combi <- data.frame(x, Addresses, stringsAsFactors = FALSE)
 
-outpathA <- "~/Desktop/FedSpeechIndv/"
+outpathA <- "Fed_Speeches_Paper/"
 
-for (i in nrow(Combi)){
+for (i in 1:nrow(Combi)){
   TempFile <- paste0(outpathA, "/", i, ".txt")
-  URL <- Combi[, 2]
+  URL <- Combi[i, 2]
   download.file(URL, destfile = TempFile)
 }
 
 #######################
 ## Open text files, parse individually and remove text of the the speeches
 
-setwd("~/Desktop/FedSpeechIndv/")
+setwd(outpathA)
 
     # Create list of text files to parse and extract speech text from
-    Files <- list.files(path = "~/Desktop/FedSpeechIndv/", pattern = "*.txt")
+    Files <- list.files(path = outpathA, pattern = "*.txt")
     
     # Create object to record empty text files (likely empty due to error in the website download)
     missing <- NULL
     
     # Indicate folder to save cleaned files into
-    outpathB <- "~/Desktop/FedSpeechIndvParsed/"
+    outpathB <- "~/Desktop/FedSpeechIndvParsed15May2014"
 
 for (i in Files){
   

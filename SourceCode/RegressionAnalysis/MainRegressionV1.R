@@ -20,7 +20,7 @@ for (i in LagVars){
                     slideBy = -3)
 }
 
-Combined$ScrutinyLag3 <- factor(Combined$ScrutinyLag3, 
+Combined$ScrutinyLag3 <- factor(Combined$ScrutinyLag3,
                              labels = c("Low", "Medium", "High"))
 
 #### Connections
@@ -28,33 +28,35 @@ Combined$ScrutinyLag3 <- factor(Combined$ScrutinyLag3,
 Combined$FedBoardCentrality <- Combined$FedBoardCentrality * 1000
 
 # Test Models for FedBoardCentrality
-MA1 <- zelig(FedBoardCentrality ~ ScrutinyLag3, data = Combined, 
+MA1 <- zelig(FedBoardCentrality ~ ScrutinyLag3, data = Combined,
             model = "ls", robust = "month_year", cite = FALSE)
-MA2 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 + PCEPIPercentLag3, data = Combined, 
+MA2 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 + PCEPIPercentLag3,
+            data = Combined,
             model = "ls", robust = "month_year", cite = FALSE)
-MA3 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 + UnemploymentRateChangeLag3, 
-            data = Combined, model = "ls", robust = "month_year", 
+MA3 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 +
+            UnemploymentRateChangeLag3,
+            data = Combined, model = "ls", robust = "month_year",
             cite = FALSE)
-MA4 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 + GDPC96Percent, 
-            data = Combined, model = "ls", robust = "month_year", 
+MA4 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 + GDPC96Percent,
+            data = Combined, model = "ls", robust = "month_year",
             cite = FALSE)
-MA5 <- zelig(FedBoardCentrality ~ ScrutinyLag3 + pres_party + house_dem_rep + 
-              senate_dem_rep, data = Combined, model = "ls", robust = "month_year", 
-            cite = FALSE)
-MA6 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 + 
-            pres_party + house_dem_rep + senate_dem_rep, 
-            data = Combined, model = "ls", robust = "month_year", 
-            cite = FALSE)
+MA5 <- zelig(FedBoardCentrality ~ ScrutinyLag3 + pres_party + house_dem_rep +
+            senate_dem_rep, data = Combined, model = "ls",
+            robust = "month_year", cite = FALSE)
+MA6 <- zelig(FedBoardCentrality ~ CaseShillerChangeLag3 +
+            pres_party + house_dem_rep + senate_dem_rep,
+            data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 # Test For Donors
-MA7 <- zelig(HFSC_CombConnect ~ ScrutinyLag3, data = Combined, 
+MA7 <- zelig(HFSC_CombConnect ~ ScrutinyLag3, data = Combined,
             model = "ls", robust = "month_year", cite = FALSE)
-MA8 <- zelig(HFSC_CombConnect ~ CaseShillerChangeLag3 + PCEPIPercentLag3, data = Combined, 
-            model = "ls", robust = "month_year", cite = FALSE)
+MA8 <- zelig(HFSC_CombConnect ~ CaseShillerChangeLag3 + PCEPIPercentLag3,
+            data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 
 
 # Create results table
-CoVarLabs1 <- c("Scrutiny Med.", "Scrutiny High", "Case-Shiller Change", "Inflation", 
-                "Unemployment Change", "Growth", "Pres. Party", "House Dem Prop.", "Senate Dem Prop.")
+CoVarLabs1 <- c("Scrutiny Med.", "Scrutiny High", "Case-Shiller Change",
+                "Inflation", "Unemployment Change", "Growth", "Pres. Party",
+                "House Dem Prop.", "Senate Dem Prop.")
 ColLabs1 <- c("A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8")
 Centrality <- stargazer(MA1, MA2, MA3, MA4, MA5, MA6, MA7, MA8,
                 title = "Coefficient Estimates for Organizations' Connectivity to the Fed Board and Congress",
@@ -74,19 +76,19 @@ Centrality <- stargazer(MA1, MA2, MA3, MA4, MA5, MA6, MA7, MA8,
 cat(Centrality, file = "~/Dropbox/Fed_Speeches_Paper/tables/FedCentrality.tex")
 
 #### Org. Type ####
-MB1 <- zelig(FedSpoketoFed ~ ScrutinyLag3, data = Combined, 
+MB1 <- zelig(FedSpoketoFed ~ ScrutinyLag3, data = Combined,
                model = "ls", robust = "month_year", cite = FALSE)
 
-MB2 <- zelig(FedSpoketoFed ~ CaseShillerChangeLag3, data = Combined, 
+MB2 <- zelig(FedSpoketoFed ~ CaseShillerChangeLag3, data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
 
-MB3 <- zelig(university ~ ScrutinyLag3, data = Combined, 
+MB3 <- zelig(university ~ ScrutinyLag3, data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
 
-MB4 <- zelig(university ~ CaseShillerChangeLag3, data = Combined, 
+MB4 <- zelig(university ~ CaseShillerChangeLag3, data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
 
-CoVarLabs2 <- c("Scrutiny Med.", "Scrutiny High", 
+CoVarLabs2 <- c("Scrutiny Med.", "Scrutiny High",
                 "Case-Shiller Change")
 ColLabs2 <- c("B1", "B2", "B3", "B4")
 OrgType <- stargazer(MB1, MB2, MB3, MB4,
@@ -95,7 +97,7 @@ OrgType <- stargazer(MB1, MB2, MB3, MB4,
               dep.var.labels = c("Fed. Venue", "University"),
               column.labels = ColLabs2,
               covariate.labels = CoVarLabs2,
-              notes = c("Robust standard errors clustered by", 
+              notes = c("Robust standard errors clustered by",
                         "month-years in parentheses.",
                         "All stressors are lagged by 3 months."),
               notes.align = "l",
@@ -111,90 +113,94 @@ cat(OrgType, file = "~/Dropbox/Fed_Speeches_Paper/tables/OrgType.tex")
 
 #### Topics ####
 # Multiply topic vars by 100 to ease interpretation
-TopicVars <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy", "International.Economy",
-                "Local.Housing.Dev", "Banking.Regulation", "Pres. Party", "House Dem Prop.", "Senate Dem Prop.")
+TopicVars <- c("Financial.Markets", "Macroeconomics", "Monetary.Policy",
+                "International.Economy", "Local.Housing.Dev",
+                "Banking.Regulation", "Pres. Party", "House Dem Prop.",
+                "Senate Dem Prop.")
 for (u in TopicVars){
     Combined[, u] <- Combined[, u] * 100
 }
-+ 
-            pres_party + house_dem_rep + senate_dem_rep
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 # Monetary Policy
-MC1 <- zelig(Monetary.Policy ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3, data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
-MC2 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3, 
-             data = Combined, 
+MC1 <- zelig(Monetary.Policy ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3,
+            data = Combined, model = "ls", robust = "month_year", cite = FALSE)
+MC2 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3,
+             data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
 MC3 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3 +
-             PCEPIPercentLag3, data = Combined, 
+             PCEPIPercentLag3, data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
 MC4 <- zelig(Monetary.Policy ~ FedSpoketoFed + CaseShillerChangeLag3 +
-            UnemploymentRateChangeLag3, 
+            UnemploymentRateChangeLag3,
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
-MC5 <- zelig(Monetary.Policy ~ FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3 + 
-               pres_party + house_dem_rep + senate_dem_rep, 
+MC5 <- zelig(Monetary.Policy ~ FedSpoketoFed + HFSC_CombConnect +
+            PCEPIPercentLag3 + pres_party + house_dem_rep + senate_dem_rep,
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 
 # Local Housing and Development
-MC6 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3, data = Combined, 
+MC6 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + HFSC_CombConnect +
+            ScrutinyLag3, data = Combined, model = "ls", robust = "month_year",
+            cite = FALSE)
+MC7 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3,
+             data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
-MC7 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3, 
-             data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
-MC8 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3 + PCEPIPercentLag3, data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
-MC9 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3 + 
-             UnemploymentRateChangeLag3 + pres_party, 
+MC8 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3 +
+            PCEPIPercentLag3, data = Combined, model = "ls",
+            robust = "month_year", cite = FALSE)
+MC9 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + CaseShillerChangeLag3 +
+             UnemploymentRateChangeLag3 + pres_party,
              data = Combined, model = "ls", robust = "month_year", cite = FALSE)
-MC10 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3 + pres_party + 
-             house_dem_rep + senate_dem_rep, data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
+MC10 <- zelig(Local.Housing.Dev ~ FedSpoketoFed + HFSC_CombConnect +
+            ScrutinyLag3 + pres_party + house_dem_rep + senate_dem_rep,
+            data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 
 # Financial Markets
-MC11 <- zelig(Financial.Markets ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3,
-             data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
-MC12 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3, 
-             data = Combined, 
+MC11 <- zelig(Financial.Markets ~ FedSpoketoFed + HFSC_CombConnect +
+            ScrutinyLag3, data = Combined, model = "ls", robust = "month_year",
+            cite = FALSE)
+MC12 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3,
+             data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
 MC13 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3 +
-             PCEPIPercentLag3, data = Combined, 
+             PCEPIPercentLag3, data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
-MC14 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3 + 
-            UnemploymentRateChangeLag3, 
+MC14 <- zelig(Financial.Markets ~ FedSpoketoFed + CaseShillerChangeLag3 +
+            UnemploymentRateChangeLag3,
             data = Combined, model = "ls", robust = "month_year", cite = FALSE)
-MC15 <- zelig(Financial.Markets ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3+ 
-             pres_party + house_dem_rep + senate_dem_rep,
-             data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
+MC15 <- zelig(Financial.Markets ~ FedSpoketoFed + HFSC_CombConnect +
+            ScrutinyLag3 + pres_party + house_dem_rep + senate_dem_rep,
+            data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 
 # Banking Regulation
-MC16 <- zelig(Banking.Regulation ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3, data = Combined, 
+MC16 <- zelig(Banking.Regulation ~ FedSpoketoFed + HFSC_CombConnect +
+            ScrutinyLag3, data = Combined, model = "ls", robust = "month_year",
+            cite = FALSE)
+MC17 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3,
+            data = Combined, model = "ls", robust = "month_year", cite = FALSE)
+MC18 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3 +
+             PCEPIPercentLag3, data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
-MC17 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3, data = Combined, 
+MC19 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3 +
+             UnemploymentRateChangeLag3, data = Combined,
              model = "ls", robust = "month_year", cite = FALSE)
-MC18 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3 + 
-             PCEPIPercentLag3, data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
-MC19 <- zelig(Banking.Regulation ~ FedSpoketoFed + CaseShillerChangeLag3 + 
-             UnemploymentRateChangeLag3, data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
-MC20 <- zelig(Banking.Regulation ~ FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3 +
-             pres_party + house_dem_rep + senate_dem_rep, 
-             data = Combined, 
-             model = "ls", robust = "month_year", cite = FALSE)
+MC20 <- zelig(Banking.Regulation ~ FedSpoketoFed + HFSC_CombConnect +
+            ScrutinyLag3 + pres_party + house_dem_rep + senate_dem_rep,
+            data = Combined, model = "ls", robust = "month_year", cite = FALSE)
 
 # Create results table
-CovarLabs3 <- c("Fed. Venue", "HCFS Donor", "Scrutiny Med.", "Scrutiny High", 
+CovarLabs3 <- c("Fed. Venue", "HCFS Donor", "Scrutiny Med.", "Scrutiny High",
                 "Case-Shiller Change", "Inflation", "Unemploy. Change",
                 "Pres. Party", "House Dem Prop.", "Senate Dem Prop.")
-ColLabs3 <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", 
+ColLabs3 <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9",
               "C10")
 Topics1 <- stargazer(MC1, MC2, MC3, MC4, MC5, MC6, MC7, MC8, MC9, MC10,
-            title = "Coefficient Estimates for Topics Discussed in Speeches (1)", 
+            title = "Coefficient Estimates for Topics Discussed in Speeches (1)",
             label = "TopicsRegress1",
             covariate.labels = CovarLabs3,
             column.labels = ColLabs3,
-            dep.var.labels = c("Monetary Policy", "Local Housing and Development"),
+            dep.var.labels = c("Monetary Policy",
+                                "Local Housing and Development"),
             notes = c("Robust standard errors clustered by month-years in parentheses.",
                 "All stressors are lagged by 3 months."),
             notes.align = "l",
@@ -205,14 +211,14 @@ Topics1 <- stargazer(MC1, MC2, MC3, MC4, MC5, MC6, MC7, MC8, MC9, MC10,
             omit.stat = c("f", "SER"))
 cat(Topics1, file = "~/Dropbox/Fed_Speeches_Paper/tables/TopicRegress1.tex")
 
-CovarLabs4 <- c("Fed. Venue", "HCFS Donor", "Scrutiny Med.", "Scrutiny High", 
-                "Case-Shiller Change", "Inflation", "Unemploy. Change", 
+CovarLabs4 <- c("Fed. Venue", "HCFS Donor", "Scrutiny Med.", "Scrutiny High",
+                "Case-Shiller Change", "Inflation", "Unemploy. Change",
                 "Pres. Party", "House Dem Prop.", "Senate Dem Prop.")
 ColLabs4 <- c("D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "
               D10")
-Topics2 <- stargazer(MC11, MC12, MC13, MC14, MC15, MC16, 
+Topics2 <- stargazer(MC11, MC12, MC13, MC14, MC15, MC16,
             MC17, MC18, MC19, MC20,
-            title = "Coefficient Estimates for Topics Discussed in Speeches (2)", 
+            title = "Coefficient Estimates for Topics Discussed in Speeches (2)",
             label = "TopicsRegress2",
             covariate.labels = CovarLabs4,
             column.labels = ColLabs4,
@@ -226,4 +232,3 @@ Topics2 <- stargazer(MC11, MC12, MC13, MC14, MC15, MC16,
             column.sep.width = "0.01cm",
             omit.stat = c("f", "SER"))
 cat(Topics2, file = "~/Dropbox/Fed_Speeches_Paper/tables/TopicRegress2.tex")
-
