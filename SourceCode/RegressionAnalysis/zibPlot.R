@@ -1,4 +1,4 @@
-zibPlot <- function(obj, max){
+zibPlot <- function(obj, max, params_labels = NULL){
     require(reshape2)
     require(dplyr)
     require(ggplot2)
@@ -24,6 +24,11 @@ zibPlot <- function(obj, max){
     names(comb) <- c('params', 'lower95', 'lower90', 'medians', 'upper90',
                      'upper95')
     
+    # Label
+    if (!is.null(labels)){
+        comb$params <- factor(comb$params, labels = params_labels)
+    }
+    
     # Reverse order
     clevels <- levels(comb$params) %>% rev
 
@@ -38,12 +43,16 @@ zibPlot <- function(obj, max){
                          yend = params), size = 1.5) +
         scale_y_discrete(limits = clevels) +
         geom_vline(xintercept = 0, linetype = 'dotted') +
-        xlab('') + ylab('') +
+        xlab('\nCoefficient Estimates') + ylab('') +
         theme_bw()
     
     return(pp)
 }
 
-zibPlot(BR1, max = 250)
+pLabels <- c('Beta_intercept', 'Beta_Scrutiny_Med', 'Beta_Scrutiny_High',
+             'P=0_intercept', 'P=0_Scrutiny_Med', 'P=0_Scrutiny_High',
+             'd', 'sigma')
+
+zibPlot(HD2, max = 250, params_labels = pLabels)
 
 

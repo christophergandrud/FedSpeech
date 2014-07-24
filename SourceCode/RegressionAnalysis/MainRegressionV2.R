@@ -78,7 +78,7 @@ HD2 <- zoib(Local.Housing.Dev ~
 
 HD2_post <- GetzoibPost(HD2, max = nIter/2)
 gelman.diag(HD2_post)
-summary(HD2_post)
+zibPlot(HD2, max = nIter/2)
 
 # Financial Markets ---------------------------------------------------------- #
 FM1 <- zoib(Financial.Markets ~
