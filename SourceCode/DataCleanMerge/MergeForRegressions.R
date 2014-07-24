@@ -118,7 +118,7 @@ KeepVars <- c("month_year", "full_date", "name", "position_cat", "Organisation",
               "SPCS10RSA",               "CPIAUCNSPercent",
               "PCEPIPercent",            "GDPC96Percent",
               "CaseShillerChange",       "UnemploymentRateChange",
-              "pres_party", "house_dem_rep", "senate_dem_rep")
+              "pres_party", "house_dem_rep", "senate_dem_rep", 'quanty')
 
 Combined <- Combined[, KeepVars]
 
