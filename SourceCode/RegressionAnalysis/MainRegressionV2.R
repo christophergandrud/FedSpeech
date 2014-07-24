@@ -7,6 +7,7 @@
 
 # Load required packages
 library(zoib)
+library(Zelig)
 
 # Functions
 ## GETzoibPost (extract posterior distribution)
@@ -33,33 +34,82 @@ for (i in LagVars){
                     slideBy = -3)
 }
 
+# Turn ScrutinyLag3 into a factor
 Combined$ScrutinyLag3 <- factor(Combined$ScrutinyLag3,
                              labels = c("Low", "Medium", "High"))
+
+# Rescale quanty to a proportion from a percent
+Combined$quanty <- Combined$quanty/100
 
 # ---------------------------------------------------------------------------- #
 #### Zero inflated beta regression ####
 
-# Banking Policy Topic
-BP1 <- zoib(Monetary.Policy ~
-                HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1|
-                HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1,
-              data = Combined, EUID = Combined$month_year, random = 1,
-              one.inflation = FALSE, joint = FALSE,
-              n.iter = 500)
+# Set the number of iterations
+nIter = 500
 
-BP1_post <- GetzoibPost(BP1, max = 250)
+# Banking Policy Topic ------------------------------------------------------- #
+BP1 <- zoib(Monetary.Policy ~
+            HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1|
+            HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+BP1_post <- GetzoibPost(BP1, max = nIter/2)
 gelman.diag(BP1_post)
 summary(BP1_post)
 
 
-# Financial Markets
-FM1 <- zoib(Financial.Markets ~ CaseShillerChange + UnemploymentRateChange|1|
-                CaseShillerChange + UnemploymentRateChange|1,
-             data = Combined, EUID = Combined$month_year, random = 1,
-             one.inflation = FALSE, joint = FALSE,
-             n.iter = 500)
+# Housing and Development Topic ---------------------------------------------- #
+HD1 <- zoib(Local.Housing.Dev ~
+            CaseShillerChange|1|
+            CaseShillerChange|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
-FM1_post <- GetzoibPost(FM1, max = 250)
+HD1_post <- GetzoibPost(HD1, max = nIter/2)
+gelman.diag(HD1_post)
+summary(HD1_post)
+
+HD2 <- zoib(Local.Housing.Dev ~
+            ScrutinyLag3|1|
+            ScrutinyLag3|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+HD2_post <- GetzoibPost(HD2, max = nIter/2)
+gelman.diag(HD2_post)
+summary(HD2_post)
+
+# Financial Markets ---------------------------------------------------------- #
+FM1 <- zoib(Financial.Markets ~
+            CaseShillerChange + ScrutinyLag3|1|
+            CaseShillerChange + ScrutinyLag3|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+FM1_post <- GetzoibPost(FM1, max = nIter/2)
 gelman.diag(FM1_post)
 summary(FM1_post)
-gelman.diag(sample12)
+
+
+# Banking Regulation Topic --------------------------------------------------- #
+BR1 <- zoib(Banking.Regulation ~
+            HFSC_CombConnect + ScrutinyLag3|1|
+            HFSC_CombConnect + ScrutinyLag3|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+BR1_post <- GetzoibPost(BR1, max = nIter/2)
+gelman.diag(BR1_post)
+summary(BR1_post)
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Degree of quantification
+QT1 <- zoib(quanty ~ CaseShillerChange|1|CaseShillerChange|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE,  n.iter = nIter)
+
+QT1_post <- GetzoibPost(QT1, max = nIter/2)
+gelman.diag(QT1_post)
+summary(QT1_post)
