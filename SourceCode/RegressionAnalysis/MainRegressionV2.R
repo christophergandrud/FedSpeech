@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 # Zero inflated beta regressions for Fed Speeches
 # Christopher Gandrud
-# 23 July 2014
+# 24 July 2014
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -14,7 +14,7 @@ GetzoibPost <- function(obj, max){
     post.sample <- obj$oripara
     sample.c1<- post.sample[[1]][1:max,]
     sample.c2<- post.sample[[2]][1:max,]
-    sample12 <- mcmc.list(as.mcmc(sample.c1),as.mcmc(sample.c2))   
+    sample12 <- mcmc.list(as.mcmc(sample.c1),as.mcmc(sample.c2))
     return(sample12)
 }
 
@@ -40,12 +40,11 @@ Combined$ScrutinyLag3 <- factor(Combined$ScrutinyLag3,
 #### Zero inflated beta regression ####
 
 # Banking Policy Topic
-BP1 <- zoib(Monetary.Policy ~ FedSpoketoFed +
-                HFSC_CombConnect + ScrutinyLag3|1| 
-                FedSpoketoFed + HFSC_CombConnect +
-                ScrutinyLag3|1,
+BP1 <- zoib(Monetary.Policy ~
+                HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1|
+                HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1,
               data = Combined, EUID = Combined$month_year, random = 1,
-              one.inflation = FALSE, joint = FALSE, 
+              one.inflation = FALSE, joint = FALSE,
               n.iter = 500)
 
 BP1_post <- GetzoibPost(BP1, max = 250)
@@ -57,11 +56,10 @@ summary(BP1_post)
 FM1 <- zoib(Financial.Markets ~ CaseShillerChange + UnemploymentRateChange|1|
                 CaseShillerChange + UnemploymentRateChange|1,
              data = Combined, EUID = Combined$month_year, random = 1,
-             one.inflation = FALSE, joint = FALSE, 
+             one.inflation = FALSE, joint = FALSE,
              n.iter = 500)
 
 FM1_post <- GetzoibPost(FM1, max = 250)
 gelman.diag(FM1_post)
 summary(FM1_post)
 gelman.diag(sample12)
-
