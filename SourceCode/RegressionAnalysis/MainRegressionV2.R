@@ -51,7 +51,7 @@ MP1 <- zoib(Monetary.Policy ~
         one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
 ## Numerical Summaries/Diagnostics
-MP1_G = GelmanDiag(MP1_post, iter = nIter)
+MP1_G = GelmanDiag(MP1, iter = nIter)
 SummaryZib(MP1, iter = nIter)
 
 # Plot
@@ -78,13 +78,11 @@ HD2 <- zoib(Local.Housing.Dev ~
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
 ## Numerical Summaries/Diagnostics
-HD1_post <- GetzibPost(HD1, max = nIter/2)
-gelman.diag(HD1_post)
-summary(HD1_post)
+HD1_G = GelmanDiag(HD1, iter = nIter)
+SummaryZib(HD1, iter = nIter)
 
-HD2_post <- GetzibPost(HD2, max = nIter/2)
-gelman.diag(HD2_post)
-summary(HD2_post)
+HD2_G = GelmanDiag(HD2, iter = nIter)
+SummaryZib(HD2, iter = nIter)
 
 # Plot
 vl_HD1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
@@ -94,7 +92,9 @@ HD_plot1 <- zibPlot(HD1, max = nIter/2, variable_names = vl_HD1,
 vl_HD2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
 HD_plot2 <- zibPlot(HD2, max = nIter/2, variable_names = vl_HD2)
 
-grid.arrange(HD_plot1, HD_plot2, nrow = 2)
+pdf(file = 'ZOIBFigures/HousingDev.pdf')
+    grid.arrange(HD_plot1, HD_plot2, nrow = 2)
+dev.off()
 
 # Financial Markets ---------------------------------------------------------- #
 FM1 <- zoib(Financial.Markets ~
@@ -109,13 +109,12 @@ FM2 <- zoib(Financial.Markets ~
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
-FM1_post <- GetzibPost(FM1, max = nIter/2)
-gelman.diag(FM1_post)
-summary(FM1_post)
+## Numerical Summaries/Diagnostics
+FM1_G = GelmanDiag(FM1, iter = nIter)
+SummaryZib(FM1, iter = nIter)
 
-FM2_post <- GetzibPost(FM2, max = nIter/2)
-gelman.diag(FM2_post)
-summary(FM2_post)
+FM2_G = GelmanDiag(FM2, iter = nIter)
+SummaryZib(FM2, iter = nIter)
 
 # Plot
 vl_FM1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
@@ -125,7 +124,9 @@ FM_plot1 <- zibPlot(FM1, max = nIter/2, variable_names = vl_FM1,
 vl_FM2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
 FM_plot2 <- zibPlot(FM2, max = nIter/2, variable_names = vl_FM2)
 
-grid.arrange(FM_plot1, FM_plot2, nrow = 2)
+pdf(file = 'ZOIBFigures/FinancialMarkets.pdf')
+    grid.arrange(FM_plot1, FM_plot2, nrow = 2)
+dev.off()
 
 # Banking Regulation Topic --------------------------------------------------- #
 BR1 <- zoib(Banking.Regulation ~
@@ -140,13 +141,12 @@ BR2 <- zoib(Banking.Regulation ~
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
-BR1_post <- GetzibPost(BR1, max = nIter/2)
-gelman.diag(BR1_post)
-summary(BR1_post)
+## Numerical Summaries/Diagnostics
+BR1_G = GelmanDiag(BR1, iter = nIter)
+SummaryZib(BR1, iter = nIter)
 
-FM2_post <- GetzibPost(FM2, max = nIter/2)
-gelman.diag(FM2_post)
-summary(FM2_post)
+BR2_G = GelmanDiag(BR2, iter = nIter)
+SummaryZib(BR2, iter = nIter)
 
 # Plot
 vl_BR1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
@@ -156,7 +156,15 @@ BR_plot1 <- zibPlot(BR1, max = nIter/2, variable_names = vl_BR1,
 vl_BR2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
 BR_plot2 <- zibPlot(BR2, max = nIter/2, variable_names = vl_BR2)
 
-grid.arrange(BR_plot1, BR_plot2, nrow = 2)
+pdf(file = 'ZOIBFigures/BankingRegulation.pdf')
+    grid.arrange(BR_plot1, BR_plot2, nrow = 2)
+dev.off()
+
+
+# Combine Gelman-Ruban Diagnostics
+GR <- rbind(MP1_G, HD1_G, HD2_G, FM1_G, FM2_G, BR1_G, BR2_G)
+write.csv(GR, file = 'ZOIBFigures/GelmanRubinDiagDump.csv')
+
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Degree of quantification
