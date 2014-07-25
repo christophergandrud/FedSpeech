@@ -1,3 +1,10 @@
+# ---------------------------------------------------------------------------- #
+# Functions for exploring/presenting Zero-inflated Beta Regression Output
+# See Liu and Kong (under review) for backgroud
+# Christopher Gandrud
+# All functions available under the MIT License
+# ---------------------------------------------------------------------------- #
+
 #' Function to plot parameter posteriors from Zero-inflated Beta Regressions
 #'
 #' @param obj model object from \code{zoib} where \code{one.inflation = FALSE}
@@ -6,9 +13,11 @@
 #' @param variable_names character vector of variable names. Must be in the
 #' same order and the same length as variables enterd into the \code{zoib}
 #' formula.
+#' @param title character string title for the plot
 #'
 
-zibPlot <- function(obj, max, variable_names = NULL){
+zibPlot <- function(obj, max, variable_names = NULL, xlab = '\nCoef. Estimates',
+                    title = ''){
     require(reshape2)
     require(dplyr)
     require(ggplot2)
@@ -50,14 +59,14 @@ zibPlot <- function(obj, max, variable_names = NULL){
                  .call = FALSE)
         }
         Summed$Labels <- factor(ReLabel(Summed, variable_names = variable_names))
-        
+
         Summed$Var2 <- 1:nrow(Summed)
         Summed$Var2 <- factor(Summed$Var2, labels = Summed$Labels)
         clevels <- levels(Summed$Var2)
     }
     # Reverse order
     clevels <- levels(Summed$Var2) %>% rev
-    
+
     # Plot
     pp <- ggplot(Summed, aes(x = medians, y = Var2, xmin = lower95,
                             xmax = upper95, color = part, group = part)) +
@@ -70,8 +79,8 @@ zibPlot <- function(obj, max, variable_names = NULL){
         geom_vline(xintercept = 0, linetype = 'dotted') +
         scale_color_manual(values = c('#a6bddb', '#2b8cbe', 'gray'),
                             guide = FALSE) +
-        xlab('\nCoefficient Estimates') + ylab('') +
-        theme_bw()
+        xlab(xlab) + ylab('') + ggtitle(title) +
+        theme_bw(base_size = 15)
 
     return(pp)
 }
@@ -102,4 +111,19 @@ ReLabel <-function(obj, variable_names){
                         paste0(variable_names[i], ' [Pr(y = 0)]'), obj$nn)
     }
     return(obj$nn)
+}
+
+#' Extract simulations in suitable form for Gelman-Rubin test and summary
+#' @param obj model object from \code{zoib} where \code{one.inflation = FALSE}
+#' and \code{joint = FALSE}.
+#' @param max maximum number of simulations post burn-in
+#'
+
+GetzibPost <- function(obj, max){
+    require(coda)
+    post.sample <- obj$oripara
+    sample.c1<- post.sample[[1]][1:max,]
+    sample.c2<- post.sample[[2]][1:max,]
+    sample12 <- mcmc.list(as.mcmc(sample.c1),as.mcmc(sample.c2))
+    return(sample12)
 }

@@ -7,21 +7,17 @@
 
 # Load required packages
 library(zoib)
+library(gridExtra)
+
+# Set working directory
+setwd('~/Dropbox/Fed_Speeches_Paper/')
 
 # Functions
-## GETzoibPost (extract posterior distribution)
-GetzoibPost <- function(obj, max){
-    post.sample <- obj$oripara
-    sample.c1<- post.sample[[1]][1:max,]
-    sample.c2<- post.sample[[2]][1:max,]
-    sample12 <- mcmc.list(as.mcmc(sample.c1),as.mcmc(sample.c2))
-    return(sample12)
-}
+source('FedSpeech/SourceCode/RegressionAnalysis/zibPlot.R')
 
 # ---------------------------------------------------------------------------- #
 #### Get Data ####
 # Generate data frame Combined
-setwd('~/Dropbox/Fed_Speeches_Paper/')
 source('FedSpeech/SourceCode/DataCleanMerge/MergeForRegressions.R')
 
 #### Add Lags
@@ -49,81 +45,116 @@ nIter = 1000
 # Monetary Policy Topic ------------------------------------------------------ #
 # Scrutiny
 MP1 <- zoib(Monetary.Policy ~
+        FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1|
+        FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1,
+        data = Combined, EUID = Combined$month_year, random = 1,
+        one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+## Numerical Summaries/Diagnostics
+MP1_post <- GetzibPost(MP1, max = nIter/2)
+gelman.diag(MP1_post)
+summary(MP1_post)
+
+# Plot
+vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High',
+            'Inflation')
+MP_plot1 <- zibPlot(MP1, max = nIter/2, variable_names = vl_MP1,
+                    title = 'Monetary Policy\n')
+
+
+# Housing and Development Topic ---------------------------------------------- #
+HD1 <- zoib(Local.Housing.Dev ~
             FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1|
             FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
-# Mandate
-MP2 <- zoib(Monetary.Policy ~
-            FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3|1|
-            FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3|1,
+HD2 <- zoib(Local.Housing.Dev ~
+            FedSpoketoFed + HFSC_CombConnect + CaseShillerChange|1|
+            FedSpoketoFed + HFSC_CombConnect + CaseShillerChange|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
 ## Numerical Summaries/Diagnostics
-MP1_post <- GetzoibPost(MP1, max = nIter/2)
-gelman.diag(MP1_post)
-summary(MP1_post)
-
-MP2_post <- GetzoibPost(MP2, max = nIter/2)
-gelman.diag(MP2_post)
-summary(MP2_post)
-
-# Plots
-vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
-zibPlot(MP1, max = nIter/2, variable_names = vl_MP1)
-
-vl_MP2 = c('Fed Venue', 'HCFS Donor', 'Inflation')
-zibPlot(MP2, max = nIter/2, variable_names = vl_MP2)
-
-
-
-
-# Housing and Development Topic ---------------------------------------------- #
-HD1 <- zoib(Local.Housing.Dev ~
-            CaseShillerChange|1|
-            CaseShillerChange|1,
-            data = Combined, EUID = Combined$month_year, random = 1,
-            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
-
-HD1_post <- GetzoibPost(HD1, max = nIter/2)
+HD1_post <- GetzibPost(HD1, max = nIter/2)
 gelman.diag(HD1_post)
 summary(HD1_post)
 
-HD2 <- zoib(Local.Housing.Dev ~
-            ScrutinyLag3|1|
-            ScrutinyLag3|1,
-            data = Combined, EUID = Combined$month_year, random = 1,
-            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
-
-HD2_post <- GetzoibPost(HD2, max = nIter/2)
+HD2_post <- GetzibPost(HD2, max = nIter/2)
 gelman.diag(HD2_post)
-zibPlot(HD2, max = nIter/2)
+summary(HD2_post)
+
+# Plot
+vl_HD1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
+HD_plot1 <- zibPlot(HD1, max = nIter/2, variable_names = vl_HD1,
+                    title = 'Local Housing & Developement\n', xlab = '')
+
+vl_HD2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
+HD_plot2 <- zibPlot(HD2, max = nIter/2, variable_names = vl_HD2)
+
+grid.arrange(HD_plot1, HD_plot2, nrow = 2)
 
 # Financial Markets ---------------------------------------------------------- #
 FM1 <- zoib(Financial.Markets ~
-            CaseShillerChange + ScrutinyLag3|1|
-            CaseShillerChange + ScrutinyLag3|1,
+            FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1|
+            FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
-FM1_post <- GetzoibPost(FM1, max = nIter/2)
+FM2 <- zoib(Financial.Markets ~
+            FedSpoketoFed + HFSC_CombConnect + CaseShillerChange|1|
+            FedSpoketoFed + HFSC_CombConnect + CaseShillerChange|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+FM1_post <- GetzibPost(FM1, max = nIter/2)
 gelman.diag(FM1_post)
 summary(FM1_post)
 
+FM2_post <- GetzibPost(FM2, max = nIter/2)
+gelman.diag(FM2_post)
+summary(FM2_post)
+
+# Plot
+vl_FM1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
+FM_plot1 <- zibPlot(FM1, max = nIter/2, variable_names = vl_FM1,
+                    title = 'Financial Markets\n', xlab = '')
+
+vl_FM2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
+FM_plot2 <- zibPlot(FM2, max = nIter/2, variable_names = vl_FM2)
+
+grid.arrange(FM_plot1, FM_plot2, nrow = 2)
 
 # Banking Regulation Topic --------------------------------------------------- #
 BR1 <- zoib(Banking.Regulation ~
-            HFSC_CombConnect + ScrutinyLag3|1|
-            HFSC_CombConnect + ScrutinyLag3|1,
+            FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1|
+            FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
-BR1_post <- GetzoibPost(BR1, max = nIter/2)
+BR2 <- zoib(Banking.Regulation ~
+            FedSpoketoFed + HFSC_CombConnect + CaseShillerChange|1|
+            FedSpoketoFed + HFSC_CombConnect + CaseShillerChange|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+BR1_post <- GetzibPost(BR1, max = nIter/2)
 gelman.diag(BR1_post)
 summary(BR1_post)
 
+FM2_post <- GetzibPost(FM2, max = nIter/2)
+gelman.diag(FM2_post)
+summary(FM2_post)
+
+# Plot
+vl_BR1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
+BR_plot1 <- zibPlot(BR1, max = nIter/2, variable_names = vl_BR1,
+                    title = 'Banking Regulation\n', xlab = '')
+
+vl_BR2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
+BR_plot2 <- zibPlot(BR2, max = nIter/2, variable_names = vl_BR2)
+
+grid.arrange(BR_plot1, BR_plot2, nrow = 2)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Degree of quantification
@@ -131,6 +162,6 @@ QT1 <- zoib(quanty ~ CaseShillerChange|1|CaseShillerChange|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE,  n.iter = nIter)
 
-QT1_post <- GetzoibPost(QT1, max = nIter/2)
+QT1_post <- GetzibPost(QT1, max = nIter/2)
 gelman.diag(QT1_post)
 summary(QT1_post)
