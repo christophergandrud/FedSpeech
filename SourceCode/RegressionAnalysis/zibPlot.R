@@ -127,3 +127,23 @@ GetzibPost <- function(obj, max){
     sample12 <- mcmc.list(as.mcmc(sample.c1),as.mcmc(sample.c2))
     return(sample12)
 }
+
+#' Extract Gelman-Rubin diagnostics as data frame
+
+GelmanDiag <- function(obj, iter){
+    require(zoib)
+    obj <- GetzibPost(obj, max = iter/2)
+    gr <-  gelman.diag(obj)
+    grDF <- gr[[1]]
+    return(grDF)
+}
+
+
+#' Extract and summarize posterior distribution
+
+SummaryZib <- function(obj, iter){
+    require(zoib)
+    obj <- GetzibPost(obj, max = iter/2)
+    Sum <-  summary(obj)
+    return(Sum)
+}

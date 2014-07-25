@@ -40,7 +40,7 @@ Combined$quanty <- Combined$quanty/100
 #### Zero inflated beta regression ####
 
 # Set the number of iterations
-nIter = 1000
+nIter = 100
 
 # Monetary Policy Topic ------------------------------------------------------ #
 # Scrutiny
@@ -51,9 +51,8 @@ MP1 <- zoib(Monetary.Policy ~
         one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
 ## Numerical Summaries/Diagnostics
-MP1_post <- GetzibPost(MP1, max = nIter/2)
-gelman.diag(MP1_post)
-summary(MP1_post)
+MP1_G = GelmanDiag(MP1_post, iter = nIter)
+SummaryZib(MP1, iter = nIter)
 
 # Plot
 vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High',
@@ -61,6 +60,9 @@ vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High',
 MP_plot1 <- zibPlot(MP1, max = nIter/2, variable_names = vl_MP1,
                     title = 'Monetary Policy\n')
 
+pdf(file = 'ZOIBFigures/BankingPolicy.pdf')
+    MP_plot1
+dev.off()
 
 # Housing and Development Topic ---------------------------------------------- #
 HD1 <- zoib(Local.Housing.Dev ~
