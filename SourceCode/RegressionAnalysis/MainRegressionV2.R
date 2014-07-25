@@ -48,31 +48,36 @@ nIter = 1000
 
 # Monetary Policy Topic ------------------------------------------------------ #
 # Scrutiny
-BP1 <- zoib(Monetary.Policy ~
+MP1 <- zoib(Monetary.Policy ~
             FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1|
             FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
 # Mandate
-BP2 <- zoib(Monetary.Policy ~
+MP2 <- zoib(Monetary.Policy ~
             FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3|1|
             FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
 ## Numerical Summaries/Diagnostics
-BP1_post <- GetzoibPost(BP1, max = nIter/2)
-gelman.diag(BP1_post)
-summary(BP1_post)
+MP1_post <- GetzoibPost(MP1, max = nIter/2)
+gelman.diag(MP1_post)
+summary(MP1_post)
 
-BP2_post <- GetzoibPost(BP2, max = nIter/2)
-gelman.diag(BP2_post)
-summary(BP2_post)
+MP2_post <- GetzoibPost(MP2, max = nIter/2)
+gelman.diag(MP2_post)
+summary(MP2_post)
 
 # Plots
-Summed = zibPlot(BP1, max = nIter/2)
-zibPlot(BP2, max = nIter/2)
+vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
+zibPlot(MP1, max = nIter/2, variable_names = vl_MP1)
+
+vl_MP2 = c('Fed Venue', 'HCFS Donor', 'Inflation')
+zibPlot(MP2, max = nIter/2, variable_names = vl_MP2)
+
+
 
 
 # Housing and Development Topic ---------------------------------------------- #
