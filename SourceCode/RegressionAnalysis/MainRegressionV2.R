@@ -1,13 +1,12 @@
 # ---------------------------------------------------------------------------- #
 # Zero inflated beta regressions for Fed Speeches
 # Christopher Gandrud
-# 24 July 2014
+# 25 July 2014
 # MIT License
 # ---------------------------------------------------------------------------- #
 
 # Load required packages
 library(zoib)
-library(Zelig)
 
 # Functions
 ## GETzoibPost (extract posterior distribution)
@@ -45,18 +44,35 @@ Combined$quanty <- Combined$quanty/100
 #### Zero inflated beta regression ####
 
 # Set the number of iterations
-nIter = 500
+nIter = 1000
 
-# Banking Policy Topic ------------------------------------------------------- #
+# Monetary Policy Topic ------------------------------------------------------ #
+# Scrutiny
 BP1 <- zoib(Monetary.Policy ~
-            HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1|
-            HFSC_CombConnect + ScrutinyLag3 + PCEPIPercentLag3|1,
+            FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1|
+            FedSpoketoFed + HFSC_CombConnect + ScrutinyLag3|1,
             data = Combined, EUID = Combined$month_year, random = 1,
             one.inflation = FALSE, joint = FALSE, n.iter = nIter)
 
+# Mandate
+BP2 <- zoib(Monetary.Policy ~
+            FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3|1|
+            FedSpoketoFed + HFSC_CombConnect + PCEPIPercentLag3|1,
+            data = Combined, EUID = Combined$month_year, random = 1,
+            one.inflation = FALSE, joint = FALSE, n.iter = nIter)
+
+## Numerical Summaries/Diagnostics
 BP1_post <- GetzoibPost(BP1, max = nIter/2)
 gelman.diag(BP1_post)
 summary(BP1_post)
+
+BP2_post <- GetzoibPost(BP2, max = nIter/2)
+gelman.diag(BP2_post)
+summary(BP2_post)
+
+# Plots
+Summed = zibPlot(BP1, max = nIter/2)
+zibPlot(BP2, max = nIter/2)
 
 
 # Housing and Development Topic ---------------------------------------------- #
