@@ -30,22 +30,26 @@ zibPlot <- function(obj, max, params_labels = NULL){
 
     Summed <- Summed[!duplicated(Summed[, 'Var2']), ]
 
-    # Label
-    if (!is.null(params_labels)){
-        if (length(params_labels) != nrow(Summed)){
-                stop('Parameter labels are a different length than expected',
-                .call = FALSE)
-            }
-        Summed$Var2 <- factor(Summed$Var2, labels = params_labels)
-    }
-
     # Indicator of whether beta or logit part
     Summed$part <- NA
     Summed$part <- ifelse(grepl('b\\[', as.character(Summed$Var2)),
                         'logit(mean of beta)', Summed$part)
     Summed$part <- ifelse(grepl('b0\\[', as.character(Summed$Var2)),
                         'logit(Pr = 0)', Summed$part)
+    Summed$part <- ifelse(grepl('d', as.character(Summed$Var2)),
+                          'shared', Summed$part)
+    Summed$part <- ifelse(grepl('sigma', as.character(Summed$Var2)),
+                          'shared', Summed$part)
     Summed$part <- factor(Summed$part)
+    
+    # Label
+    if (!is.null(params_labels)){
+        if (length(params_labels) != nrow(Summed)){
+            stop('Parameter labels are a different length than expected',
+                 .call = FALSE)
+        }
+        Summed$Var2 <- factor(Summed$Var2, labels = params_labels)
+    }
 
     # Reverse order
     clevels <- levels(Summed$Var2) %>% rev
@@ -60,7 +64,7 @@ zibPlot <- function(obj, max, params_labels = NULL){
                          yend = Var2), size = 1.5) +
         scale_y_discrete(limits = clevels) +
         geom_vline(xintercept = 0, linetype = 'dotted') +
-        scale_color_brewer(palette = 'Set1', name = '') +
+        scale_color_manual(values = c('#a6bddb', '#2b8cbe', 'gray'), name = '') +
         xlab('\nCoefficient Estimates') + ylab('') +
         theme_bw()
 
