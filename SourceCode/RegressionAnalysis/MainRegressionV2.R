@@ -40,7 +40,7 @@ Combined$quanty <- Combined$quanty/100
 #### Zero inflated beta regression ####
 
 # Set the number of iterations
-nIter = 100
+nIter = 2000
 
 # Monetary Policy Topic ------------------------------------------------------ #
 # Scrutiny
