@@ -1,7 +1,7 @@
 ############
 # Merge together data for regressions
 # Christopher Gandrud
-# 24 July 2014
+# 7 August 2014
 ############
 
 # Load packages
@@ -9,7 +9,7 @@ library(lubridate)
 library(DataCombine)
 library(plyr)
 
-# Set working directory
+# Set working directory. Change as needed
 setwd('~/Dropbox/Fed_Speeches_Paper/FedSpeech/')
 
 ##### Econ Data ####
@@ -35,7 +35,8 @@ Topics <- read.csv("Data/TopicsSpoken.csv")
 Topics$full_date <- dmy(Topics$full_date)
 
 #### Level of Quantification in Speeches ####
-Quantification <- read.csv('Data/Raw/LIWC_for_1116.csv', stringsAsFactors = FALSE)
+Quantification <- read.csv('Data/Raw/LIWC_for_1116.csv',
+                            stringsAsFactors = FALSE)
 Quantification$quanty <- Quantification$quant + Quantification$number
 Quantification <- Quantification[, c('ID', 'quanty')]
 names(Quantification) <- c('SpeechID', 'quanty')
@@ -87,10 +88,9 @@ Speeches$month_year <- floor_date(Speeches$full_date, "month")
 #### Congressional Scrutiny States ####
 ### See ChangePointCongFed.Rnw
 Speeches$Scrutiny[Speeches$month_year < as.POSIXct("2007-04-01")] <- "1"
-Speeches$Scrutiny[Speeches$month_year >= as.POSIXct("2007-04-01")] <- "3"
-Speeches$Scrutiny[Speeches$month_year >= as.POSIXct("2010-06-01")] <- "2"
+Speeches$Scrutiny[Speeches$month_year >= as.POSIXct("2007-04-01")] <- "2"
 Speeches$Scrutiny <- ordered(Speeches$Scrutiny,
-                            labels = c("Low", "Medium", "High"))
+                            labels = c("Low", "High"))
 
 #### Final Merge and Clean ####
 Combined <- merge(Speeches, Topics, by = c("full_date", "name"))

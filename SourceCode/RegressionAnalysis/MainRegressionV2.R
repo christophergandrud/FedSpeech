@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 # Zero inflated beta regressions for Fed Speeches
 # Christopher Gandrud
-# 25 July 2014
+# 7 August 2014
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -31,7 +31,7 @@ for (i in LagVars){
 
 # Turn ScrutinyLag3 into a factor
 Combined$ScrutinyLag3 <- factor(Combined$ScrutinyLag3,
-                             labels = c("Low", "Medium", "High"))
+                             labels = c("Low", "High"))
 
 # Rescale quanty to a proportion from a percent
 Combined$quanty <- Combined$quanty/100
@@ -40,7 +40,7 @@ Combined$quanty <- Combined$quanty/100
 #### Zero inflated beta regression ####
 
 # Set the number of iterations
-nIter = 2000
+nIter = 100
 
 # Monetary Policy Topic ------------------------------------------------------ #
 # Scrutiny
@@ -55,12 +55,11 @@ MP1_G = GelmanDiag(MP1, iter = nIter)
 SummaryZib(MP1, iter = nIter)
 
 # Plot
-vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High',
-            'Inflation')
+vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High', 'Inflation')
 MP_plot1 <- zibPlot(MP1, max = nIter/2, variable_names = vl_MP1,
                     title = 'Monetary Policy\n')
 
-pdf(file = 'ZOIBFigures/BankingPolicy.pdf')
+pdf(file = 'ZOIBFigures/MonetaryPolicy.pdf')
     MP_plot1
 dev.off()
 
@@ -85,7 +84,7 @@ HD2_G = GelmanDiag(HD2, iter = nIter)
 SummaryZib(HD2, iter = nIter)
 
 # Plot
-vl_HD1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
+vl_HD1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High')
 HD_plot1 <- zibPlot(HD1, max = nIter/2, variable_names = vl_HD1,
                     title = 'Local Housing & Developement\n', xlab = '')
 
@@ -117,7 +116,7 @@ FM2_G = GelmanDiag(FM2, iter = nIter)
 SummaryZib(FM2, iter = nIter)
 
 # Plot
-vl_FM1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
+vl_FM1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High')
 FM_plot1 <- zibPlot(FM1, max = nIter/2, variable_names = vl_FM1,
                     title = 'Financial Markets\n', xlab = '')
 
@@ -149,7 +148,7 @@ BR2_G = GelmanDiag(BR2, iter = nIter)
 SummaryZib(BR2, iter = nIter)
 
 # Plot
-vl_BR1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny Med.', 'Scrutiny High')
+vl_BR1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High')
 BR_plot1 <- zibPlot(BR1, max = nIter/2, variable_names = vl_BR1,
                     title = 'Banking Regulation\n', xlab = '')
 
@@ -164,14 +163,3 @@ dev.off()
 # Combine Gelman-Ruban Diagnostics
 GR <- rbind(MP1_G, HD1_G, HD2_G, FM1_G, FM2_G, BR1_G, BR2_G)
 write.csv(GR, file = 'ZOIBFigures/GelmanRubinDiagDump.csv')
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Degree of quantification
-QT1 <- zoib(quanty ~ CaseShillerChange|1|CaseShillerChange|1,
-            data = Combined, EUID = Combined$month_year, random = 1,
-            one.inflation = FALSE, joint = FALSE,  n.iter = nIter)
-
-QT1_post <- GetzibPost(QT1, max = nIter/2)
-gelman.diag(QT1_post)
-summary(QT1_post)
