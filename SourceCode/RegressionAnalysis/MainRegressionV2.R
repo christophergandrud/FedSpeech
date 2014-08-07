@@ -7,13 +7,11 @@
 
 # Load required packages
 library(zoib)
+library(zibHelpers) # devtools::install_github('christophergandrud/zibHelpers')
 library(gridExtra)
 
 # Set working directory
 setwd('~/Dropbox/Fed_Speeches_Paper/')
-
-# Functions
-source('FedSpeech/SourceCode/RegressionAnalysis/zibPlot.R')
 
 # ---------------------------------------------------------------------------- #
 #### Get Data ####
@@ -40,7 +38,7 @@ Combined$quanty <- Combined$quanty/100
 #### Zero inflated beta regression ####
 
 # Set the number of iterations
-nIter = 100
+nIter = 1000
 
 # Monetary Policy Topic ------------------------------------------------------ #
 # Scrutiny
@@ -56,7 +54,7 @@ SummaryZib(MP1, iter = nIter)
 
 # Plot
 vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High', 'Inflation')
-MP_plot1 <- zibPlot(MP1, max = nIter/2, variable_names = vl_MP1,
+MP_plot1 <- zibPlot(MP1, iter = nIter, variable_names = vl_MP1,
                     title = 'Monetary Policy\n')
 
 pdf(file = 'ZOIBFigures/MonetaryPolicy.pdf')
@@ -85,11 +83,11 @@ SummaryZib(HD2, iter = nIter)
 
 # Plot
 vl_HD1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High')
-HD_plot1 <- zibPlot(HD1, max = nIter/2, variable_names = vl_HD1,
+HD_plot1 <- zibPlot(HD1, iter = nIter, variable_names = vl_HD1,
                     title = 'Local Housing & Developement\n', xlab = '')
 
 vl_HD2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
-HD_plot2 <- zibPlot(HD2, max = nIter/2, variable_names = vl_HD2)
+HD_plot2 <- zibPlot(HD2, iter = nIter, variable_names = vl_HD2)
 
 pdf(file = 'ZOIBFigures/HousingDev.pdf')
     grid.arrange(HD_plot1, HD_plot2, nrow = 2)
@@ -117,11 +115,11 @@ SummaryZib(FM2, iter = nIter)
 
 # Plot
 vl_FM1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High')
-FM_plot1 <- zibPlot(FM1, max = nIter/2, variable_names = vl_FM1,
+FM_plot1 <- zibPlot(FM1, iter = nIter, variable_names = vl_FM1,
                     title = 'Financial Markets\n', xlab = '')
 
 vl_FM2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
-FM_plot2 <- zibPlot(FM2, max = nIter/2, variable_names = vl_FM2)
+FM_plot2 <- zibPlot(FM2, iter = nIter, variable_names = vl_FM2)
 
 pdf(file = 'ZOIBFigures/FinancialMarkets.pdf')
     grid.arrange(FM_plot1, FM_plot2, nrow = 2)
@@ -149,11 +147,11 @@ SummaryZib(BR2, iter = nIter)
 
 # Plot
 vl_BR1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High')
-BR_plot1 <- zibPlot(BR1, max = nIter/2, variable_names = vl_BR1,
+BR_plot1 <- zibPlot(BR1, iter = nIter, variable_names = vl_BR1,
                     title = 'Banking Regulation\n', xlab = '')
 
 vl_BR2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
-BR_plot2 <- zibPlot(BR2, max = nIter/2, variable_names = vl_BR2)
+BR_plot2 <- zibPlot(BR2, iter = nIter, variable_names = vl_BR2)
 
 pdf(file = 'ZOIBFigures/BankingRegulation.pdf')
     grid.arrange(BR_plot1, BR_plot2, nrow = 2)
