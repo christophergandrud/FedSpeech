@@ -11,7 +11,8 @@ library(zibHelpers) # devtools::install_github('christophergandrud/zibHelpers')
 library(gridExtra)
 
 # Set working directory
-setwd('~/Dropbox/Fed_Speeches_Paper/')
+dir = '~/Dropbox/Fed_Speeches_Paper'
+setwd(dir)
 
 # ---------------------------------------------------------------------------- #
 #### Get Data ####
@@ -57,7 +58,7 @@ vl_MP1 <- c('Fed Venue', 'HCFS Donor', 'Scrutiny High', 'Inflation')
 MP_plot1 <- zibPlot(MP1, iter = nIter, variable_names = vl_MP1,
                     title = 'Monetary Policy\n')
 
-pdf(file = 'ZOIBFigures/MonetaryPolicy.pdf')
+pdf(file = paste0(dir, '/ZOIBFigures/MonetaryPolicy.pdf'))
     MP_plot1
 dev.off()
 
@@ -89,7 +90,7 @@ HD_plot1 <- zibPlot(HD1, iter = nIter, variable_names = vl_HD1,
 vl_HD2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
 HD_plot2 <- zibPlot(HD2, iter = nIter, variable_names = vl_HD2)
 
-pdf(file = 'ZOIBFigures/HousingDev.pdf')
+pdf(file = paste0(dir, '/ZOIBFigures/HousingDev.pdf'))
     grid.arrange(HD_plot1, HD_plot2, nrow = 2)
 dev.off()
 
@@ -121,7 +122,7 @@ FM_plot1 <- zibPlot(FM1, iter = nIter, variable_names = vl_FM1,
 vl_FM2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
 FM_plot2 <- zibPlot(FM2, iter = nIter, variable_names = vl_FM2)
 
-pdf(file = 'ZOIBFigures/FinancialMarkets.pdf')
+pdf(file = paste0(dir, '/ZOIBFigures/FinancialMarkets.pdf'))
     grid.arrange(FM_plot1, FM_plot2, nrow = 2)
 dev.off()
 
@@ -153,11 +154,11 @@ BR_plot1 <- zibPlot(BR1, iter = nIter, variable_names = vl_BR1,
 vl_BR2 <- c('Fed Venue', 'HCFS Donor', 'Case Shiller Change')
 BR_plot2 <- zibPlot(BR2, iter = nIter, variable_names = vl_BR2)
 
-pdf(file = 'ZOIBFigures/BankingRegulation.pdf')
+pdf(file = paste0(dir, '/ZOIBFigures/BankingRegulation.pdf'))
     grid.arrange(BR_plot1, BR_plot2, nrow = 2)
 dev.off()
 
 
 # Combine Gelman-Ruban Diagnostics
 GR <- rbind(MP1_G, HD1_G, HD2_G, FM1_G, FM2_G, BR1_G, BR2_G)
-write.csv(GR, file = 'ZOIBFigures/GelmanRubinDiagDump.csv')
+write.csv(GR, file = paste0(dir, '/ZOIBFigures/GelmanRubinDiagDump.csv'))
