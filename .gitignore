@@ -13,3 +13,5 @@ ChangePointNote/figure/*
 ChangePointFull/cache/*
 ChangePointFull/figure/*
 ChangePointFull/figures/*
+
+.DS_Store
