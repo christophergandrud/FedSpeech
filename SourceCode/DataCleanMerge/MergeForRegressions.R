@@ -1,13 +1,13 @@
 ############
 # Merge together data for regressions
 # Christopher Gandrud
-# 7 August 2014
+# 26 February 2015
 ############
 
 # Load packages
 library(lubridate)
 library(DataCombine)
-library(plyr)
+library(dplyr)
 
 # Set working directory. Change as needed
 setwd('~/Dropbox/Fed_Speeches_Paper/FedSpeech/')
@@ -15,7 +15,7 @@ setwd('~/Dropbox/Fed_Speeches_Paper/FedSpeech/')
 ##### Econ Data ####
 # Load econ data
 EconData <- read.csv("Data/FREDEconData.csv")
-EconData <- rename(EconData, c("DateField" = "month_year"))
+EconData <- EconData %>% dplyr::rename(month_year = DateField)
 EconData$month_year <- ymd(EconData$month_year)
 
 # Drop if missing
