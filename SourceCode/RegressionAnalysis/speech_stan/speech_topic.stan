@@ -21,7 +21,6 @@ parameters {
     vector[n_names] a;                  // speaker intercept
     vector[4] beta;                     // coefficients
     real<lower=0,upper=100> sigma_a;    // scale of speaker intercept
-    real<lower=0,upper=100> sigma_b;    // scale of speaker intercept
 }
 
 transformed parameters {

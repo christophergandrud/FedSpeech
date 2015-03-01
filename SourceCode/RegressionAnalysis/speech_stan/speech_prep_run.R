@@ -22,9 +22,12 @@ source(sprintf('%s/FedSpeech/SourceCode/DataCleanMerge/MergeForRegressions.R',
 
 # Set working directory. Change as needed.
 wd <- '~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/RegressionAnalysis/speech_stan/'
-
 setwd(wd)
 
+# Load Stan Parallel Wrapper Function
+source('parallel_4.R')
+
+#### Reset Scrutiny to be base 0.
 Combined$Scrutiny <- as.numeric(Combined$Scrutiny) - 1
 
 #### Add Lags
@@ -61,7 +64,6 @@ Combined$year <- Combined$year %>% as.factor %>% as.numeric
 
 # Data descriptions
 N_names <- max(Combined$name_num)
-N_month_years <- max(Combined$year)
 
 # ---------------------------------------------------------------------------- #
 #### Specify Model ####
@@ -82,15 +84,4 @@ speeches_data <- list(
 # Create Empty Stan model (so it only needs to compile once)
 empty_stan <- stan(file = speeches_code, data = speeches_data, chains = 0)
 
-# Run on 4 cores
-sflist <-
-    mclapply(1:4, mc.cores = 4,
-             function(i) stan(fit = empty_stan, data = speeches_data,
-                              seed = i, chains = 1,
-                              iter = 2000, chain_id = i,
-                              pars = c('a', 'beta')
-             )
-    )
-
-# Collect in to Stan fit object
-fit <- sflist2stanfit(sflist)
+fit_housing <- parallel_4(empty_stan, speeches_data)
