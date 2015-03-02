@@ -25,7 +25,7 @@ wd <- '~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/RegressionAnalysis/spee
 setwd(wd)
 
 # Load Stan Parallel Wrapper Function
-source('parallel_4.R')
+source('stan_functions/parallel_4.R')
 
 #### Reset Scrutiny to be base 0.
 Combined$Scrutiny <- as.numeric(Combined$Scrutiny) - 1
@@ -85,16 +85,7 @@ speeches_data <- list(
 # Create Empty Stan model (so it only needs to compile once)
 empty_stan <- stan(file = speeches_code, data = speeches_data, chains = 0)
 
-# Run on 4-cores
-parallel_4 <- function(fit, data, iter = 2000, pars = c('a', 'b')){
-    sflist <-
-        mclapply(1:4, mc.cores = 4,
-                 function(i) stan(fit = fit, data = data,
-                                  seed = i, chains = 1,
-                                  iter = iter, chain_id = i,
-                                  pars = pars
-                 )
-        )
-    
-# Collect in to Stan fit object
-fit <- sflist2stanfit(sflist)
+fit_housing <- parallel_4(fit = empty_stan, data = speeches_data)
+
+#### Create predicted probability plots ####
+# 
