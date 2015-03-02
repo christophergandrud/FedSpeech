@@ -32,6 +32,7 @@ setwd(wd)
 source('stan_functions/parallel_4.R')
 source('stan_functions/waic.R')
 source('stan_functions/stan_predict_speeches.R')
+source('stan_functions/stan_speeches_table.R')
 
 #### Reset Scrutiny to be base 0.
 Combined$Scrutiny <- as.numeric(Combined$Scrutiny) - 1
@@ -92,8 +93,10 @@ empty_stan_housing <- stan(file = speeches_code, data = speeches_data_housing,
 
 fit_housing <- parallel_4(fit = empty_stan_housing, data = speeches_data_housing)
 
-# Find WAIC
-waic(fit_housing)
+#### Table results ####
+basic_table <- stan_speeches_param_est(list(H1 = fit_housing), 
+                                       obs = nrow(Combined), 
+                                       pars_labels = c(covars, 'Intercept'))
 
 #### Parameter estimate plots ####
 stan_caterpillar(fit_housing, 'beta\\[[1-3]\\]', covars[1:3]) + 
