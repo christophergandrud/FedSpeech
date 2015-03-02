@@ -3,41 +3,47 @@
 // Model Version 0.0
 // Stan Version 0.2.6
 // Christopher Gandrud
-// 26 February 2015
+// 2 March 2015
 // MIT License
 ////////////////////////////////
 
 data {
-    int<lower=0> N;                       // number of speeches
-    int<lower=0> n_names;                 // number of speakers
-    int<lower=0,upper=n_names> name[N];   // name of speakers
-    vector<lower=0,upper=1>[N] fed_venue; // speech at fed venue
-    vector<lower=0>[N] donor;             // donor connectivity
-    vector<lower=0,upper=1>[N] scrutiny;  // scrutiny level
-    int<lower=0,upper=1> y[N];            // topic spoken about
+    int<lower=0> N;                     // number of speeches
+    int<lower=0> K;                     // number of predictors
+    int<lower=0> J;                     // number of speakers
+    int<lower=0,upper=J> name[N];       // name of speakers
+    matrix[N,K] X;                      // predictor matrix
+    int<lower=0,upper=1> y[N];          // topic spoken about
 }
 
 parameters {
+    vector[K] beta;                     // coefficients for predictors
     real alpha;                         // intercept
-    vector[3] beta;                     // coefficients
-    vector[n_names] a;                  // speaker intercept
+    vector[J] a;                        // speaker intercepts
     real<lower=0,upper=100> sigma_a;    // scale of speaker intercept
 }
 
 transformed parameters {
     vector[N] y_hat;
 
-    for (i in 1:N)
-        y_hat[i] <- alpha +
-                    beta[1] * fed_venue[i] +
-                    beta[2] *  donor[i] +
-                    beta[3] * scrutiny[i] +
-                    a[name[i]];
+    for (n in 1:N)
+        y_hat[n] <- X[n] * beta + alpha + a[name[n]];
 }
 
+
 model {
-    a ~ normal(0, sigma_a);
     beta ~ normal(0, 100);
+    alpha ~ normal(0, 100);
+    a ~ normal(0, sigma_a);
 
     y ~ bernoulli_logit(y_hat);
+}
+
+// For finding WAIC
+generated quantities {
+    vector[N] log_lik;
+
+    for (n in 1:N) {
+        log_lik[n] <- bernoulli_logit_log(y[n], X[n]*beta + alpha + a[name[n]]);
+    }
 }

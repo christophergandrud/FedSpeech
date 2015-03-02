@@ -1,7 +1,8 @@
 #' A simple function for running Stan in parallel
 
-parallel_4 <- function(fit, data, iter = 2000, pars = c('alpha', 'beta', 'a'),
-                        cores = 4){
+parallel_4 <- function(fit, data, iter = 2000,
+                        pars = c('alpha', 'beta', 'a', 'log_lik'), cores = 4)
+{
     sflist <-
         mclapply(1:cores, mc.cores = cores,
                  function(i) stan(fit = fit, data = data,

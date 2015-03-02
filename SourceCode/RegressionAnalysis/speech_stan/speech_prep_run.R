@@ -26,6 +26,7 @@ setwd(wd)
 
 # Load Stan Parallel Wrapper Function
 source('stan_functions/parallel_4.R')
+source('stan_functions/waic.R')
 
 #### Reset Scrutiny to be base 0.
 Combined$Scrutiny <- as.numeric(Combined$Scrutiny) - 1
@@ -68,14 +69,16 @@ N_names <- max(Combined$name_num)
 #### Specify Model ####
 speeches_code <- 'speech_topic.stan'
 
+# Specify non-name predictors
+predictors <- c('FedSpoketoFed', 'HFSC_CombConnect', 'ScrutinyLag3')
+
 # Data
 speeches_data <- list(
     N = nrow(Combined),
-    n_names = N_names,
+    K = length(predictors),
+    J = N_names,
     name = Combined$name_num,
-    fed_venue = Combined$FedSpoketoFed,
-    donor = Combined$HFSC_CombConnect,
-    scrutiny = Combined$ScrutinyLag3,
+    X = Combined[, predictors] %>% as.matrix,
     ## Outcome
     y = Combined$Local.Housing.Dev_dummy
 )
@@ -87,5 +90,8 @@ empty_stan <- stan(file = speeches_code, data = speeches_data, chains = 0)
 
 fit_housing <- parallel_4(fit = empty_stan, data = speeches_data)
 
+# Find WAIC
+
+
 #### Create predicted probability plots ####
-# 
+#
