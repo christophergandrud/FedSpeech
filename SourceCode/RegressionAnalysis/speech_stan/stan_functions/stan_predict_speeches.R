@@ -6,7 +6,6 @@ fitted_matrix <- rbind(fitted_1, fitted_2)
 
 library(dplyr)
 library(boot)
-library(tidyr)
 library(ggplot2)
 
 
@@ -17,33 +16,24 @@ for (i in 1:nrow(fitted_matrix)) {
                                data = speeches_data_housing,
                                fitted_coefs = temp, a_num = 3)
     
-    pred_prob_out <- cbind.all(pred_prob_out, temp_predict)
+    pred_prob_out <- rbind(pred_prob_out, temp_predict)
 }
 
-pred_gathered <- pred_prob_out %>% as.data.frame %>% 
-                    gather(fitted, prediction)
-
-ggplot(pred_gathered, aes(fitted, prediction, group = 1)) +
-    geom_point() +
-    stat_smooth(method = 'lm') +
+pred_prob_out <- cbind(x_value = 0:1, pred_prob_out)
+    
+    
+ggplot(pred_prob_out, aes(x_value, median, group = 1)) +
+    geom_line() +
+    geom_ribbon(aes(ymin = lower_50, ymax = upper_50), alpha = 0.1) +
+    geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.1) +
     theme_bw()
-
-
-#' Helper function
-cbind.all <- function (...) 
-{
-    nm <- list(...)
-    nm <- lapply(nm, as.matrix)
-    n <- max(sapply(nm, nrow))
-    do.call(cbind, lapply(nm, function(x) 
-        rbind(x, matrix(, n - nrow(x), ncol(x)))))
-}
 
 #' Predict probability for one set of fitted values
 #' 
 #' @importFrom rstan extract
 #' @importFrom dplyr %>%
 #' @importFrom boot inv.logit
+#' @importFrom SPIn SPIn
 predict_1 <- function(stanfit, data, fitted_coefs, a_num, betas = 2:7,
                       model_pars = c('beta', 'alpha', 'a')) 
 {
@@ -61,6 +51,18 @@ predict_1 <- function(stanfit, data, fitted_coefs, a_num, betas = 2:7,
                   function(x) sum(betas_x[x, ]) + alpha[x] + a[x])
     
     pred_prob <- boot::inv.logit(raw)
-    return(pred_prob)
+    
+    spin_95 <- SPIn(pred_prob, conf = 0.95)
+    spin_50 <- SPIn(pred_prob, conf = 0.5)
+    spin_lower95 <- 
+    
+    pred_prob_summary <- data.frame(
+        lower_95 = spin_95$spin[1],
+        lower_50 = spin_50$spin[1],
+        median = median(pred_prob),
+        upper_50 = spin_50$spin[2],
+        upper_95 = spin_95$spin[2]
+    )
+    return(pred_prob_summary)
 }
 
