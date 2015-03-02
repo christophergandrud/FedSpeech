@@ -11,6 +11,9 @@ library(lubridate)
 library(rstan)
 library(parallel)
 library(StanCat)
+library(boot)
+library(dplyr)
+library(ggplot2)
 
 # Set directory for data cleaner
 PrePath = '~/Dropbox/Fed_Speeches_Paper'
@@ -28,6 +31,7 @@ setwd(wd)
 # Load Stan Parallel Wrapper Function
 source('stan_functions/parallel_4.R')
 source('stan_functions/waic.R')
+source('stan_functions/stan_predict_speeches.R')
 
 #### Reset Scrutiny to be base 0.
 Combined$Scrutiny <- as.numeric(Combined$Scrutiny) - 1
@@ -95,10 +99,25 @@ fit_housing <- parallel_4(fit = empty_stan_housing, data = speeches_data_housing
 waic(fit_housing)
 
 #### Parameter estimate plots ####
-stan_caterpillar(fit_housing, 'beta', covars)
+stan_caterpillar(fit_housing, 'beta\\[[1-3]\\]', covars[1:3])
 
 stan_caterpillar(fit_housing, '^a\\[.*\\]', full_names)
 
 #### Create predicted probability plots ####
 
-#
+fitted_1 <- c(0.023, 0, 0, 0.619, 1.0124, 0.9643)
+fitted_2 <- c(0.023, 1, 0, 0.619, 1.0124, 0.9643)
+
+fitted_matrix <- rbind(fitted_1, fitted_2)
+
+test <- predict_prob(stanfit = fit_housing, 
+                     data = speeches_data_housing,
+                     fitted_coefs = fitted_matrix, a_num = 3)
+
+pred_prob_out <- cbind(x_value = 0:1, pred_prob_out)
+
+ggplot(pred_prob_out, aes(x_value, median, group = 1)) +
+    geom_line() +
+    geom_ribbon(aes(ymin = lower_50, ymax = upper_50), alpha = 0.1) +
+    geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.1) +
+    theme_bw()

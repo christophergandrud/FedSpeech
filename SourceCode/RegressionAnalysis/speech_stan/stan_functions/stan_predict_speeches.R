@@ -1,32 +1,18 @@
-
-fitted_1 <- c(0.023, 0, 0, 0.619, 1.0124, 0.9643)
-fitted_2 <- c(0.023, 1, 0, 0.619, 1.0124, 0.9643)
-
-fitted_matrix <- rbind(fitted_1, fitted_2)
-
-library(dplyr)
-library(boot)
-library(ggplot2)
-
-
-pred_prob_out <- data.frame()
-for (i in 1:nrow(fitted_matrix)) {
-    temp <- fitted_matrix[i, ]
-    temp_predict <- predict_1(stanfit = fit_housing, 
-                               data = speeches_data_housing,
-                               fitted_coefs = temp, a_num = 3)
-    
-    pred_prob_out <- rbind(pred_prob_out, temp_predict)
+#' Predict probabilities for multiple scenarios
+predict_prob <- function(stanfit, data, fitted_coefs, a_num, betas = 2:7,
+                              model_pars = c('beta', 'alpha', 'a')) 
+{
+    pred_prob_out <- data.frame()
+    for (i in 1:nrow(fitted_coefs)) {
+        temp <- fitted_coefs[i, ]
+        temp_predict <- predict_1(stanfit = fit_housing, 
+                                  data = speeches_data_housing,
+                                  fitted_coefs = temp, a_num = 3)
+        
+        pred_prob_out <- rbind(pred_prob_out, temp_predict)
+    }    
+    return(pred_prob_out)
 }
-
-pred_prob_out <- cbind(x_value = 0:1, pred_prob_out)
-    
-    
-ggplot(pred_prob_out, aes(x_value, median, group = 1)) +
-    geom_line() +
-    geom_ribbon(aes(ymin = lower_50, ymax = upper_50), alpha = 0.1) +
-    geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.1) +
-    theme_bw()
 
 #' Predict probability for one set of fitted values
 #' 
