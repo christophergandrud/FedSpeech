@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 # Stan Speeches-Topics Regression v0.1
 # Christopher Gandrud
-# 26 February 2015
+# 2 March 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -52,7 +52,7 @@ for (i in topics) {
     Combined[, NewVar][Combined[, i] >= TopicMean] <- 1
 }
 
-rmExcept('Combined')
+rmExcept(c('Combined', 'parallel_4'))
 
 #### Keep Complete Cases ####
 covars <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3')
@@ -60,7 +60,6 @@ Combined <- Combined %>% DropNA(covars)
 
 ## Convert factor variables to numeric
 Combined$name_num <- Combined$name %>% as.factor %>% as.numeric
-Combined$year <- Combined$year %>% as.factor %>% as.numeric
 
 # Data descriptions
 N_names <- max(Combined$name_num)
@@ -81,7 +80,21 @@ speeches_data <- list(
     y = Combined$Local.Housing.Dev_dummy
 )
 
+
+#### Run Model ####
 # Create Empty Stan model (so it only needs to compile once)
 empty_stan <- stan(file = speeches_code, data = speeches_data, chains = 0)
 
-fit_housing <- parallel_4(empty_stan, speeches_data)
+# Run on 4-cores
+parallel_4 <- function(fit, data, iter = 2000, pars = c('a', 'b')){
+    sflist <-
+        mclapply(1:4, mc.cores = 4,
+                 function(i) stan(fit = fit, data = data,
+                                  seed = i, chains = 1,
+                                  iter = iter, chain_id = i,
+                                  pars = pars
+                 )
+        )
+    
+# Collect in to Stan fit object
+fit <- sflist2stanfit(sflist)
