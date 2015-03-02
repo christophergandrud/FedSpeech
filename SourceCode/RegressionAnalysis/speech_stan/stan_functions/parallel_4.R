@@ -1,4 +1,6 @@
 #' A simple function for running Stan in parallel
+#' @importFrom rstan stan sflist2stanfit
+#' @importFrom parallel mclapply
 
 parallel_4 <- function(fit, data, iter = 2000,
                         pars = c('alpha', 'beta', 'a', 'log_lik'), cores = 4)

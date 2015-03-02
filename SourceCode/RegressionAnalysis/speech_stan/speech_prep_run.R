@@ -10,6 +10,7 @@ library(DataCombine)
 library(lubridate)
 library(rstan)
 library(parallel)
+library(StanCat)
 
 # Set directory for data cleaner
 PrePath = '~/Dropbox/Fed_Speeches_Paper'
@@ -53,14 +54,16 @@ for (i in topics) {
     Combined[, NewVar][Combined[, i] >= TopicMean] <- 1
 }
 
-rmExcept(c('Combined', 'parallel_4'))
+rmExcept(c('Combined', 'parallel_4', 'colVars', 'waic'))
 
 #### Keep Complete Cases ####
-covars <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3')
+covars <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3', 
+            'pres_party', 'house_dem_rep', 'senate_dem_rep')
 Combined <- Combined %>% DropNA(covars)
 
 ## Convert factor variables to numeric
 Combined$name_num <- Combined$name %>% as.factor %>% as.numeric
+full_names <- unique(Combined$name)
 
 # Data descriptions
 N_names <- max(Combined$name_num)
@@ -69,16 +72,13 @@ N_names <- max(Combined$name_num)
 #### Specify Model ####
 speeches_code <- 'speech_topic.stan'
 
-# Specify non-name predictors
-predictors <- c('FedSpoketoFed', 'HFSC_CombConnect', 'ScrutinyLag3')
-
 # Data
-speeches_data <- list(
+speeches_data_housing <- list(
     N = nrow(Combined),
-    K = length(predictors),
+    K = length(covars),
     J = N_names,
     name = Combined$name_num,
-    X = Combined[, predictors] %>% as.matrix,
+    X = Combined[, covars] %>% as.matrix,
     ## Outcome
     y = Combined$Local.Housing.Dev_dummy
 )
@@ -86,12 +86,19 @@ speeches_data <- list(
 
 #### Run Model ####
 # Create Empty Stan model (so it only needs to compile once)
-empty_stan <- stan(file = speeches_code, data = speeches_data, chains = 0)
+empty_stan_housing <- stan(file = speeches_code, data = speeches_data_housing, 
+                           chains = 0)
 
-fit_housing <- parallel_4(fit = empty_stan, data = speeches_data)
+fit_housing <- parallel_4(fit = empty_stan_housing, data = speeches_data_housing)
 
 # Find WAIC
+waic(fit_housing)
 
+#### Parameter estimate plots ####
+stan_caterpillar(fit_housing, 'beta', covars)
+
+stan_caterpillar(fit_housing, '^a\\[.*\\]', full_names)
 
 #### Create predicted probability plots ####
+
 #

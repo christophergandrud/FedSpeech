@@ -1,13 +1,25 @@
+#' Helper function for waic
+#' @noRd
+
+colVars <- function(a)
+{
+    n <- dim(a)[[1]]
+    c <- dim(a)[[2]]
+
+    return(.colMeans(((a - matrix(.colMeans(a, n, c),
+            nrow = n, ncol = c, byrow = TRUE)) ^ 2), n, c) * n / (n - 1))
+}
+
 #' Function for finding WAIC
 #'
 #' @param stanfit a stanfit object
 #' @source from Vehrari and Gelman (2014):
 #' \url{http://www.stat.columbia.edu/~gelman/research/unpublished/waic_stan.pdf}
-#' @import rstan
+#' @import rstan extract
 #' @export
 
 waic <- function(stanfit){
-       log_lik <- extract(stanfit, "log_lik")$log_lik
+       log_lik <- rstan::extract(stanfit, "log_lik")$log_lik
        dim(log_lik) <- if (length(dim(log_lik)) == 1) c(length(log_lik),1)
                        else c(dim(log_lik)[1],
                             prod(dim(log_lik)[2:length(dim(log_lik))]))
@@ -36,15 +48,4 @@ waic <- function(stanfit){
                     pointwise = pointwise,
                     total = total,
                     se = se))
-}
-#' Helper function for waic
-#' @noRd
-
-colVars <- function(a)
-{
-    n <- dim(a)[[1]]
-    c <- dim(a)[[2]]
-
-    return(.colMeans(((a - matrix(.colMeans(a, n, c),
-            nrow = n, ncol = c, byrow = TRUE)) ^ 2), n, c) * n / (n - 1))
 }
