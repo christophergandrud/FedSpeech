@@ -14,6 +14,7 @@ library(StanCat)
 library(boot)
 library(dplyr)
 library(ggplot2)
+library(SPIn)
 
 # Set directory for data cleaner
 PrePath = '~/Dropbox/Fed_Speeches_Paper'
