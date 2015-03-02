@@ -58,11 +58,8 @@ for (i in topics) {
     Combined[, NewVar][Combined[, i] >= TopicMean] <- 1
 }
 
-rmExcept(c('Combined', 'parallel_4', 'colVars', 'waic'))
-
 #### Keep Complete Cases ####
-covars <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3', 
-            'pres_party', 'house_dem_rep', 'senate_dem_rep')
+covars <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3')
 Combined <- Combined %>% DropNA(covars)
 
 ## Convert factor variables to numeric
@@ -99,25 +96,31 @@ fit_housing <- parallel_4(fit = empty_stan_housing, data = speeches_data_housing
 waic(fit_housing)
 
 #### Parameter estimate plots ####
-stan_caterpillar(fit_housing, 'beta\\[[1-3]\\]', covars[1:3])
+stan_caterpillar(fit_housing, 'beta\\[[1-3]\\]', covars[1:3]) + 
+    geom_vline(xintercept = 0, linetype = 'dotted')    
 
-stan_caterpillar(fit_housing, '^a\\[.*\\]', full_names)
+stan_caterpillar(fit_housing, '^a\\[.*\\]', full_names) + 
+    geom_vline(xintercept = 0, linetype = 'dotted')    
 
 #### Create predicted probability plots ####
 
-fitted_1 <- c(0.023, 0, 0, 0.619, 1.0124, 0.9643)
-fitted_2 <- c(0.023, 1, 0, 0.619, 1.0124, 0.9643)
+fitted_1 <- c(0.023, 0, 0)
+fitted_2 <- c(0.023, 1, 0)
 
 fitted_matrix <- rbind(fitted_1, fitted_2)
 
-test <- predict_prob(stanfit = fit_housing, 
+pred_prob_out <- predict_prob(stanfit = fit_housing, 
                      data = speeches_data_housing,
-                     fitted_coefs = fitted_matrix, a_num = 3)
+                     fitted_coefs = fitted_matrix, a_num = 3, 
+                     betas = 1:3)
 
-pred_prob_out <- cbind(x_value = 0:1, pred_prob_out)
+pred_prob_out <- cbind(x_value = c('Not Fed Venue', 'Fed Venue' ), 
+                       pred_prob_out)
 
 ggplot(pred_prob_out, aes(x_value, median, group = 1)) +
     geom_line() +
     geom_ribbon(aes(ymin = lower_50, ymax = upper_50), alpha = 0.1) +
     geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.1) +
+    xlab('') + ylab('Predicted Prob. of Speaking about Housing\n') +
+    scale_x_discrete(limits = rev(levels(pred_prob_out$x_value))) +
     theme_bw()
