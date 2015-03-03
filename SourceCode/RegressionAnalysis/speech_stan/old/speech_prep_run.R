@@ -1,39 +1,35 @@
 # ---------------------------------------------------------------------------- #
 # Stan Speeches-Topics Regression v0.1
 # Christopher Gandrud
-# 2 March 2015
+# 3 March 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
-# Load required packages
+# Install/Load required packages
+if (!('StanCat' %in% installed.packages()[, 1])) 
+    devtools::install_github('christophergandrud/StanCat')
+if (!('StanSpeeches' %in% installed.packages()[, 1])) 
+    devtools::install_github('christophergandrud/StanSpeeches')
+library(StanCat)
+library(StanSpeeches)
 library(DataCombine)
 library(lubridate)
 library(rstan)
-library(parallel)
-library(StanCat)
-library(boot)
 library(dplyr)
 library(ggplot2)
-library(SPIn)
 
 # Set directory for data cleaner
-PrePath = '~/Dropbox/Fed_Speeches_Paper'
+PrePath = '~/Dropbox/Fed_Speeches_Paper/FedSpeech'
 
 # ---------------------------------------------------------------------------- #
 #### Get Data ####
 # Generate data frame Combined
-source(sprintf('%s/FedSpeech/SourceCode/DataCleanMerge/MergeForRegressions.R',
+source(sprintf('%s/SourceCode/DataCleanMerge/MergeForRegressions.R',
         PrePath))
 
 # Set working directory. Change as needed.
 wd <- '~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/RegressionAnalysis/speech_stan/'
 setwd(wd)
-
-# Load Stan Parallel Wrapper Function
-source('stan_functions/parallel_4.R')
-source('stan_functions/waic.R')
-source('stan_functions/stan_predict_speeches.R')
-source('stan_functions/stan_speeches_table.R')
 
 #### Reset Scrutiny to be base 0.
 Combined$Scrutiny <- as.numeric(Combined$Scrutiny) - 1
@@ -92,7 +88,8 @@ speeches_data_housing <- list(
 empty_stan_housing <- stan(file = speeches_code, data = speeches_data_housing, 
                            chains = 0)
 
-fit_housing <- parallel_4(fit = empty_stan_housing, data = speeches_data_housing)
+fit_housing <- parallel_4(fit = empty_stan_housing, 
+                          data = speeches_data_housing)
 
 #### Table results ####
 basic_table <- stan_speeches_param_est(list(H1 = fit_housing), 
@@ -107,21 +104,19 @@ stan_caterpillar(fit_housing, '^a\\[.*\\]', full_names) +
     geom_vline(xintercept = 0, linetype = 'dotted')    
 
 #### Create predicted probability plots ####
-
 fitted_1 <- c(0.023, 0, 0)
 fitted_2 <- c(0.023, 1, 0)
 
-fitted_matrix <- rbind(fitted_1, fitted_2)
+fitted_venue <- rbind(fitted_1, fitted_2)
 
-pred_prob_out <- predict_prob(stanfit = fit_housing, 
+pred_prob_out <- predict_speeches_prob(stanfit = fit_housing, 
                      data = speeches_data_housing,
-                     fitted_coefs = fitted_matrix, a_num = 3, 
-                     betas = 1:3)
+                     fitted_values = fitted_venue, a_num = 3)
 
 pred_prob_out <- cbind(x_value = c('Not Fed Venue', 'Fed Venue' ), 
                        pred_prob_out)
 
-ggplot(pred_prob_out, aes(x_value, median, group = 1)) +
+ggplot(pred_prob_out, aes(x_value, medians, group = 1)) +
     geom_line() +
     geom_ribbon(aes(ymin = lower_50, ymax = upper_50), alpha = 0.1) +
     geom_ribbon(aes(ymin = lower_95, ymax = upper_95), alpha = 0.1) +
