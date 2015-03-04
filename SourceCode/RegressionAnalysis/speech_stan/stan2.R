@@ -144,8 +144,8 @@ names(monetary_table) <- c('', names(monetary_table)[2:length(monetary_table)])
 stargazer(monetary_table, summary = F, out = 'tables/monetary.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Monetary Policy',
-          label = 'monetary_table',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown.')
+          label = 'monetaryTable',
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerMonetary}.')
 
 
 ##### Speaker effect plot #####

@@ -144,8 +144,8 @@ names(financial_table) <- c('', names(financial_table)[2:length(financial_table)
 stargazer(financial_table, summary = F, out = 'tables/financial.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Financial Markets',
-          label = 'financial_table',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \ref{speaker_financial}.')
+          label = 'financialTable',
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerFinancial}.')
 
 
 ##### Speaker effect plot #####

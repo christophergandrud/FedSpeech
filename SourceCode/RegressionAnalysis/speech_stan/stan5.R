@@ -146,8 +146,8 @@ names(banking_table) <- c('', names(banking_table)[2:length(banking_table)])
 stargazer(banking_table, summary = F, out = 'tables/banking.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Banking Regulation',
-          label = 'banking_table',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \ref{speaker_banking}.')
+          label = 'bankingTable',
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerBanking}.')
 
 
 ##### Speaker effect plot #####
