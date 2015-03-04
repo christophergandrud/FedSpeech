@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------- #
-# Stan Speeches-Topics Regression where Local Housing is the Topic
+# Stan Speeches-Topics Regression where Banking Regulation is the Topic
 # Christopher Gandrud
 # 4 March 2015
 # MIT License
@@ -52,69 +52,69 @@ base <- list(
     S = N_names,
     speaker = main$name_num,
     ## Outcome
-    y = main$Local.Housing.Dev_dummy
+    y = main$Banking.Regulation_dummy
 )
 
 #### Run Models ####
-# H1
+# B1
 vars_1 <- c('FedSpoketoFed', 'HFSC_CombConnect', 'ScrutinyLag3')
-H1_data <- stan_lister(base = base, df = main, vars = vars_1)
+B1_data <- stan_lister(base = base, df = main, vars = vars_1)
 
-H1_empty <- stan(file = speeches_code, data = H1_data, chains = 0)
-H1 <- parallel_4(fit = H1_empty, data = H1_data)
+B1_empty <- stan(file = speeches_code, data = B1_data, chains = 0)
+B1 <- parallel_4(fit = B1_empty, data = B1_data)
 
-# H2
+# B2
 vars_2 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3')
-H2_data <- stan_lister(base = base, df = main, vars = vars_2)
+B2_data <- stan_lister(base = base, df = main, vars = vars_2)
 
-H2_empty <- stan(file = speeches_code, data = H2_data, chains = 0)
-H2 <- parallel_4(fit = H2_empty, data = H2_data)
+B2_empty <- stan(file = speeches_code, data = B2_data, chains = 0)
+B2 <- parallel_4(fit = B2_empty, data = B2_data)
 
-# H3
+# B3
 vars_3 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3',
             'PCEPIPercentLag3')
-H3_data <- stan_lister(base = base, df = main, vars = vars_3)
+B3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
-H3_empty <- stan(file = speeches_code, data = H3_data, chains = 0)
-H3 <- parallel_4(fit = H3_empty, data = H3_data)
+B3_empty <- stan(file = speeches_code, data = B3_data, chains = 0)
+B3 <- parallel_4(fit = B3_empty, data = B3_data)
 
-# H4
+# B4
 vars_4 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3',
             'UnemploymentRateChangeLag3')
-H4_data <- stan_lister(base = base, df = main, vars = vars_4)
+B4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
-H4_empty <- stan(file = speeches_code, data = H4_data, chains = 0)
-H4 <- parallel_4(fit = H4_empty, data = H4_data)
+B4_empty <- stan(file = speeches_code, data = B4_data, chains = 0)
+B4 <- parallel_4(fit = B4_empty, data = B4_data)
 
-# H5
+# B5
 vars_5 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3',
             'pres_party', 'house_dem_rep', 'senate_dem_rep')
-H5_data <- stan_lister(base = base, df = main, vars = vars_5)
+B5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
-H5_empty <- stan(file = speeches_code, data = H5_data, chains = 0)
-H5 <- parallel_4(fit = H5_empty, data = H5_data)
+B5_empty <- stan(file = speeches_code, data = B5_data, chains = 0)
+B5 <- parallel_4(fit = B5_empty, data = B5_data)
 
 # ---------------------------- Output ---------------------------------------- #
 
 #### Table results ####
-housing_table <- stan_speeches_param_est(
-                    stanfit = list(H1 = H1,
-                                   H2 = H2,
-                                   H3 = H3,
-                                   H4 = H4,
-                                   H5 = H5),
+banking_table <- stan_speeches_param_est(
+                    stanfit = list(B1 = B1,
+                                   B2 = B2,
+                                   B3 = B3,
+                                   B4 = B4,
+                                   B5 = B5),
                     pars_labels = list(
-                        H1 = c('Fed. Venue', 'HCFS Donor',
+                        B1 = c('Fed. Venue', 'HCFS Donor',
                                'High Scrutiny', 'Intercept'),
-                        H2 = c('Fed. Venue', 'HCFS Donor',
+                        B2 = c('Fed. Venue', 'HCFS Donor',
                                'Case-Shiller Change', 'Intercept'),
-                        H3 = c('Fed. Venue', 'HCFS Donor',
+                        B3 = c('Fed. Venue', 'HCFS Donor',
                                'Case-Shiller Change', 'Inflation',
                                'Intercept'),
-                        H4 = c('Fed. Venue', 'HCFS Donor',
+                        B4 = c('Fed. Venue', 'HCFS Donor',
                                'Case-Shiller Change', 'Unemployment Change',
                                'Intercept'),
-                        H5 = c('Fed. Venue', 'HCFS Donor',
+                        B5 = c('Fed. Venue', 'HCFS Donor',
                                'High Scrutiny', 'Pres. Party',
                                'House Dem. Prop.', 'Senate Dem. Prop.',
                                'Intercept')
@@ -132,21 +132,21 @@ var_order <- c('Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
 vars_order <- data.frame(Parameters = var_order,
                          num_order = 1:length(var_order))
 
-housing_table <- full_join(housing_table, vars_order, by = 'Parameters') %>%
+banking_table <- full_join(banking_table, vars_order, by = 'Parameters') %>%
                     arrange(num_order) %>% select(-num_order)
 
-housing_table$Parameters <- gsub('.*_ci$', '', housing_table$Parameters)
-names(housing_table) <- c('', names(housing_table)[2:length(housing_table)])
+banking_table$Parameters <- gsub('.*_ci$', '', banking_table$Parameters)
+names(banking_table) <- c('', names(banking_table)[2:length(banking_table)])
 
-stargazer(housing_table, summary = F, out = 'tables/housing.tex',
+stargazer(banking_table, summary = F, out = 'tables/banking.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Local Housing and Development',
-          label = 'housing_table',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown.')
+          label = 'banking_table',
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \ref{speaker_banking}.')
 
 
 ##### Speaker effect plot #####
-stan_caterpillar(H1, '^a\\[.*\\]', full_names) +
+stan_caterpillar(B1, '^a\\[.*\\]', full_names) +
                 geom_vline(xintercept = 0, linetype = 'dotted')
 
-ggsave(file = 'figures/housing_speakers.pdf')
+ggsave(file = 'figures/banking_speakers.pdf')

@@ -15,5 +15,8 @@ ChangePointFull/figure/*
 ChangePointFull/figures/*
 
 .DS_Store
-*.RData
+.RData
+.RDataTemp
+.RDatatemp
 *.Rout
+Rplots.pdf
