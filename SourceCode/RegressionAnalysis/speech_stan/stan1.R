@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------------- #
 # Clean data for Stan Speeches-Topics Regressions
 # Christopher Gandrud
-# 3 March 2015
+# 4 March 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
-# Install/Load required packages
+# Load required packages
 library(DataCombine)
 library(lubridate)
 library(dplyr)
@@ -46,6 +46,31 @@ for (i in topics) {
     Combined[, NewVar] <- 0
     Combined[, NewVar][Combined[, i] >= TopicMean] <- 1
 }
+
+# Find previous year topic averages by month
+topics_lag_y1 <- Combined %>% group_by(month_year) %>%
+                summarise(mean_monetary_lag_y1 = mean(Monetary.Policy),
+                          mean_housing_lag_y1 = mean(Local.Housing.Dev),
+                          mean_financial_lag_y1 = mean(Financial.Markets),
+                          mean_banking_lag_y1 = mean(Banking.Regulation)
+                  )
+
+topics_lag_y1$month_year <- topics_lag_y1$month_year + months(12)
+
+# Find previous month topic averages
+topics_lag_m1 <- Combined %>% group_by(month_year) %>%
+                summarise(mean_monetary_lag_m1 = mean(Monetary.Policy),
+                            mean_housing_lag_m1 = mean(Local.Housing.Dev),
+                            mean_financial_lag_m1 = mean(Financial.Markets),
+                            mean_banking_lag_m1 = mean(Banking.Regulation)
+                     )
+
+topics_lag_m1$month_year <- topics_lag_m1$month_year + months(1)
+
+topics_lag_comb <- full_join(topics_lag_y1, topics_lag_m1, 
+                             by = 'month_year') %>% arrange(month_year)
+
+Combined <- full_join(Combined, topics_lag_comb, by = 'month_year')
 
 # ---------------------------------------------------------------------------- #
 # Save data

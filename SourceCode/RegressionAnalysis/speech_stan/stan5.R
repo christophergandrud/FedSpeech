@@ -29,7 +29,8 @@ main <- read.csv('combined_data.csv', stringsAsFactors = F)
 # --------------------------- Final cleaning --------------------------------- #
 
 # Keep complete cases
-covars_all <- c('FedSpoketoFed', 'HFSC_CombConnect', 'ScrutinyLag3',
+covars_all <- c('mean_banking_lag_y1', 'FedSpoketoFed',
+                'HFSC_CombConnect', 'ScrutinyLag3',
                 'CaseShillerChangeLag3', 'PCEPIPercentLag3',
                 'UnemploymentRateChangeLag3', 'pres_party', 'house_dem_rep',
                 'senate_dem_rep')
@@ -57,38 +58,40 @@ base <- list(
 
 #### Run Models ####
 # B1
-vars_1 <- c('FedSpoketoFed', 'HFSC_CombConnect', 'ScrutinyLag3')
+vars_1 <- c('mean_banking_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+            'ScrutinyLag3')
 B1_data <- stan_lister(base = base, df = main, vars = vars_1)
 
 B1_empty <- stan(file = speeches_code, data = B1_data, chains = 0)
 B1 <- parallel_4(fit = B1_empty, data = B1_data)
 
 # B2
-vars_2 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3')
+vars_2 <- c('mean_banking_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'CaseShillerChangeLag3')
 B2_data <- stan_lister(base = base, df = main, vars = vars_2)
 
 B2_empty <- stan(file = speeches_code, data = B2_data, chains = 0)
 B2 <- parallel_4(fit = B2_empty, data = B2_data)
 
 # B3
-vars_3 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3',
-            'PCEPIPercentLag3')
+vars_3 <- c('mean_banking_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'CaseShillerChangeLag3', 'PCEPIPercentLag3')
 B3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
 B3_empty <- stan(file = speeches_code, data = B3_data, chains = 0)
 B3 <- parallel_4(fit = B3_empty, data = B3_data)
 
 # B4
-vars_4 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3',
-            'UnemploymentRateChangeLag3')
+vars_4 <- c('mean_banking_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'CaseShillerChangeLag3', 'UnemploymentRateChangeLag3')
 B4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
 B4_empty <- stan(file = speeches_code, data = B4_data, chains = 0)
 B4 <- parallel_4(fit = B4_empty, data = B4_data)
 
 # B5
-vars_5 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3',
-            'pres_party', 'house_dem_rep', 'senate_dem_rep')
+vars_5 <- c('mean_banking_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'ScrutinyLag3', 'pres_party', 'house_dem_rep', 'senate_dem_rep')
 B5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
 B5_empty <- stan(file = speeches_code, data = B5_data, chains = 0)
@@ -104,24 +107,25 @@ banking_table <- stan_speeches_param_est(
                                    B4 = B4,
                                    B5 = B5),
                     pars_labels = list(
-                        B1 = c('Fed. Venue', 'HCFS Donor',
-                               'High Scrutiny', 'Intercept'),
-                        B2 = c('Fed. Venue', 'HCFS Donor',
-                               'Case-Shiller Change', 'Intercept'),
-                        B3 = c('Fed. Venue', 'HCFS Donor',
-                               'Case-Shiller Change', 'Inflation',
-                               'Intercept'),
-                        B4 = c('Fed. Venue', 'HCFS Donor',
-                               'Case-Shiller Change', 'Unemployment Change',
-                               'Intercept'),
-                        B5 = c('Fed. Venue', 'HCFS Donor',
-                               'High Scrutiny', 'Pres. Party',
-                               'House Dem. Prop.', 'Senate Dem. Prop.',
-                               'Intercept')
+                        B1 = c('M. Banking Topic y-1', 'Fed. Venue',
+                               'HCFS Donor', 'High Scrutiny', 'Intercept'),
+                        B2 = c('M. Banking Topic y-1', 'Fed. Venue',
+                             'HCFS Donor', 'Case-Shiller Change', 'Intercept'),
+                        B3 = c('M. Banking Topic y-1', 'Fed. Venue',
+                              'HCFS Donor', 'Case-Shiller Change', 'Inflation',
+                              'Intercept'),
+                        B3 = c('M. Banking Topic y-1', 'Fed. Venue',
+                              'HCFS Donor', 'Case-Shiller Change',
+                              'Unemployment Change', 'Intercept'),
+                        B5 = c('M. Banking Topic y-1', 'Fed. Venue',
+                              'HCFS Donor', 'High Scrutiny', 'Pres. Party',
+                              'House Dem. Prop.', 'Senate Dem. Prop.',
+                              'Intercept')
                         ),
                     obs = nrow(main))
 
-var_order <- c('Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
+var_order <- c('M. Banking Topic y-1', 'M. Banking Topic y-1_ci',
+               'Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
                'High Scrutiny', 'High Scrutiny_ci', 'Case-Shiller Change',
                'Case-Shiller Change_ci', 'Inflation', 'Inflation_ci',
                'Unemployment Change', 'Unemployment Change_ci',
@@ -129,6 +133,7 @@ var_order <- c('Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
                'House Dem. Prop._ci', 'Senate Dem. Prop.',
                'Senate Dem. Prop._ci', 'Intercept', 'Intercept_ci',
                'Obs.', 'WAIC')
+
 vars_order <- data.frame(Parameters = var_order,
                          num_order = 1:length(var_order))
 
@@ -140,7 +145,7 @@ names(banking_table) <- c('', names(banking_table)[2:length(banking_table)])
 
 stargazer(banking_table, summary = F, out = 'tables/banking.tex',
           out.header = F, rownames = F,
-          title = 'Coefficient Estimates from the Posterior Distribution for Discussing Local Housing and Development',
+          title = 'Coefficient Estimates from the Posterior Distribution for Discussing Banking Regulation',
           label = 'banking_table',
           notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \ref{speaker_banking}.')
 

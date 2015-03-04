@@ -29,7 +29,8 @@ main <- read.csv('combined_data.csv', stringsAsFactors = F)
 # --------------------------- Final cleaning --------------------------------- #
 
 # Keep complete cases
-covars_all <- c('FedSpoketoFed', 'HFSC_CombConnect', 'ScrutinyLag3',
+covars_all <- c('mean_housing_lag_y1', 'FedSpoketoFed',
+                'HFSC_CombConnect', 'ScrutinyLag3',
                 'CaseShillerChangeLag3', 'PCEPIPercentLag3',
                 'UnemploymentRateChangeLag3', 'pres_party', 'house_dem_rep',
                 'senate_dem_rep')
@@ -57,38 +58,40 @@ base <- list(
 
 #### Run Models ####
 # H1
-vars_1 <- c('FedSpoketoFed', 'HFSC_CombConnect', 'ScrutinyLag3')
+vars_1 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+            'ScrutinyLag3')
 H1_data <- stan_lister(base = base, df = main, vars = vars_1)
 
 H1_empty <- stan(file = speeches_code, data = H1_data, chains = 0)
 H1 <- parallel_4(fit = H1_empty, data = H1_data)
 
 # H2
-vars_2 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3')
+vars_2 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'CaseShillerChangeLag3')
 H2_data <- stan_lister(base = base, df = main, vars = vars_2)
 
 H2_empty <- stan(file = speeches_code, data = H2_data, chains = 0)
 H2 <- parallel_4(fit = H2_empty, data = H2_data)
 
 # H3
-vars_3 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3',
-            'PCEPIPercentLag3')
+vars_3 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'CaseShillerChangeLag3', 'PCEPIPercentLag3')
 H3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
 H3_empty <- stan(file = speeches_code, data = H3_data, chains = 0)
 H3 <- parallel_4(fit = H3_empty, data = H3_data)
 
 # H4
-vars_4 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'CaseShillerChangeLag3',
-            'UnemploymentRateChangeLag3')
+vars_4 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'CaseShillerChangeLag3', 'UnemploymentRateChangeLag3')
 H4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
 H4_empty <- stan(file = speeches_code, data = H4_data, chains = 0)
 H4 <- parallel_4(fit = H4_empty, data = H4_data)
 
 # H5
-vars_5 <- c('HFSC_CombConnect', 'FedSpoketoFed', 'ScrutinyLag3',
-            'pres_party', 'house_dem_rep', 'senate_dem_rep')
+vars_5 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+            'ScrutinyLag3', 'pres_party', 'house_dem_rep', 'senate_dem_rep')
 H5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
 H5_empty <- stan(file = speeches_code, data = H5_data, chains = 0)
@@ -104,24 +107,25 @@ housing_table <- stan_speeches_param_est(
                                    H4 = H4,
                                    H5 = H5),
                     pars_labels = list(
-                        H1 = c('Fed. Venue', 'HCFS Donor',
-                               'High Scrutiny', 'Intercept'),
-                        H2 = c('Fed. Venue', 'HCFS Donor',
-                               'Case-Shiller Change', 'Intercept'),
-                        H3 = c('Fed. Venue', 'HCFS Donor',
-                               'Case-Shiller Change', 'Inflation',
+                        H1 = c('M. Housing Topic y-1', 'Fed. Venue',
+                                'HCFS Donor', 'High Scrutiny', 'Intercept'),
+                        H2 = c('M. Housing Topic y-1', 'Fed. Venue',
+                              'HCFS Donor', 'Case-Shiller Change', 'Intercept'),
+                        H3 = c('M. Housing Topic y-1', 'Fed. Venue',
+                               'HCFS Donor', 'Case-Shiller Change', 'Inflation',
                                'Intercept'),
-                        H4 = c('Fed. Venue', 'HCFS Donor',
-                               'Case-Shiller Change', 'Unemployment Change',
-                               'Intercept'),
-                        H5 = c('Fed. Venue', 'HCFS Donor',
-                               'High Scrutiny', 'Pres. Party',
+                        H4 = c('M. Housing Topic y-1', 'Fed. Venue',
+                               'HCFS Donor', 'Case-Shiller Change',
+                               'Unemployment Change', 'Intercept'),
+                        H5 = c('M. Housing Topic y-1', 'Fed. Venue',
+                               'HCFS Donor', 'High Scrutiny', 'Pres. Party',
                                'House Dem. Prop.', 'Senate Dem. Prop.',
                                'Intercept')
                         ),
                     obs = nrow(main))
 
-var_order <- c('Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
+var_order <- c('M. Housing Topic y-1', 'M. Housing Topic y-1_ci',
+               'Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
                'High Scrutiny', 'High Scrutiny_ci', 'Case-Shiller Change',
                'Case-Shiller Change_ci', 'Inflation', 'Inflation_ci',
                'Unemployment Change', 'Unemployment Change_ci',
