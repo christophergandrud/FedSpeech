@@ -20,7 +20,7 @@ parameters {
     vector[K] beta;                     // coefficients for predictors
     real alpha;                         // intercept
     vector[S] a;                        // speaker intercepts
-    real<lower=0,upper=100> sigma_a;    // scale of speaker intercept
+    real<lower=0,upper=100> sigma_a;    // variance of speaker intercept
 }
 
 transformed parameters {

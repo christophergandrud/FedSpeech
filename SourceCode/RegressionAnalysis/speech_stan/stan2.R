@@ -109,12 +109,12 @@ monetary_table <- stan_speeches_param_est(
                         M1 = c('M. Monetary Topic y-1', 'Fed. Venue',
                                 'HCFS Donor', 'High Scrutiny', 'Intercept'),
                         M2 = c('M. Monetary Topic y-1', 'Fed. Venue',
-                                'HCFS Donor', 'Inflation', 'Intercept'),
+                                'HCFS Donor', 'Inflation m-3', 'Intercept'),
                         M3 = c('M. Monetary Topic y-1', 'Fed. Venue',
-                                'HCFS Donor', 'Inflation',
-                                'Case-Shiller Change', 'Intercept'),
+                                'HCFS Donor', 'Inflation m-3',
+                                'Case-Shiller Change m-3', 'Intercept'),
                         M4 = c('M. Monetary Topic y-1', 'Fed. Venue',
-                               'HCFS Donor', 'Inflation', 'Unemployment Change',
+                               'HCFS Donor', 'Inflation m-3', 'Unempoyment Change m-3',
                                'Intercept'),
                         M5 = c('M. Monetary Topic y-1', 'Fed. Venue',
                                'HCFS Donor', 'High Scrutiny', 'Pres. Party',
@@ -125,9 +125,10 @@ monetary_table <- stan_speeches_param_est(
 
 var_order <- c('M. Monetary Topic y-1', 'M. Monetary Topic y-1_ci',
                'Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
-               'High Scrutiny', 'High Scrutiny_ci', 'Inflation',
-                'Inflation_ci','Case-Shiller Change', 'Case-Shiller Change_ci',
-               'Unemployment Change', 'Unemployment Change_ci',
+               'High Scrutiny', 'High Scrutiny_ci', 'Inflation m-3',
+               'Inflation m-3_ci','Case-Shiller Change m-3',
+               'Case-Shiller Change m-3_ci',
+               'Unempoyment Change m-3', 'Unempoyment Change m-3_ci',
                'Pres. Party', 'Pres. Party_ci', 'House Dem. Prop.',
                'House Dem. Prop._ci', 'Senate Dem. Prop.',
                'Senate Dem. Prop._ci', 'Intercept', 'Intercept_ci',
@@ -145,7 +146,8 @@ stargazer(monetary_table, summary = F, out = 'tables/monetary.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Monetary Policy',
           label = 'monetaryTable',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerMonetary}.')
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerMonetary}.',
+          font.size = 'small')
 
 
 ##### Speaker effect plot #####

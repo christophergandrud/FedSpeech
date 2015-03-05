@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 # Stan Speeches-Topics Regression where Banking Regulation is the Topic
 # Christopher Gandrud
-# 4 March 2015
+# 5 March 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -110,13 +110,14 @@ banking_table <- stan_speeches_param_est(
                         B1 = c('M. Banking Topic y-1', 'Fed. Venue',
                                'HCFS Donor', 'High Scrutiny', 'Intercept'),
                         B2 = c('M. Banking Topic y-1', 'Fed. Venue',
-                             'HCFS Donor', 'Case-Shiller Change', 'Intercept'),
+                             'HCFS Donor', 'Case-Shiller Change m-3',
+                             'Intercept'),
                         B3 = c('M. Banking Topic y-1', 'Fed. Venue',
-                              'HCFS Donor', 'Case-Shiller Change', 'Inflation',
-                              'Intercept'),
+                              'HCFS Donor', 'Case-Shiller Change m-3',
+                              'Inflation m-3', 'Intercept'),
                         B3 = c('M. Banking Topic y-1', 'Fed. Venue',
-                              'HCFS Donor', 'Case-Shiller Change',
-                              'Unemployment Change', 'Intercept'),
+                              'HCFS Donor', 'Case-Shiller Change m-3',
+                              'Unemployment Change m-3', 'Intercept'),
                         B5 = c('M. Banking Topic y-1', 'Fed. Venue',
                               'HCFS Donor', 'High Scrutiny', 'Pres. Party',
                               'House Dem. Prop.', 'Senate Dem. Prop.',
@@ -126,9 +127,10 @@ banking_table <- stan_speeches_param_est(
 
 var_order <- c('M. Banking Topic y-1', 'M. Banking Topic y-1_ci',
                'Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
-               'High Scrutiny', 'High Scrutiny_ci', 'Case-Shiller Change',
-               'Case-Shiller Change_ci', 'Inflation', 'Inflation_ci',
-               'Unemployment Change', 'Unemployment Change_ci',
+               'High Scrutiny', 'High Scrutiny_ci', 'Case-Shiller Change m-3',
+               'Case-Shiller Change m-3_ci', 'Inflation m-3',
+               'Inflation m-3_ci',
+               'Unemployment Change m-3', 'Unemployment Change m-3_ci',
                'Pres. Party', 'Pres. Party_ci', 'House Dem. Prop.',
                'House Dem. Prop._ci', 'Senate Dem. Prop.',
                'Senate Dem. Prop._ci', 'Intercept', 'Intercept_ci',
@@ -147,7 +149,8 @@ stargazer(banking_table, summary = F, out = 'tables/banking.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Banking Regulation',
           label = 'bankingTable',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerBanking}.')
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerBanking}.',
+          font.size = 'small')
 
 
 ##### Speaker effect plot #####
