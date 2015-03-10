@@ -66,7 +66,7 @@ H1_empty <- stan(file = speeches_code, data = H1_data, chains = 0)
 H1 <- parallel_4(fit = H1_empty, data = H1_data)
 
 # H2
-vars_2 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_2 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3')
 H2_data <- stan_lister(base = base, df = main, vars = vars_2)
 
@@ -74,7 +74,7 @@ H2_empty <- stan(file = speeches_code, data = H2_data, chains = 0)
 H2 <- parallel_4(fit = H2_empty, data = H2_data)
 
 # H3
-vars_3 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_3 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'PCEPIPercentLag3')
 H3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
@@ -82,7 +82,7 @@ H3_empty <- stan(file = speeches_code, data = H3_data, chains = 0)
 H3 <- parallel_4(fit = H3_empty, data = H3_data)
 
 # H4
-vars_4 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_4 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'UnemploymentRateChangeLag3')
 H4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
@@ -90,7 +90,7 @@ H4_empty <- stan(file = speeches_code, data = H4_data, chains = 0)
 H4 <- parallel_4(fit = H4_empty, data = H4_data)
 
 # H5
-vars_5 <- c('mean_housing_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_5 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'ScrutinyLag3', 'pres_party', 'house_dem_rep', 'senate_dem_rep')
 H5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
@@ -149,7 +149,7 @@ stargazer(housing_table, summary = F, out = 'tables/housing.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Local Housing and Development',
           label = 'housingTable',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerHousing}.',
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerHousing}.',
           font.size = 'small')
 
 

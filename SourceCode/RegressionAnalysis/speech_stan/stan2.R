@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 # Stan Speeches-Topics Regression where Monetary Policy is the Topic
 # Christopher Gandrud
-# 4 March 2015
+# 5 March 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -66,7 +66,7 @@ M1_empty <- stan(file = speeches_code, data = M1_data, chains = 0)
 M1 <- parallel_4(fit = M1_empty, data = M1_data)
 
 # H2
-vars_2 <- c('mean_monetary_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_2 <- c('mean_monetary_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'PCEPIPercentLag3')
 M2_Data <- stan_lister(base = base, df = main, vars = vars_2)
 
@@ -74,7 +74,7 @@ M2_empty <- stan(file = speeches_code, data = M2_Data, chains = 0)
 M2 <- parallel_4(fit = M2_empty, data = M2_Data)
 
 # M3
-vars_3 <- c('mean_monetary_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_3 <- c('mean_monetary_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'PCEPIPercentLag3', 'CaseShillerChangeLag3')
 M3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
@@ -82,7 +82,7 @@ M3_empty <- stan(file = speeches_code, data = M3_data, chains = 0)
 M3 <- parallel_4(fit = M3_empty, data = M3_data)
 
 # M4
-vars_4 <- c('mean_monetary_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_4 <- c('mean_monetary_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'PCEPIPercentLag3', 'UnemploymentRateChangeLag3')
 M4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
@@ -90,7 +90,7 @@ M4_empty <- stan(file = speeches_code, data = M4_data, chains = 0)
 M4 <- parallel_4(fit = M4_empty, data = M4_data)
 
 # M5
-vars_5 <- c('mean_monetary_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_5 <- c('mean_monetary_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'ScrutinyLag3', 'pres_party', 'house_dem_rep', 'senate_dem_rep')
 M5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
@@ -146,7 +146,7 @@ stargazer(monetary_table, summary = F, out = 'tables/monetary.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Monetary Policy',
           label = 'monetaryTable',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerMonetary}.',
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerMonetary}.',
           font.size = 'small')
 
 

@@ -65,7 +65,7 @@ F1_empty <- stan(file = speeches_code, data = F1_data, chains = 0)
 F1 <- parallel_4(fit = F1_empty, data = F1_data)
 
 # F2
-vars_2 <- c('mean_financial_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_2 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3')
 F2_data <- stan_lister(base = base, df = main, vars = vars_2)
 
@@ -73,7 +73,7 @@ F2_empty <- stan(file = speeches_code, data = F2_data, chains = 0)
 F2 <- parallel_4(fit = F2_empty, data = F2_data)
 
 # F3
-vars_3 <- c('mean_financial_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_3 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'PCEPIPercentLag3')
 F3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
@@ -81,7 +81,7 @@ F3_empty <- stan(file = speeches_code, data = F3_data, chains = 0)
 F3 <- parallel_4(fit = F3_empty, data = F3_data)
 
 # F4
-vars_4 <- c('mean_financial_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_4 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'UnemploymentRateChangeLag3')
 F4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
@@ -89,7 +89,7 @@ F4_empty <- stan(file = speeches_code, data = F4_data, chains = 0)
 F4 <- parallel_4(fit = F4_empty, data = F4_data)
 
 # F5
-vars_5 <- c('mean_financial_lag_y1', 'HFSC_CombConnect', 'FedSpoketoFed',
+vars_5 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'ScrutinyLag3', 'pres_party', 'house_dem_rep', 'senate_dem_rep')
 F5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
@@ -146,7 +146,7 @@ stargazer(financial_table, summary = F, out = 'tables/financial.tex',
           out.header = F, rownames = F,
           title = 'Coefficient Estimates from the Posterior Distribution for Discussing Financial Markets',
           label = 'financialTable',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\ref{speakerFinancial}.',
+          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerFinancial}.',
           font.size = 'small')
 
 
