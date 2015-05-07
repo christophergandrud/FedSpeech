@@ -41,27 +41,40 @@ for (i in lda_out) log_lik <- c(log_link, logLik(i))
 plot(topic_number, log_lik)
 
 #### Visualise topics and terms ####
-# Choose fitted model to visualise
-to_visualise <- lda_10 # 10 topic model
-
 # Create json objected needed for LDAvis
-phi <- posterior(to_visualise)$terms %>% as.matrix
-theta <- posterior(to_visualise)$topics %>% as.matrix
-vocab <- colnames(phi)
-doc_length <- vector()
-for (i in 1:length(corpus)) {
-    temp <- paste(corpus[[i]]$content, collapse = ' ')
-    doc_length <- c(doc_length, stri_count(temp, regex = '\\S+'))
-}
-temp_frequency <- inspect(doc_term)
-freq_matrix <- data.frame(ST = colnames(temp_frequency), Freq = colSums(temp_frequency))
-row.names(freq_matrix) <- NULL
-rm(temp_frequency)
+serVis_json_creator <- function(fitted, corpus, doc_term){
+    # Required packages
+    library(topicmodels)
+    library(dplyr)
+    library(tm)
+    library(LDAvis)
 
-json_lda <- createJSON(phi = phi, theta = theta,
-                       vocab = vocab,
-                       doc.length = doc_length,
-                       term.frequency = freq_matrix$Freq)
+    # Find required quantities
+    phi <- posterior(fitted)$terms %>% as.matrix
+    theta <- posterior(fitted)$topics %>% as.matrix
+    vocab <- colnames(phi)
+    doc_length <- vector()
+    for (i in 1:length(corpus)) {
+        temp <- paste(corpus[[i]]$content, collapse = ' ')
+        doc_length <- c(doc_length, stri_count(temp, regex = '\\S+'))
+    }
+    temp_frequency <- inspect(doc_term)
+    freq_matrix <- data.frame(ST = colnames(temp_frequency),
+                              Freq = colSums(temp_frequency))
+    rm(temp_frequency)
+
+    # Convert to json
+    json_lda <- createJSON(phi = phi, theta = theta,
+                           vocab = vocab,
+                           doc.length = doc_length,
+                           term.frequency = freq_matrix$Freq)
+
+    return(json_lda)
+}
+
+json_lda <- serVis_json_creator(fitted = lda_10, corpus = corpus,
+                                doc_term = doc_term)
+
 
 # Visualise with LDAvis
 serVis(json_lda, open.browser = T)
