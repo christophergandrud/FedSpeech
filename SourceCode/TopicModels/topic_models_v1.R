@@ -27,7 +27,7 @@ corpus <- Corpus(DirSource()) %>%
 doc_term <- DocumentTermMatrix(corpus)
 
 #### Run topic models for a range of topics ####
-topic_numbers <- c(3, 5, 7, 10, 15, 20, 50)
+topic_numbers <- c(3, 5, 7, 10, 15, 20, 30, 40, 50)
 for (i in topic_numbers) {
     message(sprintf('Running %s', i))
     assign(sprintf('lda_%s', i), LDA(doc_term, k = i, seed = 1001))
@@ -72,7 +72,7 @@ serVis_json_creator <- function(fitted, corpus, doc_term){
     return(json_lda)
 }
 
-json_lda <- serVis_json_creator(fitted = lda_10, corpus = corpus,
+json_lda <- serVis_json_creator(fitted = lda_20, corpus = corpus,
                                 doc_term = doc_term)
 
 
