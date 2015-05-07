@@ -27,18 +27,18 @@ corpus <- Corpus(DirSource()) %>%
 doc_term <- DocumentTermMatrix(corpus)
 
 #### Run topic models for a range of topics ####
-topic_number <-
-for (i in c(3, 5, 7, 10, 15, 20)) {
+topic_numbers <- c(3, 5, 7, 10, 15, 20, 50)
+for (i in topic_numbers) {
     message(sprintf('Running %s', i))
     assign(sprintf('lda_%s', i), LDA(doc_term, k = i, seed = 1001))
 }
 
 #### Compare log-likelihood per number of topics, to assess model fit ####
-lda_out <- sprintf('lda_%s', topic_number)
+lda_out <- sprintf('lda_%s', topic_numbers)
 log_lik <- vector()
-for (i in lda_out) log_lik <- c(log_link, logLik(i))
+for (i in lda_out) log_lik <- c(log_lik, logLik(eval(parse(text = i)))[[1]])
 
-plot(topic_number, log_lik)
+plot(topic_numbers, log_lik)
 
 #### Visualise topics and terms ####
 # Create json objected needed for LDAvis
