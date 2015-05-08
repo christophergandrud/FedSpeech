@@ -42,13 +42,7 @@ plot(topic_numbers, log_lik)
 
 #### Visualise topics and terms ####
 # Create json objected needed for LDAvis
-serVis_json_creator <- function(fitted, corpus, doc_term){
-    # Required packages
-    library(topicmodels)
-    library(dplyr)
-    library(tm)
-    library(LDAvis)
-
+topicmodels_json_ldavis <- function(fitted, corpus, doc_term){
     # Find required quantities
     phi <- posterior(fitted)$terms %>% as.matrix
     theta <- posterior(fitted)$topics %>% as.matrix
@@ -64,17 +58,17 @@ serVis_json_creator <- function(fitted, corpus, doc_term){
     rm(temp_frequency)
 
     # Convert to json
-    json_lda <- createJSON(phi = phi, theta = theta,
-                           vocab = vocab,
-                           doc.length = doc_length,
-                           term.frequency = freq_matrix$Freq)
+    json_lda <- LDAvis::createJSON(phi = phi, theta = theta,
+                            vocab = vocab,
+                            doc.length = doc_length,
+                            term.frequency = freq_matrix$Freq)
 
     return(json_lda)
 }
 
-json_lda <- serVis_json_creator(fitted = lda_20, corpus = corpus,
+json_lda <- topicmodels_json_ldavis(fitted = lda_20, corpus = corpus,
                                 doc_term = doc_term)
 
 
 # Visualise with LDAvis
-serVis(json_lda, open.browser = T)
+serVis(json_lda, out.dir = '~/Desktop/vis_20_topics_7May' open.browser = T)
