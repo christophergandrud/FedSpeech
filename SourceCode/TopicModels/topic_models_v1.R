@@ -14,10 +14,13 @@ library(LDAvis)
 # Set working directory
 setwd('~/Dropbox/Fed_Speeches_Data/fed.text.parsed/')
 
+source('~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/TopicModels/extendedstopwords.R')
+
 # Load and process corpus
 corpus <- Corpus(DirSource()) %>%
     tm_map(content_transformer(tolower)) %>%
-    tm_map(removeWords, stopwords('english'), mc.cores = 1) %>%
+    tm_map(removeWords, stopwords(c('english', extendedstopwords)), 
+           mc.cores = 1) %>%
     tm_map(stemDocument, mc.cores = 1) %>%
     tm_map(stripWhitespace) %>%
     tm_map(removePunctuation, mc.cores = 1) %>%
@@ -28,10 +31,18 @@ doc_term <- DocumentTermMatrix(corpus)
 
 #### Run topic models for a range of topics ####
 topic_numbers <- c(3, 5, 7, 10, 15, 20, 30, 40, 50)
-for (i in topic_numbers) {
-    message(sprintf('Running %s', i))
-    assign(sprintf('lda_%s', i), LDA(doc_term, k = i, seed = 1001))
-}
+
+# VEM Version
+# for (i in topic_numbers) {
+#    message(sprintf('Running %s', i))
+#    assign(sprintf('lda_%s', i), LDA(doc_term, k = i, seed = 1001))
+#}
+
+# Gibbs version
+models <- lapply(topic_numbers, function(k) LDA(doc_term, k, method = "Gibbs", 
+                                    control = list(alpha = 1/k, delta = 0.1, 
+                                    doc_termin = 1000, iter = 1000, 
+                                    keep = 50)))
 
 #### Compare log-likelihood per number of topics, to assess model fit ####
 lda_out <- sprintf('lda_%s', topic_numbers)
@@ -66,9 +77,9 @@ topicmodels_json_ldavis <- function(fitted, corpus, doc_term){
     return(json_lda)
 }
 
-json_lda <- topicmodels_json_ldavis(fitted = lda_20, corpus = corpus,
+json_lda <- topicmodels_json_ldavis(fitted = lda_5, corpus = corpus,
                                 doc_term = doc_term)
 
 
 # Visualise with LDAvis
-serVis(json_lda, out.dir = '~/Desktop/vis_20_topics_7May' open.browser = T)
+serVis(json_lda, out.dir = '~/Desktop/vis_20_topics_7May', open.browser = T)
