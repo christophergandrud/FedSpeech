@@ -27,7 +27,7 @@ corpus <- Corpus(DirSource()) %>%
     tm_map(removeNumbers, mc.cores = 1)
 
 # Create document-term matrix for LDA
-doc_term <- DocumentTermMatrix(corpus)
+doc_term <- DocumentTermMatrix(corpus) %>% removeSparseTerms(0.9)
 
 #### Run topic models for a range of topics ####
 topic_numbers <- c(3, 5, 7, 10, 15, 20, 30, 40, 50)
