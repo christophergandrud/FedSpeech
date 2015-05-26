@@ -14,12 +14,10 @@ library(LDAvis)
 # Set working directory
 setwd('~/Dropbox/Fed_Speeches_Data/fed.text.parsed/')
 
-source('~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/TopicModels/extendedstopwords.R')
-
 # Load and process corpus
 corpus <- Corpus(DirSource()) %>%
     tm_map(content_transformer(tolower)) %>%
-    tm_map(removeWords, stopwords(c('english', extendedstopwords)), 
+    tm_map(removeWords, stopwords('english'), 
            mc.cores = 1) %>%
     tm_map(stemDocument, mc.cores = 1) %>%
     tm_map(stripWhitespace) %>%
@@ -27,10 +25,12 @@ corpus <- Corpus(DirSource()) %>%
     tm_map(removeNumbers, mc.cores = 1)
 
 # Create document-term matrix for LDA
-doc_term <- DocumentTermMatrix(corpus) %>% removeSparseTerms(0.9)
+doc_term <- DocumentTermMatrix(corpus) %>% removeSparseTerms(0.8)
 
 #### Run topic models for a range of topics ####
 topic_numbers <- c(3, 5, 7, 10, 15, 20, 30, 40, 50)
+
+topic_numbers <- c(5)
 
 # VEM Version
 # for (i in topic_numbers) {
@@ -41,13 +41,15 @@ topic_numbers <- c(3, 5, 7, 10, 15, 20, 30, 40, 50)
 # Gibbs version
 models <- lapply(topic_numbers, function(k) LDA(doc_term, k, method = "Gibbs", 
                                     control = list(alpha = 1/k, delta = 0.1, 
-                                    doc_termin = 1000, iter = 1000, 
-                                    keep = 50)))
+                                    iter = 1000, keep = 50)))
 
 #### Compare log-likelihood per number of topics, to assess model fit ####
-lda_out <- sprintf('lda_%s', topic_numbers)
-log_lik <- vector()
-for (i in lda_out) log_lik <- c(log_lik, logLik(eval(parse(text = i)))[[1]])
+#lda_out <- sprintf('lda_%s', topic_numbers)
+#log_lik <- vector()
+#for (i in lda_out) log_lik <- c(log_lik, logLik(eval(parse(text = i)))[[1]])
+
+lda_5 <- models[[1]]
+log_lik <- logLik(lda_5)
 
 plot(topic_numbers, log_lik)
 
