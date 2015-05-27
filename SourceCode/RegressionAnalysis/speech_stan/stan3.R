@@ -147,7 +147,7 @@ names(housing_table) <- c('', names(housing_table)[2:length(housing_table)])
 
 stargazer(housing_table, summary = F, out = 'tables/housing.tex',
           out.header = F, rownames = F,
-          title = 'Coefficient Estimates from the Posterior Distribution for Discussing Local Housing and Development',
+          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Local Housing and Development',
           label = 'housingTable',
           notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerHousing}.',
           font.size = 'small')
