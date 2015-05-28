@@ -146,7 +146,7 @@ stargazer(financial_table, summary = F, out = 'tables/financial.tex',
           out.header = F, rownames = F,
           title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Financial Markets',
           label = 'financialTable',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerFinancial}.',
+          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerFinancial}.',
           font.size = 'small')
 
 

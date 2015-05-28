@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 # Stan Speeches-Topics Regression where Monetary Policy is the Topic
 # Christopher Gandrud
-# 5 March 2015
+# 28 May 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -146,7 +146,7 @@ stargazer(monetary_table, summary = F, out = 'tables/monetary.tex',
           out.header = F, rownames = F,
           title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Monetary Policy',
           label = 'monetaryTable',
-          notes = '95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerMonetary}.',
+          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerMonetary}.',
           font.size = 'small')
 
 
