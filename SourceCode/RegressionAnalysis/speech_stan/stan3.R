@@ -1,7 +1,6 @@
 # ---------------------------------------------------------------------------- #
-# Stan Speeches-Topics Regression where Local Housing is the Topic
+# Stan Speeches-Topics Regression where Financial Markets is the Topic
 # Christopher Gandrud
-# 5 March 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -29,9 +28,8 @@ main <- read.csv('combined_data.csv', stringsAsFactors = F)
 # --------------------------- Final cleaning --------------------------------- #
 
 # Keep complete cases
-covars_all <- c('mean_housing_lag_y1', 'FedSpoketoFed',
-                'HFSC_CombConnect', 'ScrutinyLag3',
-                'CaseShillerChangeLag3', 'PCEPIPercentLag3',
+covars_all <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+                'ScrutinyLag3', 'CaseShillerChangeLag3', 'PCEPIPercentLag3',
                 'UnemploymentRateChangeLag3', 'pres_party', 'house_dem_rep',
                 'senate_dem_rep')
 main <- main %>% DropNA(covars_all)
@@ -53,80 +51,78 @@ base <- list(
     S = N_names,
     speaker = main$name_num,
     ## Outcome
-    y = main$Local.Housing.Dev_dummy
+    y = main$Financial.Markets_dummy
 )
 
 #### Run Models ####
-# H1
-vars_1 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# F1
+vars_1 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'ScrutinyLag3')
-H1_data <- stan_lister(base = base, df = main, vars = vars_1)
+F1_data <- stan_lister(base = base, df = main, vars = vars_1)
 
-H1_empty <- stan(file = speeches_code, data = H1_data, chains = 0)
-H1 <- parallel_4(fit = H1_empty, data = H1_data)
+F1_empty <- stan(file = speeches_code, data = F1_data, chains = 0)
+F1 <- parallel_4(fit = F1_empty, data = F1_data)
 
-# H2
-vars_2 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# F2
+vars_2 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3')
-H2_data <- stan_lister(base = base, df = main, vars = vars_2)
+F2_data <- stan_lister(base = base, df = main, vars = vars_2)
 
-H2_empty <- stan(file = speeches_code, data = H2_data, chains = 0)
-H2 <- parallel_4(fit = H2_empty, data = H2_data)
+F2_empty <- stan(file = speeches_code, data = F2_data, chains = 0)
+F2 <- parallel_4(fit = F2_empty, data = F2_data)
 
-# H3
-vars_3 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# F3
+vars_3 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'PCEPIPercentLag3')
-H3_data <- stan_lister(base = base, df = main, vars = vars_3)
+F3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
-H3_empty <- stan(file = speeches_code, data = H3_data, chains = 0)
-H3 <- parallel_4(fit = H3_empty, data = H3_data)
+F3_empty <- stan(file = speeches_code, data = F3_data, chains = 0)
+F3 <- parallel_4(fit = F3_empty, data = F3_data)
 
-# H4
-vars_4 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# F4
+vars_4 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'UnemploymentRateChangeLag3')
-H4_data <- stan_lister(base = base, df = main, vars = vars_4)
+F4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
-H4_empty <- stan(file = speeches_code, data = H4_data, chains = 0)
-H4 <- parallel_4(fit = H4_empty, data = H4_data)
+F4_empty <- stan(file = speeches_code, data = F4_data, chains = 0)
+F4 <- parallel_4(fit = F4_empty, data = F4_data)
 
-# H5
-vars_5 <- c('mean_housing_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# F5
+vars_5 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'ScrutinyLag3', 'pres_party', 'house_dem_rep', 'senate_dem_rep')
-H5_data <- stan_lister(base = base, df = main, vars = vars_5)
+F5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
-H5_empty <- stan(file = speeches_code, data = H5_data, chains = 0)
-H5 <- parallel_4(fit = H5_empty, data = H5_data)
+F5_empty <- stan(file = speeches_code, data = F5_data, chains = 0)
+F5 <- parallel_4(fit = F5_empty, data = F5_data)
 
 # ---------------------------- Output ---------------------------------------- #
 
 #### Table results ####
-housing_table <- stan_speeches_param_est(
-                    stanfit = list(H1 = H1,
-                                   H2 = H2,
-                                   H3 = H3,
-                                   H4 = H4,
-                                   H5 = H5),
+financial_table <- stan_speeches_param_est(
+                    stanfit = list(F1 = F1,
+                                   F2 = F2,
+                                   F3 = F3,
+                                   F4 = F4,
+                                   F5 = F5),
                     pars_labels = list(
-                        H1 = c('M. Housing Topic y-1', 'Fed. Venue',
-                                'HCFS Donor', 'High Scrutiny', 'Intercept'),
-                        H2 = c('M. Housing Topic y-1', 'Fed. Venue',
+                        F1 = c('M. Financial Topic y-1', 'Fed. Venue',
+                               'HCFS Donor', 'High Scrutiny', 'Intercept'),
+                        F2 = c('M. Financial Topic y-1', 'Fed. Venue',
+                             'HCFS Donor', 'Case-Shiller Change m-3', 'Intercept'),
+                        F3 = c('M. Financial Topic y-1', 'Fed. Venue',
                               'HCFS Donor', 'Case-Shiller Change m-3',
-                              'Intercept'),
-                        H3 = c('M. Housing Topic y-1', 'Fed. Venue',
-                               'HCFS Donor', 'Case-Shiller Change m-3',
-                               'Inflation m-3',
-                               'Intercept'),
-                        H4 = c('M. Housing Topic y-1', 'Fed. Venue',
-                               'HCFS Donor', 'Case-Shiller Change m-3',
-                               'Unemployment Change m-3', 'Intercept'),
-                        H5 = c('M. Housing Topic y-1', 'Fed. Venue',
-                               'HCFS Donor', 'High Scrutiny', 'Pres. Party',
-                               'House Dem. Prop.', 'Senate Dem. Prop.',
-                               'Intercept')
+                              'Inflation m-3', 'Intercept'),
+                        F4 = c('M. Financial Topic y-1', 'Fed. Venue',
+                              'HCFS Donor', 'Case-Shiller Change m-3',
+                              'Unemployment Change m-3', 'Intercept'),
+                        F5 = c('M. Financial Topic y-1', 'Fed. Venue',
+                              'HCFS Donor', 'High Scrutiny', 'Pres. Party',
+                              'House Dem. Prop.', 'Senate Dem. Prop.',
+                              'Intercept')
                         ),
                     obs = nrow(main))
 
-var_order <- c('M. Housing Topic y-1', 'M. Housing Topic y-1_ci',
+var_order <- c('M. Financial Topic y-1', 'M. Financial Topic y-1_ci',
                'Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
                'High Scrutiny', 'High Scrutiny_ci', 'Case-Shiller Change m-3',
                'Case-Shiller Change m-3_ci', 'Inflation m-3',
@@ -139,22 +135,22 @@ var_order <- c('M. Housing Topic y-1', 'M. Housing Topic y-1_ci',
 vars_order <- data.frame(Parameters = var_order,
                          num_order = 1:length(var_order))
 
-housing_table <- full_join(housing_table, vars_order, by = 'Parameters') %>%
+financial_table <- full_join(financial_table, vars_order, by = 'Parameters') %>%
                     arrange(num_order) %>% select(-num_order)
 
-housing_table$Parameters <- gsub('.*_ci$', '', housing_table$Parameters)
-names(housing_table) <- c('', names(housing_table)[2:length(housing_table)])
+financial_table$Parameters <- gsub('.*_ci$', '', financial_table$Parameters)
+names(financial_table) <- c('', names(financial_table)[2:length(financial_table)])
 
-stargazer(housing_table, summary = F, out = 'tables/housing.tex',
+stargazer(financial_table, summary = F, out = 'tables/financial.tex',
           out.header = F, rownames = F,
-          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Local Housing and Development',
-          label = 'housingTable',
-          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerHousing}.',
+          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Financial Markets',
+          label = 'financialTable',
+          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerFinancial}.',
           font.size = 'small')
 
 
 ##### Speaker effect plot #####
-stan_caterpillar(H1, '^a\\[.*\\]', full_names) +
+stan_caterpillar(F1, '^a\\[.*\\]', full_names) +
                 geom_vline(xintercept = 0, linetype = 'dotted')
 
-ggsave(file = 'figures/housing_speakers.pdf')
+ggsave(file = 'figures/financial_speakers.pdf')

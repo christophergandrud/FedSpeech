@@ -1,7 +1,6 @@
 # ---------------------------------------------------------------------------- #
-# Stan Speeches-Topics Regression where Financial Markets is the Topic
+# Stan Speeches-Topics Regression where Banking Regulation is the Topic
 # Christopher Gandrud
-# 5 March 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -29,8 +28,9 @@ main <- read.csv('combined_data.csv', stringsAsFactors = F)
 # --------------------------- Final cleaning --------------------------------- #
 
 # Keep complete cases
-covars_all <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
-                'ScrutinyLag3', 'CaseShillerChangeLag3', 'PCEPIPercentLag3',
+covars_all <- c('mean_banking_lag_y1', 'FedSpoketoFed',
+                'HFSC_CombConnect', 'ScrutinyLag3',
+                'CaseShillerChangeLag3', 'PCEPIPercentLag3',
                 'UnemploymentRateChangeLag3', 'pres_party', 'house_dem_rep',
                 'senate_dem_rep')
 main <- main %>% DropNA(covars_all)
@@ -52,78 +52,79 @@ base <- list(
     S = N_names,
     speaker = main$name_num,
     ## Outcome
-    y = main$Financial.Markets_dummy
+    y = main$Banking.Regulation_dummy
 )
 
 #### Run Models ####
-# F1
-vars_1 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# B1
+vars_1 <- c('mean_banking_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'ScrutinyLag3')
-F1_data <- stan_lister(base = base, df = main, vars = vars_1)
+B1_data <- stan_lister(base = base, df = main, vars = vars_1)
 
-F1_empty <- stan(file = speeches_code, data = F1_data, chains = 0)
-F1 <- parallel_4(fit = F1_empty, data = F1_data)
+B1_empty <- stan(file = speeches_code, data = B1_data, chains = 0)
+B1 <- parallel_4(fit = B1_empty, data = B1_data)
 
-# F2
-vars_2 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# B2
+vars_2 <- c('mean_banking_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3')
-F2_data <- stan_lister(base = base, df = main, vars = vars_2)
+B2_data <- stan_lister(base = base, df = main, vars = vars_2)
 
-F2_empty <- stan(file = speeches_code, data = F2_data, chains = 0)
-F2 <- parallel_4(fit = F2_empty, data = F2_data)
+B2_empty <- stan(file = speeches_code, data = B2_data, chains = 0)
+B2 <- parallel_4(fit = B2_empty, data = B2_data)
 
-# F3
-vars_3 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# B3
+vars_3 <- c('mean_banking_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'PCEPIPercentLag3')
-F3_data <- stan_lister(base = base, df = main, vars = vars_3)
+B3_data <- stan_lister(base = base, df = main, vars = vars_3)
 
-F3_empty <- stan(file = speeches_code, data = F3_data, chains = 0)
-F3 <- parallel_4(fit = F3_empty, data = F3_data)
+B3_empty <- stan(file = speeches_code, data = B3_data, chains = 0)
+B3 <- parallel_4(fit = B3_empty, data = B3_data)
 
-# F4
-vars_4 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# B4
+vars_4 <- c('mean_banking_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'CaseShillerChangeLag3', 'UnemploymentRateChangeLag3')
-F4_data <- stan_lister(base = base, df = main, vars = vars_4)
+B4_data <- stan_lister(base = base, df = main, vars = vars_4)
 
-F4_empty <- stan(file = speeches_code, data = F4_data, chains = 0)
-F4 <- parallel_4(fit = F4_empty, data = F4_data)
+B4_empty <- stan(file = speeches_code, data = B4_data, chains = 0)
+B4 <- parallel_4(fit = B4_empty, data = B4_data)
 
-# F5
-vars_5 <- c('mean_financial_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
+# B5
+vars_5 <- c('mean_banking_lag_y1', 'FedSpoketoFed', 'HFSC_CombConnect',
             'ScrutinyLag3', 'pres_party', 'house_dem_rep', 'senate_dem_rep')
-F5_data <- stan_lister(base = base, df = main, vars = vars_5)
+B5_data <- stan_lister(base = base, df = main, vars = vars_5)
 
-F5_empty <- stan(file = speeches_code, data = F5_data, chains = 0)
-F5 <- parallel_4(fit = F5_empty, data = F5_data)
+B5_empty <- stan(file = speeches_code, data = B5_data, chains = 0)
+B5 <- parallel_4(fit = B5_empty, data = B5_data)
 
 # ---------------------------- Output ---------------------------------------- #
 
 #### Table results ####
-financial_table <- stan_speeches_param_est(
-                    stanfit = list(F1 = F1,
-                                   F2 = F2,
-                                   F3 = F3,
-                                   F4 = F4,
-                                   F5 = F5),
+banking_table <- stan_speeches_param_est(
+                    stanfit = list(B1 = B1,
+                                   B2 = B2,
+                                   B3 = B3,
+                                   B4 = B4,
+                                   B5 = B5),
                     pars_labels = list(
-                        F1 = c('M. Financial Topic y-1', 'Fed. Venue',
+                        B1 = c('M. Banking Topic y-1', 'Fed. Venue',
                                'HCFS Donor', 'High Scrutiny', 'Intercept'),
-                        F2 = c('M. Financial Topic y-1', 'Fed. Venue',
-                             'HCFS Donor', 'Case-Shiller Change m-3', 'Intercept'),
-                        F3 = c('M. Financial Topic y-1', 'Fed. Venue',
+                        B2 = c('M. Banking Topic y-1', 'Fed. Venue',
+                             'HCFS Donor', 'Case-Shiller Change m-3',
+                             'Intercept'),
+                        B3 = c('M. Banking Topic y-1', 'Fed. Venue',
                               'HCFS Donor', 'Case-Shiller Change m-3',
                               'Inflation m-3', 'Intercept'),
-                        F4 = c('M. Financial Topic y-1', 'Fed. Venue',
+                        B3 = c('M. Banking Topic y-1', 'Fed. Venue',
                               'HCFS Donor', 'Case-Shiller Change m-3',
                               'Unemployment Change m-3', 'Intercept'),
-                        F5 = c('M. Financial Topic y-1', 'Fed. Venue',
+                        B5 = c('M. Banking Topic y-1', 'Fed. Venue',
                               'HCFS Donor', 'High Scrutiny', 'Pres. Party',
                               'House Dem. Prop.', 'Senate Dem. Prop.',
                               'Intercept')
                         ),
                     obs = nrow(main))
 
-var_order <- c('M. Financial Topic y-1', 'M. Financial Topic y-1_ci',
+var_order <- c('M. Banking Topic y-1', 'M. Banking Topic y-1_ci',
                'Fed. Venue', 'Fed. Venue_ci', 'HCFS Donor', 'HCFS Donor_ci',
                'High Scrutiny', 'High Scrutiny_ci', 'Case-Shiller Change m-3',
                'Case-Shiller Change m-3_ci', 'Inflation m-3',
@@ -133,25 +134,26 @@ var_order <- c('M. Financial Topic y-1', 'M. Financial Topic y-1_ci',
                'House Dem. Prop._ci', 'Senate Dem. Prop.',
                'Senate Dem. Prop._ci', 'Intercept', 'Intercept_ci',
                'Obs.', 'WAIC')
+
 vars_order <- data.frame(Parameters = var_order,
                          num_order = 1:length(var_order))
 
-financial_table <- full_join(financial_table, vars_order, by = 'Parameters') %>%
+banking_table <- full_join(banking_table, vars_order, by = 'Parameters') %>%
                     arrange(num_order) %>% select(-num_order)
 
-financial_table$Parameters <- gsub('.*_ci$', '', financial_table$Parameters)
-names(financial_table) <- c('', names(financial_table)[2:length(financial_table)])
+banking_table$Parameters <- gsub('.*_ci$', '', banking_table$Parameters)
+names(banking_table) <- c('', names(banking_table)[2:length(banking_table)])
 
-stargazer(financial_table, summary = F, out = 'tables/financial.tex',
+stargazer(banking_table, summary = F, out = 'tables/banking.tex',
           out.header = F, rownames = F,
-          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Financial Markets',
-          label = 'financialTable',
-          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerFinancial}.',
+          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Banking Regulation',
+          label = 'bankingTable',
+          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerBanking}.',
           font.size = 'small')
 
 
 ##### Speaker effect plot #####
-stan_caterpillar(F1, '^a\\[.*\\]', full_names) +
+stan_caterpillar(B1, '^a\\[.*\\]', full_names) +
                 geom_vline(xintercept = 0, linetype = 'dotted')
 
-ggsave(file = 'figures/financial_speakers.pdf')
+ggsave(file = 'figures/banking_speakers.pdf')
