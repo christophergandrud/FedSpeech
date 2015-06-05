@@ -1,7 +1,6 @@
 # ---------------------------------------------------------------------------- #
 # Stan Speeches-Topics Regression where Monetary Policy is the Topic
 # Christopher Gandrud
-# 28 May 2015
 # MIT License
 # ---------------------------------------------------------------------------- #
 
@@ -11,6 +10,7 @@ wd <- '~/Dropbox/Fed_Speeches_Paper/FedSpeech/SourceCode/RegressionAnalysis/spee
 setwd(wd)
 
 # Install/Load required packages
+library(rio)
 if (!('StanCat' %in% installed.packages()[, 1]))
     devtools::install_github('christophergandrud/StanCat')
 if (!('StanSpeeches' %in% installed.packages()[, 1]))
@@ -24,7 +24,7 @@ library(stargazer)
 library(ggplot2)
 
 # Load data
-main <- read.csv('combined_data.csv', stringsAsFactors = F)
+main <- import('combined_data.csv')
 
 # --------------------------- Final cleaning --------------------------------- #
 
@@ -114,8 +114,8 @@ monetary_table <- stan_speeches_param_est(
                                 'HCFS Donor', 'Inflation m-3',
                                 'Case-Shiller Change m-3', 'Intercept'),
                         M4 = c('M. Monetary Topic y-1', 'Fed. Venue',
-                               'HCFS Donor', 'Inflation m-3', 'Unempoyment Change m-3',
-                               'Intercept'),
+                               'HCFS Donor', 'Inflation m-3', 
+                               'Unemployment Change m-3', 'Intercept'),
                         M5 = c('M. Monetary Topic y-1', 'Fed. Venue',
                                'HCFS Donor', 'High Scrutiny', 'Pres. Party',
                                'House Dem. Prop.', 'Senate Dem. Prop.',
@@ -146,7 +146,7 @@ stargazer(monetary_table, summary = F, out = 'tables/monetary.tex',
           out.header = F, rownames = F,
           title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Monetary Policy',
           label = 'monetaryTable',
-          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerMonetary}.',
+          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerMonetary} in the Appendix.',
           font.size = 'small')
 
 
