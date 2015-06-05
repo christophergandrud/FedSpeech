@@ -148,7 +148,7 @@ stargazer(banking_table, summary = F, out = 'tables/banking.tex',
           out.header = F, rownames = F,
           title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Banking Regulation',
           label = 'bankingTable',
-          notes = 'Posterior distribution medians, with 95\\% credible intervals in parentheses. Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerBanking} in the Appendix.',
+          notes = c('Posterior distribution medians, with 95\\% credible intervals in parentheses.', 'Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerBanking} in the Appendix.'),
           font.size = 'small')
 
 
