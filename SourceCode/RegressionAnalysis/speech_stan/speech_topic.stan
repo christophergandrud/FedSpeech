@@ -1,7 +1,7 @@
 ////////////////////////////////
 // Fed Speech-Topic Stan Model
 // Model Version 0.1
-// Stan Version 0.2.6
+// Stan Version 2.6.0
 // Christopher Gandrud
 // 3 March 2015
 // MIT License

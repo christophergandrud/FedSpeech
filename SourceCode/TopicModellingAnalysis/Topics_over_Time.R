@@ -34,7 +34,7 @@ plotter <- function(x) {
     ggplot(temp, aes(month_year, proportion, group = topic)) +
         geom_point(alpha = 0.4) +
         stat_smooth(se = F, color = 'black') +
-        geom_vline(xintercept = as.numeric(as.POSIXct("2008-01-01 12:00:00")),
+        geom_vline(xintercept = as.numeric(as.POSIXct("2008-09-01 12:00:00")),
                    linetype = 'dotted') +
         ylab('') + xlab('') +
         ggtitle(title_clean) +
