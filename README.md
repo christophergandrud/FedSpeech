@@ -1,6 +1,8 @@
 FedSpeech
 =========
 
-## Source code/data files for "What the Fed Says" Project 
+Christopher Gandrud and Kevin Young
 
-### Kevin Young &amp; Christopher Gandrud
+Source code/data files for "Speaking Under Scrutiny" Project 
+
+
