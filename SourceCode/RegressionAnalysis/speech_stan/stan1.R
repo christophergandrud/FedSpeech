@@ -47,6 +47,15 @@ for (i in topics) {
     Combined[, NewVar][Combined[, i] >= TopicMean] <- 1
 }
 
+# Robustness dummies
+## 50%
+for (i in topics) {
+    NewVar <- sprintf("%s_dummy_50", i)
+    TopicMean <- mean(Combined[, i])
+    Combined[, NewVar] <- 0
+    Combined[, NewVar][Combined[, i] >= 0.5] <- 1
+}
+
 # Find previous year topic averages by month
 topics_lag_y1 <- Combined %>% group_by(month_year) %>%
                 summarise(mean_monetary_lag_y1 = mean(Monetary.Policy),

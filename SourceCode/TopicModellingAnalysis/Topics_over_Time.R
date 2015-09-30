@@ -36,6 +36,7 @@ plotter <- function(x) {
         stat_smooth(se = F, color = 'black') +
         geom_vline(xintercept = as.numeric(as.POSIXct("2008-09-01 12:00:00")),
                    linetype = 'dotted') +
+        scale_y_continuous(limits = c(0.33, 1), breaks = c(0.33, 0.5, 0.8, 1)) +
         ylab('') + xlab('') +
         ggtitle(title_clean) +
         theme_bw() 
@@ -47,7 +48,7 @@ for (i in unique(as.character(sub_gathered$topic))) {
     topic_list[[i]] <- plotter(i)
 }
 
-pdf(file = '~/Dropbox/Fed_Speeches_Paper/JoPP/R1/figures/TopicBasic.pdf', 
+pdf(file = '~/Dropbox/Fed_Speeches_Paper/Journal_Submissions/current/figures/TopicBasic.pdf', 
     width = 5)
     do.call(grid.arrange, topic_list)
 dev.off()
