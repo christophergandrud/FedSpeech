@@ -146,9 +146,9 @@ names(banking_table) <- c('', names(banking_table)[2:length(banking_table)])
 
 stargazer(banking_table, summary = F, out = 'tables/banking_50.tex',
           out.header = F, rownames = F,
-          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Banking Regulation',
+          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Banking Regulation: 50\% DV Dummy Cutoff',
           label = 'bankingTable',
-          notes = c('Posterior distribution medians, with 95\\% credible intervals in parentheses.', 'Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerBanking} in the Appendix.'),
+          notes = c('Posterior distribution medians, with 95\\% credible intervals in parentheses.'),
           font.size = 'small')
 
 

@@ -143,9 +143,9 @@ names(financial_table) <- c('', names(financial_table)[2:length(financial_table)
 
 stargazer(financial_table, summary = F, out = 'tables/financial_50.tex',
           out.header = F, rownames = F,
-          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Financial Markets',
+          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Financial Markets: 50\% DV Dummy Cutoff',
           label = 'financialTable',
-          notes = c('Posterior distribution medians, with 95\\% credible intervals in parentheses.', 'Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerFinancial} in the Appendix.'),
+          notes = c('Posterior distribution medians, with 95\\% credible intervals in parentheses.'),
           font.size = 'small')
 
 

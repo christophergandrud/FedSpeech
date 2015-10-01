@@ -144,9 +144,9 @@ names(monetary_table) <- c('', names(monetary_table)[2:length(monetary_table)])
 
 stargazer(monetary_table, summary = F, out = 'tables/monetary_50.tex',
           out.header = F, rownames = F,
-          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Monetary Policy',
+          title = 'Logistic Regression Coefficient Estimates from the Posterior Distribution for Discussing Monetary Policy: 50\% DV Dummy Cutoff',
           label = 'monetaryTable',
-          notes = c('Posterior distribution medians, with 95\\% credible intervals in parentheses.', 'Speaker varying-intercepts not shown. Please see Figure \\\\ref{speakerMonetary} in the Appendix.'),
+          notes = c('Posterior distribution medians, with 95\\% credible intervals in parentheses.'),
           font.size = 'small')
 
 

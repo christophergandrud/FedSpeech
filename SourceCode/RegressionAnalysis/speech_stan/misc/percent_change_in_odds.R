@@ -25,6 +25,7 @@ pred_change(-0.06)
 
 # Speaking about financial markets during periods of high congressional stress
 pred_change(1.29)
+pred_change(0.86)
 
 # Speaking about monetary policy at a donor event
 pred_change(-3.67)
